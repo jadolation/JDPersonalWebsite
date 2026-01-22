@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name | IT Student Portfolio</title>
+    <title>Jan Dale D. Zarate | Portfolio</title>
     <meta name="description" content="Personal portfolio of an IT student from Baguio City">
     
     <!-- Google Fonts -->
@@ -19,13 +19,20 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
+    <!-- Favicons (place your files in assets/pictures/) -->
+    <link rel="icon" href="assets/pictures/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/pictures/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="assets/pictures/logo.png">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="nav-logo">
-                <a href="#home">JD<span class="accent">.</span></a>
+                <a href="#home">
+                    <img src="assets/pictures/logo.png" alt="JD logo" class="nav-logo-img">
+                    
+                </a>
             </div>
             <div class="nav-menu" id="navMenu">
                 <ul class="nav-list">
@@ -50,7 +57,7 @@
         <div class="container">
             <div class="hero-content" data-aos="fade-up">
                 <p class="hero-subtitle">Hello, I'm</p>
-                <h1 class="hero-title">Your Name</h1>
+                <h1 class="hero-title">Jan Dale D. Zarate</h1>
                 <p class="hero-description">
                     <span class="typing-text"></span>
                 </p>
@@ -62,10 +69,10 @@
                     <a href="#projects" class="btn btn-secondary">View Projects</a>
                 </div>
                 <div class="social-links">
-                    <a href="#" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/jadolation" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/jan-dale-zarate-1bbb67188/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/jandale.ii/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/jadolation/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -85,7 +92,7 @@
             <div class="about-content">
                 <div class="about-image" data-aos="fade-right">
                     <div class="about-image-wrapper">
-                        <img src="https://via.placeholder.com/400x400" alt="Profile Picture">
+                        <img src="assets/pictures/profilePic.jpg" alt="Profile Picture">
                         <div class="about-image-border"></div>
                     </div>
                 </div>
@@ -107,18 +114,18 @@
                         </div>
                         <div class="info-item">
                             <i class="fas fa-graduation-cap"></i>
-                            <span><strong>Study:</strong> IT Student</span>
+                            <span><strong>Study:</strong> Bachelor's of Science in Information Technology</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span><strong>Location:</strong> Baguio City</span>
+                            <span><strong>Location:</strong> Baguio City, Benguet</span>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-envelope"></i>
-                            <span><strong>Email:</strong> your.email@example.com</span>
+                            <span><strong>Email:</strong> zaratejandale15@gmail.com</span>
                         </div>
                     </div>
-                    <a href="#" class="btn btn-primary">Download CV <i class="fas fa-download"></i></a>
+                    <a href="assets/documents/Jan Dale Zarate - CV.pdf" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View CV <i class="fas fa-external-link-alt"></i></a>
                 </div>
             </div>
         </div>
@@ -131,71 +138,105 @@
             <p class="section-subtitle" data-aos="fade-up">Here are some technologies I've been working with</p>
             
             <div class="skills-grid">
-                <!-- Frontend -->
+                <!-- Programming & Markup Languages -->
                 <div class="skill-category" data-aos="fade-up" data-aos-delay="100">
-                    <h3><i class="fas fa-laptop-code"></i> Frontend</h3>
+                    <h3><i class="fas fa-code"></i> Programming & Markup Languages</h3>
                     <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-code"></i></div>
+                            <span>Java</span>
+                        </div>
                         <div class="skill-item">
                             <div class="skill-icon"><i class="fab fa-html5"></i></div>
-                            <span>HTML5</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
-                            <span>CSS3</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-js"></i></div>
-                            <span>JavaScript</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-react"></i></div>
-                            <span>React</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Backend -->
-                <div class="skill-category" data-aos="fade-up" data-aos-delay="200">
-                    <h3><i class="fas fa-server"></i> Backend</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-node-js"></i></div>
-                            <span>Node.js</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-python"></i></div>
-                            <span>Python</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-php"></i></div>
-                            <span>PHP</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fas fa-database"></i></div>
-                            <span>MySQL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tools -->
-                <div class="skill-category" data-aos="fade-up" data-aos-delay="300">
-                    <h3><i class="fas fa-tools"></i> Tools & Others</h3>
-                    <div class="skill-items">
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
-                            <span>Git</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-github"></i></div>
-                            <span>GitHub</span>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><i class="fab fa-figma"></i></div>
-                            <span>Figma</span>
+                            <span>HTML</span>
                         </div>
                         <div class="skill-item">
                             <div class="skill-icon"><i class="fas fa-code"></i></div>
-                            <span>VS Code</span>
+                            <span>TypeScript</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tools and Technologies -->
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-tools"></i> Tools & Technologies</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+                            <span>Git & GitHub</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-docker"></i></div>
+                            <span>Docker</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Framework -->
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="300">
+                    <h3><i class="fas fa-layer-group"></i> Framework</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fab fa-react"></i></div>
+                            <span>React Native</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Relevant Skills -->
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="400">
+                    <h3><i class="fas fa-star"></i> Other Relevant Skills</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-paint-brush"></i></div>
+                            <span>User Interface Designing</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-robot"></i></div>
+                            <span>Prompt Engineering</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-link"></i></div>
+                            <span>Blockchain Fundamentals</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-project-diagram"></i></div>
+                            <span>Agile Methodology</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-layer-group"></i></div>
+                            <span>Object Oriented Programming</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soft Skills -->
+                <div class="skill-category" data-aos="fade-up" data-aos-delay="500">
+                    <h3><i class="fas fa-user-friends"></i> Soft Skills</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-tasks"></i></div>
+                            <span>Project Management</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-brain"></i></div>
+                            <span>Critical Thinking</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-book-reader"></i></div>
+                            <span>Curiosity & Continuous Learning</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-lightbulb"></i></div>
+                            <span>Problem Solving</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-handshake"></i></div>
+                            <span>Collaboration & Teamwork</span>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon"><i class="fas fa-chess-king"></i></div>
+                            <span>Leadership</span>
                         </div>
                     </div>
                 </div>
@@ -318,10 +359,10 @@
 
                 <form class="contact-form" data-aos="fade-left">
                     <div class="form-group">
-                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                        <input type="text" id="name" name="name" placeholder="Jan Dale D. Zarate" required>
                     </div>
                     <div class="form-group">
-                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                        <input type="email" id="email" name="email" placeholder="zaratejandale15@gmail.com" required>
                     </div>
                     <div class="form-group">
                         <input type="text" id="subject" name="subject" placeholder="Subject" required>

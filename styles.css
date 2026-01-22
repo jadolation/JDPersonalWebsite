@@ -163,6 +163,24 @@ img {
     background-clip: text;
 }
 
+/* Logo image styling */
+.nav-logo-img {
+    height: 50px;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.nav-logo-text {
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .nav-list {
     display: flex;
     gap: 2rem;
