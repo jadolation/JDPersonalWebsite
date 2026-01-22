@@ -262,3 +262,145 @@ projectCards.forEach(card => {
 console.log('%c👋 Hello, Developer!', 'font-size: 20px; color: #00d4ff; font-weight: bold;');
 console.log('%cWelcome to my portfolio. Looking for something? 🔍', 'font-size: 14px; color: #a0a8b8;');
 console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px; color: #00ff88;');
+ 
+// ============================================
+// Hero Logo Interactivity (modal viewer + keyboard)
+// ============================================
+(function() {
+    const logoBtn = document.querySelector('.hero-logo-button');
+    const logoModal = document.getElementById('logoModal');
+    const modalClose = document.querySelector('.logo-modal-close');
+    const modalBackdrop = document.querySelector('.logo-modal-backdrop');
+
+    if (!logoBtn || !logoModal) return;
+    const logoImg = logoBtn.querySelector('.hero-logo');
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let wasDragged = false;
+
+    function openLogoModal() {
+        logoModal.classList.add('open');
+        logoModal.setAttribute('aria-hidden', 'false');
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
+        if (modalClose) modalClose.focus();
+    }
+
+    function closeLogoModal() {
+        logoModal.classList.remove('open');
+        logoModal.setAttribute('aria-hidden', 'true');
+        document.documentElement.style.overflow = '';
+        document.body.style.overflow = '';
+        logoBtn.focus();
+    }
+
+    // Trigger a quick spark effect when clicked
+    function triggerSpark() {
+        if (!logoImg) return;
+        logoImg.classList.remove('logo-spark');
+        // trigger reflow to restart animation
+        void logoImg.offsetWidth;
+        logoImg.classList.add('logo-spark');
+        // remove after animation completes
+        const cleanup = () => {
+            logoImg.classList.remove('logo-spark');
+            logoImg.removeEventListener('animationend', cleanup);
+        };
+        logoImg.addEventListener('animationend', cleanup);
+    }
+
+    // Click handler: ignore if it was a drag
+    logoBtn.addEventListener('click', (e) => {
+        if (wasDragged) {
+            wasDragged = false;
+            return;
+        }
+        // unique action: spark + open modal
+        triggerSpark();
+        openLogoModal();
+    });
+
+    logoBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            triggerSpark();
+            openLogoModal();
+        }
+    });
+
+    if (modalClose) modalClose.addEventListener('click', closeLogoModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeLogoModal);
+
+    // close on ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && logoModal.classList.contains('open')) {
+            closeLogoModal();
+        }
+    });
+
+    // ---- Drag behavior: move the button while dragging, then snap back ----
+    function onPointerDown(e) {
+        // only primary button
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        isDragging = false;
+        wasDragged = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        lastX = 0;
+        lastY = 0;
+        logoBtn.setPointerCapture(e.pointerId);
+        logoBtn.classList.remove('dragging');
+        // pause image animation while interacting
+        if (logoImg) logoImg.style.animationPlayState = 'paused';
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
+    }
+
+    function onPointerMove(e) {
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        const moveDist = Math.hypot(dx, dy);
+        if (!isDragging && moveDist > 6) {
+            isDragging = true;
+            logoBtn.classList.add('dragging');
+        }
+        if (isDragging) {
+            lastX = dx;
+            lastY = dy;
+            // move the button
+            logoBtn.style.transition = 'none';
+            logoBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+        }
+    }
+
+    function onPointerUp(e) {
+        try { logoBtn.releasePointerCapture(e.pointerId); } catch(_) {}
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointercancel', onPointerUp);
+        if (isDragging) {
+            wasDragged = true;
+            // snap back with transition
+            logoBtn.style.transition = 'transform 300ms cubic-bezier(.2,.9,.2,1)';
+            logoBtn.style.transform = '';
+            // after transition, cleanup
+            const cleanup = () => {
+                logoBtn.style.transition = '';
+                logoBtn.classList.remove('dragging');
+                if (logoImg) logoImg.style.animationPlayState = '';
+                logoBtn.removeEventListener('transitionend', cleanup);
+            };
+            logoBtn.addEventListener('transitionend', cleanup);
+        } else {
+            // not dragged, just restore animation
+            if (logoImg) logoImg.style.animationPlayState = '';
+        }
+        isDragging = false;
+    }
+
+    logoBtn.addEventListener('pointerdown', onPointerDown);
+})();
