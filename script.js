@@ -1,15 +1,11 @@
-// ============================================
-// Initialize AOS (Animate on Scroll)
-// ============================================
+// AOS init
 AOS.init({
     duration: 1000,
     once: true,
     offset: 100
 });
 
-// ============================================
 // Navigation
-// ============================================
 const navbar = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
@@ -59,9 +55,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// ============================================
-// Typing Effect
-// ============================================
+// Typing effect
 const typingText = document.querySelector('.typing-text');
 const phrases = [
     'IT Student',
@@ -107,9 +101,7 @@ window.addEventListener('load', () => {
     setTimeout(typeEffect, 1000);
 });
 
-// ============================================
-// Smooth Scrolling
-// ============================================
+// Smooth scrolling
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -123,9 +115,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// ============================================
-// Form Submission
-// ============================================
+// Form submission
 const contactForm = document.querySelector('.contact-form');
 
 contactForm.addEventListener('submit', (e) => {
@@ -143,9 +133,7 @@ contactForm.addEventListener('submit', (e) => {
     contactForm.reset();
 });
 
-// ============================================
-// Particle Animation (Optional Enhancement)
-// ============================================
+// Particles
 function createParticles() {
     const particlesContainer = document.querySelector('.hero-particles');
     const particleCount = 50;
@@ -189,9 +177,7 @@ document.head.appendChild(style);
 // Create particles on load
 window.addEventListener('load', createParticles);
 
-// ============================================
-// Scroll to Top Button (Optional)
-// ============================================
+// Scroll-to-top button
 const scrollTopBtn = document.createElement('button');
 scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
 scrollTopBtn.className = 'scroll-top-btn';
@@ -241,9 +227,7 @@ scrollTopBtn.addEventListener('mouseleave', () => {
     scrollTopBtn.style.transform = 'translateY(0)';
 });
 
-// ============================================
-// Project Cards Animation Enhancement
-// ============================================
+// Project cards
 const projectCards = document.querySelectorAll('.project-card');
 
 projectCards.forEach(card => {
@@ -256,16 +240,12 @@ projectCards.forEach(card => {
     });
 });
 
-// ============================================
-// Console Message
-// ============================================
+// Console messages
 console.log('%c👋 Hello, Developer!', 'font-size: 20px; color: #00d4ff; font-weight: bold;');
 console.log('%cWelcome to my portfolio. Looking for something? 🔍', 'font-size: 14px; color: #a0a8b8;');
 console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px; color: #00ff88;');
  
-// ============================================
-// Hero Logo Interactivity (modal viewer + keyboard)
-// ============================================
+// Logo interactivity
 (function() {
     const logoBtn = document.querySelector('.hero-logo-button');
     const logoModal = document.getElementById('logoModal');
@@ -404,3 +384,88 @@ console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px
 
     logoBtn.addEventListener('pointerdown', onPointerDown);
 })();
+
+    // About carousel
+    (function() {
+        const images = [
+            'assets/pictures/jd2.jpg',
+            'assets/pictures/jd3.jpg',
+            'assets/pictures/jd4.jpg',
+            'assets/pictures/jd5.jpg',
+            'assets/pictures/jd6.jpg',
+            'assets/pictures/jd7.jpg',
+            'assets/pictures/jd8.jpg',
+            'assets/pictures/profilePic.jpg'
+        ];
+
+        const colors = [
+            '#ffd700',
+            '#00d4ff',
+            '#00ff88',
+            '#ff6b6b',
+            '#b19cff',
+            '#ff9f1c',
+            '#7bd389',
+            '#c97bd3'
+        ];
+
+        const main = document.getElementById('carouselMain');
+        const border = document.getElementById('aboutImageBorder');
+        const thumbsContainer = document.getElementById('carouselThumbs');
+        if (!main || !border || !thumbsContainer) return;
+
+        const thumbs = Array.from(thumbsContainer.querySelectorAll('.thumb'));
+        let current = 0;
+        let autoInterval = null;
+
+        function hexToRgba(hex, a) {
+            let c = hex.replace('#', '');
+            if (c.length === 3) c = c.split('').map(ch => ch + ch).join('');
+            const bigint = parseInt(c, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `rgba(${r},${g},${b},${a})`;
+        }
+
+        function setActive(i) {
+            current = ((i % images.length) + images.length) % images.length;
+            main.src = images[current];
+
+            // trigger a quick bounce visual when image changes
+            main.classList.remove('bounce');
+            // force reflow to restart animation
+            void main.offsetWidth;
+            main.classList.add('bounce');
+            main.addEventListener('animationend', () => { main.classList.remove('bounce'); }, { once: true });
+
+            thumbs.forEach((t, idx) => {
+                if (idx === current) t.classList.add('active'); else t.classList.remove('active');
+            });
+            const color = colors[current % colors.length];
+            border.style.borderColor = color;
+            border.style.boxShadow = `0 12px 40px ${hexToRgba(color, 0.12)}`;
+        }
+
+        function startAuto() {
+            if (autoInterval) return;
+            autoInterval = setInterval(() => setActive(current + 1), 4000);
+        }
+        function pauseAuto() { if (autoInterval) { clearInterval(autoInterval); autoInterval = null; } }
+        function resumeAuto() { if (!autoInterval) startAuto(); }
+        function resetAuto() { pauseAuto(); setTimeout(startAuto, 2600); }
+
+        thumbs.forEach((btn, idx) => {
+            btn.addEventListener('click', () => { setActive(idx); resetAuto(); });
+            btn.addEventListener('mouseenter', pauseAuto);
+            btn.addEventListener('mouseleave', resumeAuto);
+        });
+
+        main.addEventListener('click', () => { setActive(current + 1); resetAuto(); });
+        main.addEventListener('mouseenter', pauseAuto);
+        main.addEventListener('mouseleave', resumeAuto);
+
+        // initialize
+        setActive(0);
+        startAuto();
+    })();

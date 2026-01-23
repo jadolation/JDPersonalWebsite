@@ -1,6 +1,4 @@
-/* ============================================
-   CSS Variables & Reset
-   ============================================ */
+ /* CSS Vars & Reset */
 :root {
     /* Colors */
     --primary-color: #00d4ff;
@@ -72,9 +70,7 @@ img {
     display: block;
 }
 
-/* ============================================
-   Utility Classes
-   ============================================ */
+     /* Utility Classes */
 .container {
     max-width: var(--container-width);
     margin: 0 auto;
@@ -136,9 +132,7 @@ img {
     transform: translateY(-2px);
 }
 
-/* ============================================
-   Navigation
-   ============================================ */
+ /* Navigation */
 .navbar {
     position: fixed;
     top: 0;
@@ -247,9 +241,7 @@ img {
     transition: var(--transition);
 }
 
-/* ============================================
-   Hero Section
-   ============================================ */
+ /* Hero */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -538,9 +530,7 @@ img {
     }
 }
 
-/* ============================================
-   About Section
-   ============================================ */
+ /* About */
 .about {
     padding: var(--section-padding);
     background: var(--bg-secondary);
@@ -573,9 +563,95 @@ img {
     left: 20px;
     width: 100%;
     height: 100%;
-    border: 3px solid var(--primary-color);
+    border: 6px solid var(--primary-color);
     border-radius: 12px;
     z-index: 1;
+    transition: border-color 300ms ease, box-shadow 300ms ease, transform 300ms ease;
+}
+
+/* Carousel styles for About section */
+.carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.carousel-display {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 400px;
+}
+.carousel-main {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 2;
+    border-radius: 12px;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    cursor: pointer;
+}
+.carousel-main:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-glow);
+}
+
+.carousel-main.bounce {
+    animation: bounce 640ms cubic-bezier(.2,.9,.2,1);
+}
+
+@keyframes bounce {
+    0% { transform: translateY(0) scale(1); }
+    30% { transform: translateY(-18px) scale(1.03); }
+    50% { transform: translateY(0) scale(0.995); }
+    70% { transform: translateY(-8px) scale(1.01); }
+    100% { transform: translateY(0) scale(1); }
+}
+.carousel-thumbs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    /* hide native scrollbar while keeping touch/drag scroll */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.carousel-thumbs::-webkit-scrollbar { display: none; }
+.carousel-thumbs .thumb {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    flex: 0 0 auto;
+    outline: none;
+}
+.carousel-thumbs .thumb img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.carousel-thumbs .thumb:hover img {
+    transform: scale(1.06);
+}
+.carousel-thumbs .thumb.active img {
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 18px rgba(0,212,255,0.12);
+}
+
+/* Make sure about-image-border sits visually behind the main image */
+.about-image-wrapper .about-image-border {
+    transform: translate(16px, 16px);
+}
+
+/* responsive tweaks */
+@media (max-width: 768px) {
+    .carousel-display { height: 300px; }
+    .carousel-main { height: 300px; }
 }
 
 .about-text h3 {
@@ -617,9 +693,7 @@ img {
     font-size: 0.95rem;
 }
 
-/* ============================================
-   Skills Section
-   ============================================ */
+ /* Skills */
 .skills {
     padding: var(--section-padding);
     background: var(--bg-primary);
@@ -692,9 +766,7 @@ img {
     text-align: center;
 }
 
-/* ============================================
-   Projects Section
-   ============================================ */
+ /* Projects */
 .projects {
     padding: var(--section-padding);
     background: var(--bg-secondary);
@@ -810,9 +882,7 @@ img {
     color: var(--primary-color);
 }
 
-/* ============================================
-   Contact Section
-   ============================================ */
+ /* Contact */
 .contact {
     padding: var(--section-padding);
     background: var(--bg-primary);
@@ -891,9 +961,7 @@ img {
     width: 100%;
 }
 
-/* ============================================
-   Footer
-   ============================================ */
+ /* Footer */
 .footer {
     background: var(--bg-secondary);
     padding: 2rem 0;
@@ -934,9 +1002,7 @@ img {
     border-color: transparent;
 }
 
-/* ============================================
-   Responsive Design
-   ============================================ */
+ /* Responsive */
 @media (max-width: 968px) {
     .nav-menu {
         position: fixed;
@@ -1060,9 +1126,7 @@ img {
     }
 }
 
-/* ============================================
-   SRV Startup Section
-   ============================================ */
+ /* SRV */
 .srv-section {
     padding: var(--section-padding);
     background: linear-gradient(135deg, rgba(10, 14, 26, 0.95) 0%, rgba(15, 22, 36, 0.98) 50%, rgba(10, 14, 26, 0.95) 100%);
