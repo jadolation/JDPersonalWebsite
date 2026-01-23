@@ -472,7 +472,7 @@ console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px
         startAuto();
     })();
 
-    // Defer hero logo animations until the logo is visible (improves mobile performance)
+    // Defer hero logo animations until the logo is visible 
     (function() {
         const heroLogo = document.querySelector('.hero-logo');
         if (!heroLogo) return;
