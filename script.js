@@ -174,8 +174,10 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Create particles on load
-window.addEventListener('load', createParticles);
+// Create particles on load (skip on small screens to improve performance)
+if (window.innerWidth >= 768) {
+    window.addEventListener('load', createParticles);
+}
 
 // Scroll-to-top button
 const scrollTopBtn = document.createElement('button');
@@ -468,4 +470,24 @@ console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px
         // initialize
         setActive(0);
         startAuto();
+    })();
+
+    // Defer hero logo animations until the logo is visible (improves mobile performance)
+    (function() {
+        const heroLogo = document.querySelector('.hero-logo');
+        if (!heroLogo) return;
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        heroLogo.classList.remove('not-visible');
+                        observer.unobserve(heroLogo);
+                    }
+                });
+            }, { threshold: 0.05 });
+            io.observe(heroLogo);
+        } else {
+            // Fallback: enable animations immediately
+            heroLogo.classList.remove('not-visible');
+        }
     })();
