@@ -275,6 +275,69 @@ img {
     position: relative;
     z-index: 1;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nft-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.625rem 1.125rem;
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid rgba(0, 212, 255, 0.3);
+    border-radius: 24px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: var(--transition);
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 1101;
+}
+
+.nft-badge:hover {
+    background: rgba(0, 212, 255, 0.18);
+    border-color: rgba(0, 212, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 212, 255, 0.2);
+}
+
+.nft-badge i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.nft-badge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.nft-badge-title {
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.nft-badge-status {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+    .nft-badge {
+        margin-top: 30px;
+    }
 }
 
 .hero-logo-button {
@@ -1247,9 +1310,27 @@ img {
     z-index: 1;
 }
 
+@media (min-width: 968px) {
+    .srv-section .container {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        gap: 4rem;
+    }
+}
+
 .srv-header {
     text-align: center;
     margin-bottom: 3rem;
+}
+
+@media (min-width: 968px) {
+    .srv-header {
+        flex: 0 0 400px;
+        margin-bottom: 0;
+        position: sticky;
+        top: 120px;
+    }
 }
 
 .srv-logo-placeholder {
@@ -1259,7 +1340,7 @@ img {
 }
 
 .srv-logo {
-    max-width: 150px;
+    max-width: 250px;
     height: auto;
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
     transition: var(--transition);
@@ -1291,12 +1372,76 @@ img {
     gap: 2rem;
 }
 
+@media (min-width: 968px) {
+    .srv-content {
+        flex: 1;
+        margin-top: 0;
+    }
+}
+
 .srv-card {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 2rem;
     transition: var(--transition);
+}
+
+.srv-summary {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+@media (min-width: 968px) {
+    .srv-summary {
+        max-width: none;
+        margin: 0;
+    }
+}
+
+.srv-intro {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.srv-highlights {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.srv-highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.srv-highlight-item:hover {
+    background: var(--bg-primary);
+    transform: translateX(8px);
+}
+
+.srv-highlight-item i {
+    color: var(--srv-yellow);
+    font-size: 1.3rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.srv-highlight-item span {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.srv-highlight-item strong {
+    color: var(--srv-yellow);
 }
 
 .srv-card:hover {
