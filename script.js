@@ -493,18 +493,49 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
     })();
 
     async function loadProjects() {
-  const response = await fetch('./projects.json');
-  const projects = await response.json();
-  const container = document.getElementById('projects');
+        const response = await fetch('./projects.json');
+        const projects = await response.json();
+        const grid = document.querySelector('.projects-grid');
 
-  container.innerHTML = projects.map(repo => `
-    <div class="card">
-      <h3>${repo.name}</h3>
-      <p>${repo.description || 'No description provided.'}</p>
-      <span class="badge">${repo.language}</span>
-      <a href="${repo.url}" target="_blank">View on GitHub</a>
-    </div>
-  `).join('');
+        if (!grid) {
+            // Fallback: replace #projects section if grid isn't present
+            const container = document.getElementById('projects');
+            if (!container) return;
+            container.innerHTML = projects.map(repo => `
+                <div class="project-card" data-aos="fade-up">
+                    <div class="project-content">
+                        <h3>${repo.name}</h3>
+                        <p>${repo.description || 'No description provided.'}</p>
+                        <div class="project-tags">
+                            ${repo.language ? `<span class="tag">${repo.language}</span>` : ''}
+                        </div>
+                        <a href="${repo.url}" target="_blank">View on GitHub</a>
+                    </div>
+                </div>
+            `).join('');
+            return;
+        }
+
+        grid.innerHTML = projects.map((repo, idx) => `
+            <div class="project-card" data-aos="fade-up" data-aos-delay="${100 + (idx * 100)}">
+                <div class="project-image">
+                    <img src="${repo.image || 'https://via.placeholder.com/600x400'}" alt="${repo.name}">
+                    <div class="project-overlay">
+                        <div class="project-links">
+                            <a href="${repo.url}" target="_blank" class="project-link" aria-label="View ${repo.name} on GitHub"><i class="fab fa-github"></i></a>
+                            ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link" aria-label="Open ${repo.name} demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="project-content">
+                    <h3>${repo.name}</h3>
+                    <p>${repo.description || 'No description provided.'}</p>
+                    <div class="project-tags">
+                        ${repo.language ? `<span class="tag">${repo.language}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
 }
 
 loadProjects();
