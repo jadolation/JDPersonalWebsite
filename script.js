@@ -519,7 +519,7 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
         grid.innerHTML = projects.map((repo, idx) => `
             <div class="project-card" data-aos="fade-up" data-aos-delay="${100 + (idx * 100)}">
                 <div class="project-image">
-                    <img src="${repo.image || 'https://via.placeholder.com/600x400'}" alt="${repo.name}">
+                    <img src="${repo.image || 'https://via.placeholder.com/600x400'}" alt="${repo.name}" data-repo="${repo.name}">
                     <div class="project-overlay">
                         <div class="project-links">
                             <a href="${repo.url}" target="_blank" class="project-link" aria-label="View ${repo.name} on GitHub"><i class="fab fa-github"></i></a>
@@ -536,6 +536,65 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
                 </div>
             </div>
         `).join('');
+
+        // After rendering, try to replace placeholders with images from each repo (if available)
+        const owner = 'jadolation';
+        const candidates = [
+            'assets/pictures/preview.png',
+            'assets/pictures/preview.jpg',
+            'assets/preview.png',
+            'assets/preview.jpg',
+            'assets/screenshot.png',
+            'assets/screenshot.jpg',
+            'screenshot.png',
+            'screenshot.jpg',
+            'thumbnail.png',
+            'thumbnail.jpg',
+            'images/preview.png',
+            'images/preview.jpg',
+            'docs/screenshot.png',
+            'docs/preview.png',
+            'logo.png'
+        ];
+
+        function timeoutFetch(url, ms = 3000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), ms);
+            return fetch(url, { signal: controller.signal, cache: 'no-cache' })
+                .finally(() => clearTimeout(id));
+        }
+
+        async function findRepoImage(repoName) {
+            for (const path of candidates) {
+                const url = `https://raw.githubusercontent.com/${owner}/${repoName}/main/${path}`;
+                try {
+                    const res = await timeoutFetch(url, 3000);
+                    if (!res.ok) continue;
+                    const ct = res.headers.get('content-type') || '';
+                    if (ct.startsWith('image/')) return url;
+                    // some hosts may not set content-type; try to treat small responses as images
+                    const blob = await res.blob();
+                    if (blob && blob.type && blob.type.startsWith('image/')) return url;
+                } catch (err) {
+                    // ignore and try next
+                }
+            }
+            return null;
+        }
+
+        // Update image elements asynchronously
+        projects.forEach(async (repo) => {
+            const imgEl = document.querySelector(`img[data-repo="${CSS.escape(repo.name)}"]`);
+            if (!imgEl) return;
+            // if repo provided an `image` field, use it
+            if (repo.image) {
+                imgEl.src = repo.image;
+                return;
+            }
+            const found = await findRepoImage(repo.name);
+            if (found) imgEl.src = found;
+            // otherwise keep placeholder; you can assign later via repo.json or manual edits
+        });
 }
 
 loadProjects();
