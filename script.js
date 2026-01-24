@@ -497,6 +497,35 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
         const projects = await response.json();
         const grid = document.querySelector('.projects-grid');
 
+        const fallbackImageUrl = 'https://japanpowered.com/media/images//GurrenLagann-simon.jpg';
+
+        const escapeHtml = (value) => String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+
+        const githubOgImage = (repoUrl, repoName) => {
+            // Use GitHub's Open Graph preview image. This works even when the repo doesn't
+            // have a custom "social preview" image; GitHub generates one.
+            // Format: https://opengraph.githubassets.com/<salt>/<owner>/<repo>
+            const defaultOwner = 'jadolation';
+            let owner = defaultOwner;
+            let name = repoName;
+            try {
+                const u = new URL(repoUrl);
+                const parts = u.pathname.split('/').filter(Boolean);
+                if (parts.length >= 2) {
+                    owner = parts[0];
+                    name = parts[1];
+                }
+            } catch (_) {
+                // ignore
+            }
+            return `https://opengraph.githubassets.com/1/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`;
+        };
+
         if (!grid) {
             // Fallback: replace #projects section if grid isn't present
             const container = document.getElementById('projects');
@@ -504,97 +533,54 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
             container.innerHTML = projects.map(repo => `
                 <div class="project-card" data-aos="fade-up">
                     <div class="project-content">
-                        <h3>${repo.name}</h3>
-                        <p>${repo.description || 'No description provided.'}</p>
+                        <h3>${escapeHtml(repo.name)}</h3>
+                        <p>${escapeHtml(repo.description || 'No description provided.')}</p>
                         <div class="project-tags">
-                            ${repo.language ? `<span class="tag">${repo.language}</span>` : ''}
+                            ${repo.language ? `<span class="tag">${escapeHtml(repo.language)}</span>` : ''}
                         </div>
-                        <a href="${repo.url}" target="_blank">View on GitHub</a>
+                        <a href="${escapeHtml(repo.url)}" target="_blank" rel="noopener">View on GitHub</a>
                     </div>
                 </div>
             `).join('');
             return;
         }
 
-        grid.innerHTML = projects.map((repo, idx) => `
+        grid.innerHTML = projects.map((repo, idx) => {
+            const repoName = escapeHtml(repo.name);
+            const repoUrl = escapeHtml(repo.url);
+            const repoDesc = escapeHtml(repo.description || 'No description provided.');
+            const repoLang = repo.language ? escapeHtml(repo.language) : '';
+            const homepageUrl = repo.homepage ? escapeHtml(repo.homepage) : '';
+            const imgUrl = githubOgImage(repo.url, repo.name);
+
+            return `
             <div class="project-card" data-aos="fade-up" data-aos-delay="${100 + (idx * 100)}">
                 <div class="project-image">
-                    <img src="${repo.image || 'https://via.placeholder.com/600x400'}" alt="${repo.name}" data-repo="${repo.name}">
+                    <img
+                        src="${imgUrl}"
+                        alt="${repoName}"
+                        loading="lazy"
+                        decoding="async"
+                        referrerpolicy="no-referrer"
+                        onerror="this.onerror=null;this.src='${fallbackImageUrl}';"
+                    >
                     <div class="project-overlay">
                         <div class="project-links">
-                            <a href="${repo.url}" target="_blank" class="project-link" aria-label="View ${repo.name} on GitHub"><i class="fab fa-github"></i></a>
-                            ${repo.homepage ? `<a href="${repo.homepage}" target="_blank" class="project-link" aria-label="Open ${repo.name} demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                            <a href="${repoUrl}" target="_blank" rel="noopener" class="project-link" aria-label="View ${repoName} on GitHub"><i class="fab fa-github"></i></a>
+                            ${homepageUrl ? `<a href="${homepageUrl}" target="_blank" rel="noopener" class="project-link" aria-label="Open ${repoName} demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
                         </div>
                     </div>
                 </div>
                 <div class="project-content">
-                    <h3>${repo.name}</h3>
-                    <p>${repo.description || 'No description provided.'}</p>
+                    <h3>${repoName}</h3>
+                    <p>${repoDesc}</p>
                     <div class="project-tags">
-                        ${repo.language ? `<span class="tag">${repo.language}</span>` : ''}
+                        ${repoLang ? `<span class="tag">${repoLang}</span>` : ''}
                     </div>
                 </div>
             </div>
-        `).join('');
-
-        // After rendering, try to replace placeholders with images from each repo (if available)
-        const owner = 'jadolation';
-        const candidates = [
-            'assets/pictures/preview.png',
-            'assets/pictures/preview.jpg',
-            'assets/preview.png',
-            'assets/preview.jpg',
-            'assets/screenshot.png',
-            'assets/screenshot.jpg',
-            'screenshot.png',
-            'screenshot.jpg',
-            'thumbnail.png',
-            'thumbnail.jpg',
-            'images/preview.png',
-            'images/preview.jpg',
-            'docs/screenshot.png',
-            'docs/preview.png',
-            'logo.png'
-        ];
-
-        function timeoutFetch(url, ms = 3000) {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), ms);
-            return fetch(url, { signal: controller.signal, cache: 'no-cache' })
-                .finally(() => clearTimeout(id));
-        }
-
-        async function findRepoImage(repoName) {
-            for (const path of candidates) {
-                const url = `https://raw.githubusercontent.com/${owner}/${repoName}/main/${path}`;
-                try {
-                    const res = await timeoutFetch(url, 3000);
-                    if (!res.ok) continue;
-                    const ct = res.headers.get('content-type') || '';
-                    if (ct.startsWith('image/')) return url;
-                    // some hosts may not set content-type; try to treat small responses as images
-                    const blob = await res.blob();
-                    if (blob && blob.type && blob.type.startsWith('image/')) return url;
-                } catch (err) {
-                    // ignore and try next
-                }
-            }
-            return null;
-        }
-
-        // Update image elements asynchronously
-        projects.forEach(async (repo) => {
-            const imgEl = document.querySelector(`img[data-repo="${CSS.escape(repo.name)}"]`);
-            if (!imgEl) return;
-            // if repo provided an `image` field, use it
-            if (repo.image) {
-                imgEl.src = repo.image;
-                return;
-            }
-            const found = await findRepoImage(repo.name);
-            if (found) imgEl.src = found;
-            // otherwise keep placeholder; you can assign later via repo.json or manual edits
-        });
+            `;
+        }).join('');
 }
 
 loadProjects();
