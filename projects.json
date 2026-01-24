@@ -14,6 +14,13 @@
     "language": "HTML"
   },
   {
+    "name": "simpl_nft",
+    "description": "Simple NFT ",
+    "url": "https://github.com/jadolation/simpl_nft",
+    "stars": 0,
+    "language": null
+  },
+  {
     "name": "my_coin_template",
     "description": "A coin template for those building their coin in SUI",
     "url": "https://github.com/jadolation/my_coin_template",
