@@ -1,0 +1,54 @@
+name: Update Project Data
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Fetch public repositories and build projects.json
+        env:
+          GITHUB_USER: jadolation
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          page=1
+          tmpfile="projects.tmp.json"
+          echo "[]" > "$tmpfile"
+          while :; do
+            echo "Fetching page $page"
+            resp=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" "https://api.github.com/users/$GITHUB_USER/repos?per_page=100&page=$page&sort=updated")
+            count=$(echo "$resp" | jq 'length')
+            if [ "$count" -eq 0 ]; then
+              break
+            fi
+            echo "$resp" | jq '[.[] | select(.private == false) | {name: .name, description: .description, url: .html_url, stars: .stargazers_count, language: .language}]' > "page_$page.json"
+            jq -s '.[0] + .[1]' "$tmpfile" "page_$page.json" > tmp && mv tmp "$tmpfile"
+            page=$((page+1))
+          done
+          jq 'unique_by(.name) | sort_by(.stars) | reverse' "$tmpfile" > projects.json
+          rm -f page_*.json "$tmpfile"
+
+      - name: Commit and push projects.json
+        run: |
+          git add projects.json || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "Auto-update projects.json"
+          git push

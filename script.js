@@ -245,7 +245,7 @@ projectCards.forEach(card => {
 // Console messages
 console.log('%c👋 Hello, Developer!', 'font-size: 20px; color: #00d4ff; font-weight: bold;');
 console.log('%cWelcome to my portfolio. Looking for something? 🔍', 'font-size: 14px; color: #a0a8b8;');
-console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px; color: #00ff88;');
+console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 12px; color: #00ff88;');
  
 // Logo interactivity
 (function() {
@@ -491,3 +491,20 @@ console.log('%cFeel free to reach out: your.email@example.com', 'font-size: 12px
             heroLogo.classList.remove('not-visible');
         }
     })();
+
+    async function loadProjects() {
+  const response = await fetch('./projects.json');
+  const projects = await response.json();
+  const container = document.getElementById('projects');
+
+  container.innerHTML = projects.map(repo => `
+    <div class="card">
+      <h3>${repo.name}</h3>
+      <p>${repo.description || 'No description provided.'}</p>
+      <span class="badge">${repo.language}</span>
+      <a href="${repo.url}" target="_blank">View on GitHub</a>
+    </div>
+  `).join('');
+}
+
+loadProjects();
