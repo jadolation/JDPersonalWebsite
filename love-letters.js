@@ -29,11 +29,15 @@ I created this space because you deserve something special, something that's jus
 
 I hope every time you visit here, you feel how much I care about you, how much you brighten my days, and how grateful I am to have you in my life.
 
-This is just the beginning. There will be many more letters to come, each one a little piece of my heart.
+I also want to say I'm sorry for what happened last night. I never meant to upset you, and I hope we can talk it through when you're ready. You mean the world to me, and I want to make things right.
+
+You didn't deserve what happened, and I promise to do better. Please know that my love for you is endless, and I'm here for you always.
+
+You are my everything, and I love you more than words can express.
 
 With all my love,
-Your Special Someone 💕`,
-    author: 'Your Love',
+With love, Jan Dale D. Zarate`,
+    author: 'Jan Dale D. Zarate',
     date: 'January 27, 2026'
 };
 
@@ -123,7 +127,13 @@ function openLetter(letterId) {
     title.textContent = letter.title;
     date.textContent = letter.date;
     content.textContent = letter.content;
-    author.textContent = `With love, ${letter.author}`;
+        // Insert signature text and a signature image placeholder
+        author.innerHTML = `
+            <div class="letter-signature">
+                <p>With love, ${escapeHtml(letter.author)}</p>
+                <img src="assets/pictures/Jan%20Dale%20Zarate%20-%20%20Signature.png" alt="Signature image" class="signature-image" onerror="this.style.display='none'" />
+            </div>
+        `;
     
     // Show delete button only for non-welcome letters
     if (deleteBtn) {

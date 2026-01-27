@@ -1820,3 +1820,27 @@ img {
     }
 }
 
+/* Signature image styles for love letters modal */
+.letter-signature {
+    text-align: left;
+    margin-top: 1.5rem;
+}
+
+.letter-signature p {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.signature-image {
+    max-width: 240px;
+    width: 80%;
+    height: auto;
+    display: block;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+

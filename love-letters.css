@@ -316,7 +316,8 @@
     border-top: 2px solid #ffe4f1;
 }
 
-.letter-paper-footer p {
+.letter-paper-footer p,
+.letter-paper-footer .modal-author {
     font-size: 1.2rem;
     color: var(--primary-color);
     font-family: 'Dancing Script', cursive;

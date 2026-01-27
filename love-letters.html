@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="romantic-theme.css">
     <link rel="stylesheet" href="love-letters.css">
+
+        <!-- Favicons -->
+    <link rel="icon" href="assets/pictures/favicon_io-kr/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/pictures/favicon_io-kr/favicon-16x16.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="assets/pictures/favicon_io-kr/favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="assets/pictures/favicon_io-kr/apple-touch-icon.png">
 </head>
 <body class="romantic-theme">
     <!-- Navigation -->
@@ -85,7 +91,7 @@
                                 <textarea id="letterContent" rows="10" placeholder="Write your letter here... 💕" required></textarea>
                             </div>
                             <div class="form-group">
-                                <input type="text" id="letterAuthor" placeholder="From: Your Name" value="Your Love" required>
+                                <input type="text" id="letterAuthor" placeholder="From: Your Name" value="Jan Dale D. Zarate" required>
                             </div>
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-primary">
@@ -141,7 +147,7 @@
                     Letter content will appear here...
                 </div>
                 <div class="letter-paper-footer">
-                    <p id="modalLetterAuthor">From: Author</p>
+                    <div id="modalLetterAuthor" class="modal-author">From: Author</div>
                 </div>
                 <button class="btn-delete-letter" id="deleteLetterBtn" style="display: none;">
                     <i class="fas fa-trash"></i> Delete Letter
