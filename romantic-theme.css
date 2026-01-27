@@ -578,10 +578,25 @@ body.romantic-theme .letter-card:hover {
     overflow: hidden;
     border-radius: 12px;
     transition: var(--transition);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .bandit-card:hover .bandit-image {
     transform: scale(1.05);
+}
+
+.bandit-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.bandit-fallback {
+    width: 100%;
 }
 
 .bandit-info {
