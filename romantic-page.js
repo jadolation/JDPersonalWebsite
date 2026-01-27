@@ -1,5 +1,25 @@
 // Romantic page behaviors (no content swapping; stable page)
 
+// Set romantic favicon dynamically
+(function setRomanticFavicon() {
+    function updateLink(rel, href, sizes) {
+        let el = document.querySelector(`link[rel="${rel}"]${sizes ? `[sizes="${sizes}"]` : ''}`);
+        if (!el) {
+            el = document.createElement('link');
+            el.rel = rel;
+            if (sizes) el.setAttribute('sizes', sizes);
+            document.head.appendChild(el);
+        }
+        // Cache-bust so browsers pick up changes
+        el.href = href + '?v=' + Date.now();
+    }
+
+    updateLink('icon', 'assets/pictures/favicon_io-kr/favicon.ico');
+    updateLink('icon', 'assets/pictures/favicon_io-kr/favicon-16x16.png', '16x16');
+    updateLink('icon', 'assets/pictures/favicon_io-kr/favicon-32x32.png', '32x32');
+    updateLink('apple-touch-icon', 'assets/pictures/favicon_io-kr/apple-touch-icon.png');
+})();
+
 // AOS init (guarded)
 if (window.AOS && typeof window.AOS.init === 'function') {
     AOS.init({
@@ -91,18 +111,22 @@ if (window.innerWidth >= 768) {
     window.addEventListener('load', createParticles);
 }
 
-// Floating theme button becomes a page switcher (moon -> back to portfolio)
+// Floating theme/heart button becomes a page switcher (heart -> back to portfolio)
 const themeToggleBtn = document.createElement('button');
 themeToggleBtn.className = 'theme-toggle-btn';
 themeToggleBtn.setAttribute('aria-label', 'Back to portfolio');
 themeToggleBtn.innerHTML = '<i class="fas fa-moon theme-icon"></i>';
 document.body.appendChild(themeToggleBtn);
 
+// Make it visible immediately so it's present in the hero section
+themeToggleBtn.classList.add('visible');
+
+// Keep legacy scroll behavior too (keeps class in sync if other code toggles it)
 window.addEventListener('scroll', () => {
     if (window.scrollY > 300) {
         themeToggleBtn.classList.add('visible');
     } else {
-        themeToggleBtn.classList.remove('visible');
+        themeToggleBtn.classList.add('visible');
     }
 });
 
@@ -110,6 +134,25 @@ themeToggleBtn.addEventListener('click', () => {
     localStorage.setItem('portfolio-theme', 'techy');
     window.location.href = 'index.html';
 });
+
+// Ensure hero logo animations start when the logo becomes visible (similar to main page)
+(function enableHeroLogoAnimations() {
+    const heroLogo = document.querySelector('.hero-logo');
+    if (!heroLogo) return;
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    heroLogo.classList.remove('not-visible');
+                    observer.unobserve(heroLogo);
+                }
+            });
+        }, { threshold: 0.05 });
+        io.observe(heroLogo);
+    } else {
+        heroLogo.classList.remove('not-visible');
+    }
+})();
 
 // Valentine interaction
 const yesBtn = document.getElementById('valentineYes');

@@ -206,15 +206,19 @@ if (!forceTech && savedTheme === 'romantic') {
 }
 updateThemeIcon();
 
-document.body.appendChild(themeToggleBtn);
+    document.body.appendChild(themeToggleBtn);
 
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        themeToggleBtn.classList.add('visible');
-    } else {
-        themeToggleBtn.classList.remove('visible');
-    }
-});
+    // Make the toggle visible immediately so it's present in the hero section
+    themeToggleBtn.classList.add('visible');
+
+    // Keep legacy scroll behavior in sync (no-op since we force visible)
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            themeToggleBtn.classList.add('visible');
+        } else {
+            themeToggleBtn.classList.add('visible');
+        }
+    });
 
 themeToggleBtn.addEventListener('click', () => {
     localStorage.setItem('portfolio-theme', 'romantic');

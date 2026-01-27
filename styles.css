@@ -469,7 +469,9 @@ img {
 
 /* Hover/focus interaction: stronger scale and glow */
 .hero-logo-button:hover .hero-logo,
-.hero-logo-button:focus .hero-logo {
+.hero-logo-button:focus .hero-logo,
+.hero-logo-link:hover .hero-logo,
+.hero-logo-link:focus .hero-logo {
     transform: scale(1.06);
     filter: drop-shadow(0 0 80px rgba(0, 212, 255, 1)) drop-shadow(0 0 100px rgba(0,255,136,0.75));
     /* Hold the glow and pause sway while hovered/focused */
