@@ -186,20 +186,23 @@ if (window.innerWidth >= 768) {
 // Theme Toggle Button (replaces scroll-to-top)
 const themeToggleBtn = document.createElement('button');
 themeToggleBtn.className = 'theme-toggle-btn';
-themeToggleBtn.setAttribute('aria-label', 'Toggle theme');
+themeToggleBtn.setAttribute('aria-label', 'Open romantic page');
 
 function updateThemeIcon() {
-    const isRomantic = document.body.classList.contains('romantic-theme');
-    if (isRomantic) {
-        themeToggleBtn.innerHTML = '<i class="fas fa-moon theme-icon"></i>';
-    } else {
-        themeToggleBtn.innerHTML = '<i class="fas fa-heart theme-icon"></i>';
-    }
+    themeToggleBtn.innerHTML = '<i class="fas fa-heart theme-icon"></i>';
 }
 
 const savedTheme = localStorage.getItem('portfolio-theme');
-if (savedTheme === 'romantic') {
-    document.body.classList.add('romantic-theme');
+const urlParams = new URLSearchParams(window.location.search);
+const forceTech = urlParams.get('forceTech') === '1';
+
+if (forceTech) {
+    localStorage.setItem('portfolio-theme', 'techy');
+}
+
+if (!forceTech && savedTheme === 'romantic') {
+    // Dedicated romantic page keeps content stable across navigation.
+    window.location.replace('romantic.html');
 }
 updateThemeIcon();
 
@@ -214,27 +217,8 @@ window.addEventListener('scroll', () => {
 });
 
 themeToggleBtn.addEventListener('click', () => {
-    document.body.classList.toggle('romantic-theme');
-    const isRomantic = document.body.classList.contains('romantic-theme');
-    
-    localStorage.setItem('portfolio-theme', isRomantic ? 'romantic' : 'techy');
-    
-    updateThemeIcon();
-    applyContentTheme(isRomantic);
-    
-    const particles = document.querySelectorAll('.particle');
-    particles.forEach(particle => {
-        if (isRomantic) {
-            particle.style.background = `rgba(255, 107, 157, ${Math.random() * 0.5 + 0.2})`;
-        } else {
-            particle.style.background = `rgba(0, 212, 255, ${Math.random() * 0.5 + 0.2})`;
-        }
-    });
-    
-    themeToggleBtn.style.transform = 'scale(0.8)';
-    setTimeout(() => {
-        themeToggleBtn.style.transform = 'scale(1)';
-    }, 200);
+    localStorage.setItem('portfolio-theme', 'romantic');
+    window.location.href = 'romantic.html';
 });
 
 // Content Swapping Function
@@ -424,18 +408,7 @@ function restoreTechSkills() {
     }, 300);
 }
 
-// Apply theme on page load
-window.addEventListener('load', () => {
-    const savedTheme = localStorage.getItem('portfolio-theme');
-    const isRomantic = savedTheme === 'romantic';
-    
-    // Small delay to ensure content files are loaded
-    setTimeout(() => {
-        if (isRomantic) {
-            applyContentTheme(true);
-        }
-    }, 100);
-});
+// (Romantic mode now uses a dedicated page: romantic.html)
 
 // Project cards
 const projectCards = document.querySelectorAll('.project-card');

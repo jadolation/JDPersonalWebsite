@@ -224,3 +224,250 @@ body.romantic-theme .srv-link {
         transform: scale(1);
     }
 }
+
+/* Valentine Section Styles */
+.valentine-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #fff0f6 0%, #ffe4f1 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.valentine-section::before {
+    content: '💕';
+    position: absolute;
+    font-size: 15rem;
+    opacity: 0.05;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.valentine-title {
+    font-size: 3rem;
+    font-family: 'Dancing Script', cursive;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+}
+
+.valentine-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 60px;
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2);
+    position: relative;
+}
+
+.valentine-content::before {
+    content: '💝';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 4rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.valentine-message {
+    margin-bottom: 40px;
+}
+
+.valentine-text {
+    font-size: 1.2rem;
+    line-height: 2;
+    color: #555;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.valentine-question {
+    text-align: center;
+    margin: 50px 0 40px;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(255, 168, 211, 0.1));
+    border-radius: 20px;
+}
+
+.valentine-main-question {
+    font-size: 2.5rem;
+    font-family: 'Dancing Script', cursive;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.valentine-subtext {
+    font-size: 1.1rem;
+    color: #777;
+    font-style: italic;
+}
+
+.valentine-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.btn-valentine {
+    padding: 20px 40px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-yes {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.btn-yes:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+}
+
+.btn-yes i {
+    animation: heartbeat 1s infinite;
+}
+
+.btn-maybe {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-maybe:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-5px) scale(1.05);
+}
+
+.valentine-response {
+    margin-top: 40px;
+    text-align: center;
+    animation: slideUp 0.5s ease;
+}
+
+.valentine-celebration {
+    position: relative;
+    padding: 40px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(255, 168, 211, 0.15));
+    border-radius: 20px;
+}
+
+.celebration-heart {
+    position: absolute;
+    font-size: 3rem;
+    color: var(--primary-color);
+    animation: floatHearts 3s ease-in-out infinite;
+    opacity: 0.6;
+}
+
+.celebration-heart:nth-child(1) {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.celebration-heart:nth-child(2) {
+    top: 60%;
+    right: 15%;
+    animation-delay: 1s;
+}
+
+.celebration-heart:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 2s;
+}
+
+.valentine-response-text {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0);
+    }
+    50% {
+        transform: translateX(-50%) translateY(-20px);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatHearts {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .valentine-content {
+        padding: 40px 25px;
+    }
+    
+    .valentine-title {
+        font-size: 2rem;
+    }
+    
+    .valentine-main-question {
+        font-size: 1.8rem;
+    }
+    
+    .btn-valentine {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}
+
+/* Floating hearts (romantic page + valentine celebration) */
+.floating-heart {
+    position: fixed;
+    bottom: -40px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.9;
+    animation: floatUp 4s ease-in forwards;
+    filter: drop-shadow(0 6px 10px rgba(255, 107, 157, 0.25));
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
