@@ -475,7 +475,289 @@ body.romantic-theme .srv-link {
         transform: translateY(-20px) rotate(10deg);
     }
 }
+/* Love Letters Preview Section */
+.love-letters-preview {
+    padding: var(--section-padding);
+    background: var(--bg-primary);
+}
 
+.letters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.letter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+body.romantic-theme .letter-card {
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.1);
+    border: 1px solid rgba(255, 179, 217, 0.3);
+}
+
+body.romantic-theme .letter-card:hover {
+    box-shadow: 0 8px 30px rgba(255, 107, 157, 0.2);
+    transform: translateY(-5px);
+}
+
+.letter-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.letter-card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.letter-card-date {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.letter-card-preview {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.btn-read-letter {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--gradient-primary);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.btn-read-letter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 157, 0.3);
+}
+
+.letters-cta {
+    text-align: center;
+}
+
+/* Bandit Section */
+.bandit-section {
+    padding: var(--section-padding);
+    background: var(--bg-secondary);
+}
+
+.bandit-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.bandit-card {
+    text-align: center;
+}
+
+.bandit-card h3 {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.bandit-image {
+    overflow: hidden;
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.bandit-card:hover .bandit-image {
+    transform: scale(1.05);
+}
+
+.bandit-info {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.bandit-bio {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+body.romantic-theme .bandit-bio {
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.1);
+    border: 1px solid rgba(255, 179, 217, 0.3);
+}
+
+.bandit-bio h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.bandit-bio h3 i {
+    margin-right: 0.5rem;
+}
+
+.bandit-bio p {
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+    .letters-grid,
+    .bandit-gallery {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Confirmation Modal Styles */
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.confirm-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+}
+
+.confirm-modal-content {
+    position: relative;
+    z-index: 10001;
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(255, 107, 157, 0.3);
+    text-align: center;
+    animation: modalBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.confirm-modal-header {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: heartBreak 0.6s ease;
+}
+
+.confirm-modal-title {
+    font-size: 2rem;
+    font-family: 'Dancing Script', cursive;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.confirm-modal-text {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.confirm-modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-confirm-yes,
+.btn-confirm-no {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.btn-confirm-yes {
+    background: #ff6b9d;
+    color: white;
+}
+
+.btn-confirm-yes:hover {
+    background: #ff5288;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+}
+
+.btn-confirm-no {
+    background: white;
+    color: #ff6b9d;
+    border: 2px solid #ff6b9d;
+}
+
+.btn-confirm-no:hover {
+    background: #fff0f6;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes modalBounce {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes heartBreak {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-10deg);
+    }
+    75% {
+        transform: rotate(10deg);
+    }
+}
 @media (max-width: 768px) {
     .valentine-content {
         padding: 40px 25px;
