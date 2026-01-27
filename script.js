@@ -1,3 +1,7 @@
+// Load romantic content
+// Content is loaded from romantic-content.js via script tag
+// Access via window.romanticContent and window.techContent
+
 // AOS init
 AOS.init({
     duration: 1000,
@@ -179,54 +183,258 @@ if (window.innerWidth >= 768) {
     window.addEventListener('load', createParticles);
 }
 
-// Scroll-to-top button
-const scrollTopBtn = document.createElement('button');
-scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-scrollTopBtn.className = 'scroll-top-btn';
-scrollTopBtn.style.cssText = `
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #00d4ff, #0099ff);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 999;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-`;
+// Theme Toggle Button (replaces scroll-to-top)
+const themeToggleBtn = document.createElement('button');
+themeToggleBtn.className = 'theme-toggle-btn';
+themeToggleBtn.setAttribute('aria-label', 'Toggle theme');
 
-document.body.appendChild(scrollTopBtn);
+function updateThemeIcon() {
+    const isRomantic = document.body.classList.contains('romantic-theme');
+    if (isRomantic) {
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon theme-icon"></i>';
+    } else {
+        themeToggleBtn.innerHTML = '<i class="fas fa-heart theme-icon"></i>';
+    }
+}
+
+const savedTheme = localStorage.getItem('portfolio-theme');
+if (savedTheme === 'romantic') {
+    document.body.classList.add('romantic-theme');
+}
+updateThemeIcon();
+
+document.body.appendChild(themeToggleBtn);
 
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
-        scrollTopBtn.style.opacity = '1';
-        scrollTopBtn.style.visibility = 'visible';
+    if (window.scrollY > 300) {
+        themeToggleBtn.classList.add('visible');
     } else {
-        scrollTopBtn.style.opacity = '0';
-        scrollTopBtn.style.visibility = 'hidden';
+        themeToggleBtn.classList.remove('visible');
     }
 });
 
-scrollTopBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+themeToggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('romantic-theme');
+    const isRomantic = document.body.classList.contains('romantic-theme');
+    
+    localStorage.setItem('portfolio-theme', isRomantic ? 'romantic' : 'techy');
+    
+    updateThemeIcon();
+    applyContentTheme(isRomantic);
+    
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach(particle => {
+        if (isRomantic) {
+            particle.style.background = `rgba(255, 107, 157, ${Math.random() * 0.5 + 0.2})`;
+        } else {
+            particle.style.background = `rgba(0, 212, 255, ${Math.random() * 0.5 + 0.2})`;
+        }
     });
+    
+    themeToggleBtn.style.transform = 'scale(0.8)';
+    setTimeout(() => {
+        themeToggleBtn.style.transform = 'scale(1)';
+    }, 200);
 });
 
-scrollTopBtn.addEventListener('mouseenter', () => {
-    scrollTopBtn.style.transform = 'translateY(-5px)';
-});
+// Content Swapping Function
+function applyContentTheme(isRomantic) {
+    const content = isRomantic ? window.romanticContent : window.techContent;
+    
+    if (!content) return;
+    
+    // Helper function for smooth content transition
+    function setText(selector, text, useFade = true) {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        
+        if (useFade) {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                el.textContent = text;
+                el.style.opacity = '1';
+            }, 300);
+        } else {
+            el.textContent = text;
+        }
+    }
+    
+    function setHTML(selector, html, useFade = true) {
+        const el = document.querySelector(selector);
+        if (!el) return;
+        
+        if (useFade) {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                el.innerHTML = html;
+                el.style.opacity = '1';
+            }, 300);
+        } else {
+            el.innerHTML = html;
+        }
+    }
+    
+    // Update Hero Section
+    if (content.hero) {
+        setText('.hero-subtitle', content.hero.subtitle);
+        setText('.hero-title', content.hero.title);
+        
+        // Update typing phrases
+        if (content.hero.typing && window.phrases) {
+            window.phrases = content.hero.typing;
+        }
+        
+        // Update location
+        const locationEl = document.querySelector('.hero-location');
+        if (locationEl && content.hero.location) {
+            const icon = isRomantic ? '<i class="fas fa-heart"></i>' : '<i class="fas fa-map-marker-alt"></i>';
+            setHTML('.hero-location', `${icon} ${content.hero.location}`);
+        }
+        
+        // Update buttons
+        if (content.hero.buttons) {
+            const primaryBtn = document.querySelector('.hero-buttons .btn-primary');
+            const secondaryBtn = document.querySelector('.hero-buttons .btn-secondary');
+            
+            if (primaryBtn && content.hero.buttons.primary) {
+                if (isRomantic) {
+                    primaryBtn.textContent = content.hero.buttons.primary;
+                    primaryBtn.href = 'love-letters.html';
+                } else {
+                    primaryBtn.textContent = content.hero.buttons.primary;
+                    primaryBtn.href = '#contact';
+                }
+            }
+            
+            if (secondaryBtn && content.hero.buttons.secondary) {
+                setText('.hero-buttons .btn-secondary', content.hero.buttons.secondary, false);
+            }
+        }
+    }
+    
+    // Update NFT Badge
+    if (content.nftBadge) {
+        setText('.nft-badge-title', content.nftBadge.title);
+        setText('.nft-badge-status', content.nftBadge.status);
+    }
+    
+    // Update Skills Section (only title and subtitle, not the actual skills)
+    if (content.skills) {
+        setText('.skills .section-title', content.skills.title);
+        setText('.skills .section-subtitle', content.skills.subtitle);
+        
+        // If romantic theme has custom skills categories, render them
+        if (isRomantic && content.skills.categories && content.skills.categories.length > 0) {
+            renderRomanticSkills(content.skills.categories);
+        } else if (!isRomantic) {
+            restoreTechSkills();
+        }
+    }
+    
+    // Update Projects Section
+    if (content.projects) {
+        setText('.projects .section-title', content.projects.title);
+        setText('.projects .section-subtitle', content.projects.subtitle);
+        setText('.projects-automation-note p', content.projects.note);
+    }
+    
+    // Update Contact Section
+    if (content.contact) {
+        setText('.contact .section-title', content.contact.title);
+        setText('.contact .section-subtitle', content.contact.subtitle);
+        
+        // Update form placeholders
+        if (content.contact.form) {
+            const nameInput = document.querySelector('.contact-form input[type="text"]');
+            const emailInput = document.querySelector('.contact-form input[type="email"]');
+            const subjectInput = document.querySelector('.contact-form input[placeholder*="Subject"]');
+            const messageTextarea = document.querySelector('.contact-form textarea');
+            const submitBtn = document.querySelector('.contact-form .btn');
+            
+            if (nameInput && content.contact.form.namePlaceholder) {
+                nameInput.placeholder = content.contact.form.namePlaceholder;
+            }
+            if (emailInput && content.contact.form.emailPlaceholder) {
+                emailInput.placeholder = content.contact.form.emailPlaceholder;
+            }
+            if (subjectInput && content.contact.form.subjectPlaceholder) {
+                subjectInput.placeholder = content.contact.form.subjectPlaceholder;
+            }
+            if (messageTextarea && content.contact.form.messagePlaceholder) {
+                messageTextarea.placeholder = content.contact.form.messagePlaceholder;
+            }
+            if (submitBtn && content.contact.form.button) {
+                submitBtn.textContent = content.contact.form.button;
+            }
+        }
+    }
+    
+    // Update Footer
+    if (content.footer && content.footer.text) {
+        setText('.footer-content p', content.footer.text);
+    }
+}
 
-scrollTopBtn.addEventListener('mouseleave', () => {
-    scrollTopBtn.style.transform = 'translateY(0)';
+// Store original skills HTML for restoration
+let originalSkillsHTML = '';
+
+function renderRomanticSkills(categories) {
+    const skillsGrid = document.querySelector('.skills-grid');
+    if (!skillsGrid) return;
+    
+    // Save original HTML if not saved
+    if (!originalSkillsHTML) {
+        originalSkillsHTML = skillsGrid.innerHTML;
+    }
+    
+    skillsGrid.style.opacity = '0';
+    
+    setTimeout(() => {
+        skillsGrid.innerHTML = categories.map(category => `
+            <div class="skill-category">
+                <h3><i class="${category.icon}"></i> ${category.title}</h3>
+                <div class="skill-items">
+                    ${category.items.map(item => `
+                        <div class="skill-item">
+                            <div class="skill-icon">${item.icon}</div>
+                            <span>${item.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('');
+        
+        skillsGrid.style.opacity = '1';
+    }, 300);
+}
+
+function restoreTechSkills() {
+    const skillsGrid = document.querySelector('.skills-grid');
+    if (!skillsGrid || !originalSkillsHTML) return;
+    
+    skillsGrid.style.opacity = '0';
+    
+    setTimeout(() => {
+        skillsGrid.innerHTML = originalSkillsHTML;
+        skillsGrid.style.opacity = '1';
+    }, 300);
+}
+
+// Apply theme on page load
+window.addEventListener('load', () => {
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    const isRomantic = savedTheme === 'romantic';
+    
+    // Small delay to ensure content files are loaded
+    setTimeout(() => {
+        if (isRomantic) {
+            applyContentTheme(true);
+        }
+    }, 100);
 });
 
 // Project cards
@@ -483,8 +691,20 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
             const repoUrl = escapeHtml(repo.url);
             const repoDesc = escapeHtml(repo.description || 'No description provided.');
             const repoLang = repo.language ? escapeHtml(repo.language) : '';
-            const homepageUrl = repo.homepage ? escapeHtml(repo.homepage) : '';
+            let homepageUrl = repo.homepage ? escapeHtml(repo.homepage) : '';
             const imgUrl = githubOgImage(repo.url, repo.name);
+            
+            const isPersonalWebsite = repo.name === 'JDPersonalWebsite';
+            const isNFTProject = repo.name.toLowerCase().includes('nft') || repo.name === 'my_coin_template';
+            const suiscanUrl = 'https://suiscan.xyz/testnet/object/0x53a570961334e517cfef15e703ef300e6d59da322eaa6bd4763d19e329b8a52c/tx-blocks';
+            
+            if (isNFTProject && !homepageUrl) {
+                homepageUrl = suiscanUrl;
+            }
+            
+            const specialNote = isPersonalWebsite 
+                ? '<div class="project-special-note"><i class="fas fa-info-circle"></i> You are currently viewing this project!</div>' 
+                : '';
 
             return `
             <div class="project-card" data-aos="fade-up" data-aos-delay="${100 + (idx * 100)}">
@@ -498,9 +718,10 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
                         onerror="this.onerror=null;this.src='${fallbackImageUrl}';"
                     >
                     <div class="project-overlay">
+                        ${specialNote}
                         <div class="project-links">
                             <a href="${repoUrl}" target="_blank" rel="noopener" class="project-link" aria-label="View ${repoName} on GitHub"><i class="fab fa-github"></i></a>
-                            ${homepageUrl ? `<a href="${homepageUrl}" target="_blank" rel="noopener" class="project-link" aria-label="Open ${repoName} demo"><i class="fas fa-external-link-alt"></i></a>` : ''}
+                            ${homepageUrl ? `<a href="${homepageUrl}" target="_blank" rel="noopener" class="project-link" aria-label="${isNFTProject ? 'View NFT certificate on SuiScan' : 'Open ' + repoName + ' demo'}"><i class="fas fa-external-link-alt"></i></a>` : ''}
                         </div>
                     </div>
                 </div>

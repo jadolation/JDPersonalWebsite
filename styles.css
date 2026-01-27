@@ -37,6 +37,58 @@
     --transition: all 0.3s ease;
 }
 
+body.romantic-theme {
+    --primary-color: #ff6b9d;
+    --secondary-color: #ff8fab;
+    --accent-color: #ffd6e8;
+    --bg-primary: #fff0f6;
+    --bg-secondary: #ffe4f1;
+    --bg-card: #ffffff;
+    --text-primary: #4a1942;
+    --text-secondary: #8b5f83;
+    --border-color: #ffb3d9;
+    
+    --srv-yellow: #ff85c0;
+    --srv-yellow-light: #ffa8d3;
+    --srv-yellow-dark: #ff6baf;
+    --srv-blue: #ff8fab;
+    --srv-gradient: linear-gradient(135deg, #ff85c0, #ff8fab);
+    --srv-glow: 0 0 20px rgba(255, 107, 157, 0.3);
+    
+    --gradient-primary: linear-gradient(135deg, #ff6b9d, #ff8fab, #ffa8d3);
+    --gradient-accent: linear-gradient(135deg, #ffd6e8, #ff6b9d);
+    
+    --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.15);
+    --shadow-md: 0 4px 16px rgba(255, 107, 157, 0.2);
+    --shadow-lg: 0 8px 32px rgba(255, 107, 157, 0.25);
+    --shadow-glow: 0 0 20px rgba(255, 107, 157, 0.4);
+}
+
+body.romantic-theme::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 107, 157, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 192, 203, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.romantic-theme .hero,
+body.romantic-theme .about,
+body.romantic-theme .skills,
+body.romantic-theme .srv-section,
+body.romantic-theme .projects,
+body.romantic-theme .contact {
+    position: relative;
+    z-index: 1;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -943,10 +995,34 @@ img {
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     opacity: 0;
     transition: var(--transition);
+}
+
+.project-special-note {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 212, 255, 0.15);
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.project-special-note i {
+    font-size: 1rem;
 }
 
 .project-card:hover .project-overlay {
@@ -1281,6 +1357,21 @@ img {
     .hero .container {
         gap: 1.2rem;
     }
+}
+
+/* Content fade transitions for theme switching */
+.hero-title,
+.hero-subtitle,
+.hero-location,
+.section-title,
+.section-subtitle,
+.nft-badge-title,
+.nft-badge-status {
+    transition: opacity 0.3s ease;
+}
+
+.skills-grid {
+    transition: opacity 0.3s ease;
 }
 
  /* SRV */
