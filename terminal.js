@@ -38,7 +38,13 @@ class InteractiveTerminal {
 
     init() {
         this.input.addEventListener('keydown', this.handleKeyDown.bind(this));
-        this.input.focus();
+
+        // Only autofocus if the URL hash is #terminal (user explicitly navigated)
+        // or if the terminal is visible in the current viewport.
+        const shouldAutoFocus = window.location.hash === '#terminal' || this.isElementInViewport(this.container);
+        if (shouldAutoFocus) {
+            this.input.focus();
+        }
         
         // Show welcome message
         this.showWelcome();
@@ -117,6 +123,18 @@ class InteractiveTerminal {
         } else if (matches.length > 1) {
             this.addLine(`<span class="terminal-text info">${matches.join('  ')}</span>`);
         }
+    }
+
+    // Check if an element is currently visible in the viewport
+    isElementInViewport(el) {
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     }
 
     // Dynamic content extractors
