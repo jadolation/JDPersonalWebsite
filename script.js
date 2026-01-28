@@ -110,6 +110,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
+        // Set active class immediately for visual feedback (underline)
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        if (this.classList.contains('nav-link')) {
+            this.classList.add('active');
+        }
         if (target) {
             target.scrollIntoView({
                 behavior: 'smooth',

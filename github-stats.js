@@ -108,8 +108,62 @@ class GitHubStats {
         return repos.reduce((total, repo) => total + repo.stargazers_count, 0);
     }
 
-    // Calculate language statistics
-    calculateLanguageStats(repos) {
+    // Calculate language statistics from actual repo language data
+    async calculateLanguageStats(repos) {
+        const languageBytes = {};
+        
+        // Fetch language data for each repo (up to 20 repos to avoid rate limits)
+        const reposToCheck = repos.slice(0, 20);
+        
+        for (const repo of reposToCheck) {
+            try {
+                // Use cached languages if available
+                const cacheKey = `lang_${repo.full_name}`;
+                let repoLanguages = this.cache?.[cacheKey];
+                
+                if (!repoLanguages) {
+                    const response = await fetch(`${this.apiBase}/repos/${repo.full_name}/languages`);
+                    if (response.ok) {
+                        repoLanguages = await response.json();
+                        // Cache individual repo languages
+                        if (this.cache) {
+                            this.cache[cacheKey] = repoLanguages;
+                        }
+                    }
+                }
+                
+                if (repoLanguages) {
+                    // Add bytes for each language
+                    Object.entries(repoLanguages).forEach(([lang, bytes]) => {
+                        languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
+                    });
+                }
+            } catch (error) {
+                console.warn(`Failed to fetch languages for ${repo.full_name}:`, error);
+            }
+        }
+
+        // Convert to percentage based on actual code bytes
+        const totalBytes = Object.values(languageBytes).reduce((sum, bytes) => sum + bytes, 0);
+        
+        if (totalBytes === 0) {
+            // Fallback to simple repo count if API calls fail
+            return this.calculateLanguageStatsFallback(repos);
+        }
+        
+        const languageStats = Object.entries(languageBytes)
+            .map(([name, bytes]) => ({
+                name,
+                percentage: ((bytes / totalBytes) * 100).toFixed(1)
+            }))
+            .sort((a, b) => b.percentage - a.percentage)
+            .slice(0, 5); // Top 5 languages
+
+        return languageStats;
+    }
+
+    // Fallback language calculation (counts repos per language)
+    calculateLanguageStatsFallback(repos) {
         const languages = {};
         
         repos.forEach(repo => {
@@ -118,7 +172,6 @@ class GitHubStats {
             }
         });
 
-        // Convert to percentage
         const total = Object.values(languages).reduce((sum, count) => sum + count, 0);
         const languageStats = Object.entries(languages)
             .map(([name, count]) => ({
@@ -126,7 +179,7 @@ class GitHubStats {
                 percentage: ((count / total) * 100).toFixed(1)
             }))
             .sort((a, b) => b.percentage - a.percentage)
-            .slice(0, 5); // Top 5 languages
+            .slice(0, 5);
 
         return languageStats;
     }
@@ -204,7 +257,7 @@ class GitHubStats {
     }
 
     // Update DOM with stats
-    updateStatsDisplay(userData, repos, activity) {
+    async updateStatsDisplay(userData, repos, activity) {
         // Update stat cards
         document.getElementById('github-repos').textContent = userData.public_repos;
         document.getElementById('github-followers').textContent = userData.followers;
@@ -219,8 +272,8 @@ class GitHubStats {
         // Update activity
         this.updateActivityDisplay(activity);
 
-        // Update language stats
-        this.updateLanguageStats(repos);
+        // Update language stats (async - fetches additional data)
+        await this.updateLanguageStats(repos);
     }
 
     // Update activity display
@@ -229,6 +282,15 @@ class GitHubStats {
         if (!activityList) return;
 
         const formattedActivity = this.formatActivity(events);
+        
+        if (formattedActivity.length === 0) {
+            activityList.innerHTML = `
+                <li class="activity-item">
+                    <span class="terminal-text">No recent public activity found.</span>
+                </li>
+            `;
+            return;
+        }
         
         activityList.innerHTML = formattedActivity.map(item => `
             <li class="activity-item">
@@ -246,11 +308,11 @@ class GitHubStats {
     }
 
     // Update language stats
-    updateLanguageStats(repos) {
+    async updateLanguageStats(repos) {
         const languageContainer = document.getElementById('language-bars');
         if (!languageContainer) return;
 
-        const languageStats = this.calculateLanguageStats(repos);
+        const languageStats = await this.calculateLanguageStats(repos);
         
         languageContainer.innerHTML = languageStats.map(lang => `
             <div class="language-bar">
@@ -306,7 +368,7 @@ class GitHubStats {
             // If we have valid cache, use it immediately and update in background
             if (this.cache) {
                 console.log('Displaying cached GitHub stats...');
-                this.updateStatsDisplay(
+                await this.updateStatsDisplay(
                     this.cache.userData,
                     this.cache.repos,
                     this.cache.activity
@@ -325,14 +387,14 @@ class GitHubStats {
             this.saveCache({ userData, repos, activity });
 
             // Update display
-            this.updateStatsDisplay(userData, repos, activity);
+            await this.updateStatsDisplay(userData, repos, activity);
 
         } catch (error) {
             console.error('GitHub Stats Error:', error);
             
             // If we have cache, use it
             if (this.cache) {
-                this.updateStatsDisplay(
+                await this.updateStatsDisplay(
                     this.cache.userData,
                     this.cache.repos,
                     this.cache.activity
@@ -342,6 +404,13 @@ class GitHubStats {
             this.showError(error.message);
         }
     }
+
+    // Clear cache and reload data (useful for debugging)
+    clearCache() {
+        localStorage.removeItem('github_stats_cache');
+        console.log('GitHub stats cache cleared');
+        this.cache = null;
+    }
 }
 
 // Initialize GitHub stats when DOM is loaded
@@ -350,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const githubUsername = 'jadolation';
     
     if (document.querySelector('.github-stats')) {
-        const stats = new GitHubStats(githubUsername);
-        stats.init();
+        window.githubStats = new GitHubStats(githubUsername);
+        window.githubStats.init();
     }
 });

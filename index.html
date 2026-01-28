@@ -44,11 +44,11 @@
                         <i class="fas fa-heart"></i> Love Letters
                     </a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#srv" class="nav-link srv-link">SRV</a></li>
                     <li><a href="#terminal" class="nav-link"><i class="fas fa-terminal"></i> Terminal</a></li>
                     <li><a href="#skills" class="nav-link">Skills</a></li>
-                    <li><a href="#github-stats" class="nav-link"><i class="fab fa-github"></i> GitHub</a></li>
-                    <li><a href="#srv" class="nav-link srv-link">SRV</a></li>
                     <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#github-stats" class="nav-link"><i class="fab fa-github"></i> GitHub</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
             </div>
@@ -173,7 +173,50 @@
         </div>
     </section>
 
-  
+    <!-- SRV Startup Section -->
+    <section id="srv" class="srv-section">
+        <div class="container">
+            <div class="srv-header" data-aos="fade-up">
+                <div class="srv-logo-placeholder">
+                    <img src="assets/pictures/srv-logo.png" alt="SRV Logo" class="srv-logo">
+                </div>
+                <h2 class="section-title srv-title">SRV: Serbisyo, Rito, Valid</h2>
+                <p class="srv-tagline">Your Local Service Connection in Baguio</p>
+            </div>
+
+            <div class="srv-content">
+                <!-- Consolidated Summary -->
+                <div class="srv-card srv-summary" data-aos="fade-up" data-aos-delay="100">
+                    <p class="srv-intro">
+                        <strong>SRV (Serbisyo, Rito, Valid)</strong> is a blockchain-powered marketplace connecting clients with local freelance service providers in Baguio City. 
+                        Developed by <strong>SRV Digital Solutions Co.</strong>, the platform features service discovery, provider profiles, booking systems, and a unique vouching mechanism where users stake coins to build provider trust.
+                    </p>
+                    <div class="srv-highlights">
+                        <div class="srv-highlight-item">
+                            <i class="fas fa-link"></i>
+                            <span><strong>Blockchain Trust:</strong> Staking-based vouching system with smart contracts</span>
+                        </div>
+                        <div class="srv-highlight-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span><strong>Categories:</strong> Home repairs, auto services, tech support, cleaning, beauty, delivery, tutoring</span>
+                        </div>
+                        <div class="srv-highlight-item">
+                            <i class="fas fa-wallet"></i>
+                            <span><strong>Payments:</strong> Cash & GCash with blockchain integration on test networks</span>
+                        </div>
+                        <div class="srv-highlight-item">
+                            <i class="fas fa-rocket"></i>
+                            <span><strong>Status:</strong> Currently in development, preparing for Baguio market launch</span>
+                        </div>
+                    </div>
+                    <div class="srv-cta">
+                        <a href="https://srvpinoy.com/" class="btn btn-srv" target="_blank" rel="noopener noreferrer">Learn More About SRV <i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Interactive Terminal Section -->
     <section class="terminal-section" id="terminal">
@@ -223,50 +266,6 @@
                     <button class="terminal-chip" data-command="clear">
                         <i class="fas fa-trash"></i> clear
                     </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SRV Startup Section -->
-    <section id="srv" class="srv-section">
-        <div class="container">
-            <div class="srv-header" data-aos="fade-up">
-                <div class="srv-logo-placeholder">
-                    <img src="assets/pictures/srv-logo.png" alt="SRV Logo" class="srv-logo">
-                </div>
-                <h2 class="section-title srv-title">SRV: Serbisyo, Rito, Valid</h2>
-                <p class="srv-tagline">Your Local Service Connection in Baguio</p>
-            </div>
-
-            <div class="srv-content">
-                <!-- Consolidated Summary -->
-                <div class="srv-card srv-summary" data-aos="fade-up" data-aos-delay="100">
-                    <p class="srv-intro">
-                        <strong>SRV (Serbisyo, Rito, Valid)</strong> is a blockchain-powered marketplace connecting clients with local freelance service providers in Baguio City. 
-                        Developed by <strong>SRV Digital Solutions Co.</strong>, the platform features service discovery, provider profiles, booking systems, and a unique vouching mechanism where users stake coins to build provider trust.
-                    </p>
-                    <div class="srv-highlights">
-                        <div class="srv-highlight-item">
-                            <i class="fas fa-link"></i>
-                            <span><strong>Blockchain Trust:</strong> Staking-based vouching system with smart contracts</span>
-                        </div>
-                        <div class="srv-highlight-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span><strong>Categories:</strong> Home repairs, auto services, tech support, cleaning, beauty, delivery, tutoring</span>
-                        </div>
-                        <div class="srv-highlight-item">
-                            <i class="fas fa-wallet"></i>
-                            <span><strong>Payments:</strong> Cash & GCash with blockchain integration on test networks</span>
-                        </div>
-                        <div class="srv-highlight-item">
-                            <i class="fas fa-rocket"></i>
-                            <span><strong>Status:</strong> Currently in development, preparing for Baguio market launch</span>
-                        </div>
-                    </div>
-                    <div class="srv-cta">
-                        <a href="https://srvpinoy.com/" class="btn btn-srv" target="_blank" rel="noopener noreferrer">Learn More About SRV <i class="fas fa-external-link-alt"></i></a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -510,6 +509,9 @@
             </h2>
             <p class="section-subtitle" data-aos="fade-up">
                 Real-time stats from my GitHub profile
+                <button onclick="if(window.githubStats){window.githubStats.clearCache();location.reload();}" style="margin-left: 15px; padding: 5px 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 5px; cursor: pointer; font-size: 0.8rem;">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
             </p>
 
             <!-- Stats Grid -->

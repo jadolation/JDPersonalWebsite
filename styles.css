@@ -279,6 +279,20 @@ img {
     width: 100%;
 }
 
+/* Make underline appear when link receives focus or is active via click */
+.nav-link:focus,
+.nav-link:focus-visible,
+.nav-link:active {
+    color: var(--text-primary);
+    outline: none;
+}
+
+.nav-link:focus::after,
+.nav-link:focus-visible::after,
+.nav-link:active::after {
+    width: 100%;
+}
+
 .nav-toggle {
     display: none;
     flex-direction: column;
