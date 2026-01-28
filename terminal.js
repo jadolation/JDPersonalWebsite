@@ -1,4 +1,4 @@
-// Interactive Terminal
+// Interactive Terminal with Dynamic Content Extraction
 class InteractiveTerminal {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
@@ -23,10 +23,14 @@ class InteractiveTerminal {
             github: this.githubCommand.bind(this),
             linkedin: this.linkedinCommand.bind(this),
             ls: this.lsCommand.bind(this),
+            pwd: this.pwdCommand.bind(this),
+            cd: this.cdCommand.bind(this),
+            cat: this.catCommand.bind(this),
             whoami: this.whoamiCommand.bind(this),
             date: this.dateCommand.bind(this),
             echo: this.echoCommand.bind(this),
             sudo: this.sudoCommand.bind(this),
+            history: this.historyCommand.bind(this),
         };
 
         this.init();
@@ -90,12 +94,13 @@ class InteractiveTerminal {
         const [command, ...args] = input.split(' ');
         
         // Show command in output
-        this.addLine(`<span class="terminal-prompt">guest@jd-portfolio:${this.currentPath}$</span> <span class="terminal-command">${input}</span>`);
+        const promptPath = this.currentPath === '~' ? '~' : `~/${this.currentPath}`;
+        this.addLine(`<span class="terminal-prompt">guest@jd-portfolio:${promptPath}$</span> <span class="terminal-command">${input}</span>`);
 
         if (this.commands[command.toLowerCase()]) {
             this.commands[command.toLowerCase()](args);
         } else if (command) {
-            this.addLine(`<span class="terminal-text error">Command not found: ${command}</span>`);
+            this.addLine(`<span class="terminal-text error">bash: ${command}: command not found</span>`);
             this.addLine(`<span class="terminal-text">Type 'help' for available commands.</span>`);
         }
 
@@ -114,6 +119,136 @@ class InteractiveTerminal {
         }
     }
 
+    // Dynamic content extractors
+    extractAboutContent() {
+        const aboutSection = document.querySelector('#about .about-text');
+        if (!aboutSection) return 'About section not found.';
+        
+        const name = aboutSection.querySelector('h3')?.textContent.trim() || 'Jan Dale Zarate';
+        const paragraphs = Array.from(aboutSection.querySelectorAll('p'))
+            .map(p => p.textContent.trim())
+            .filter(text => text.length > 0);
+        
+        let lines = [];
+        lines.push('<span class="terminal-text info">════════════════════════════════════════════════════════</span>');
+        lines.push(`<span class="terminal-text success">${name}</span>`);
+        lines.push('<span class="terminal-text info">════════════════════════════════════════════════════════</span>');
+        lines.push('');
+        
+        paragraphs.forEach(para => {
+            const textLines = para.match(/.{1,60}(\s|$)/g) || [para];
+            textLines.forEach(line => {
+                lines.push(`<span class="terminal-text">${line.trim()}</span>`);
+            });
+            lines.push('');
+        });
+        
+        return lines;
+    }
+
+    extractSkillsContent() {
+        const skillsSection = document.querySelector('#skills');
+        if (!skillsSection) return ['Skills section not found.'];
+        
+        let lines = [];
+        lines.push('<span class="terminal-text success">Technical Skills:</span>');
+        lines.push('');
+        
+        const categories = skillsSection.querySelectorAll('.skill-category');
+        categories.forEach(category => {
+            const title = category.querySelector('h3')?.textContent.trim() || '';
+            const skills = Array.from(category.querySelectorAll('.skill-item span'))
+                .map(s => s.textContent.trim());
+            
+            if (title && skills.length > 0) {
+                lines.push(`<span class="terminal-text warning">${title}</span>`);
+                skills.forEach(skill => {
+                    lines.push(`<span class="terminal-text">   • ${skill}</span>`);
+                });
+                lines.push('');
+            }
+        });
+        
+        lines.push('<span class="terminal-text info">Navigate to #skills section for detailed proficiency levels</span>');
+        return lines;
+    }
+
+    extractProjectsContent() {
+        const projectsSection = document.querySelector('#projects');
+        if (!projectsSection) return ['Projects section not found.'];
+        
+        let lines = [];
+        lines.push('<span class="terminal-text success">Featured Projects:</span>');
+        lines.push('');
+        
+        const projectCards = projectsSection.querySelectorAll('.project-card');
+        projectCards.forEach((card, index) => {
+            const title = card.querySelector('.project-title')?.textContent.trim() || `Project ${index + 1}`;
+            const description = card.querySelector('.project-description')?.textContent.trim() || '';
+            const tags = Array.from(card.querySelectorAll('.project-tag'))
+                .map(tag => tag.textContent.trim());
+            
+            lines.push(`<span class="terminal-text warning">${index + 1}. ${title}</span>`);
+            if (description) {
+                const descLines = description.match(/.{1,60}(\s|$)/g) || [description];
+                descLines.forEach(line => {
+                    lines.push(`<span class="terminal-text">   ${line.trim()}</span>`);
+                });
+            }
+            if (tags.length > 0) {
+                lines.push(`<span class="terminal-text">   Tech: ${tags.join(', ')}</span>`);
+            }
+            lines.push('');
+        });
+        
+        lines.push('<span class="terminal-text info">Scroll to #projects section to see all project details</span>');
+        return lines;
+    }
+
+    extractContactContent() {
+        const contactSection = document.querySelector('#contact');
+        if (!contactSection) return ['Contact section not found.'];
+        
+        let lines = [];
+        lines.push('<span class="terminal-text success">Contact Information:</span>');
+        lines.push('');
+        
+        const contactItems = contactSection.querySelectorAll('.contact-item');
+        contactItems.forEach(item => {
+            const icon = item.querySelector('i')?.className || '';
+            const title = item.querySelector('h3')?.textContent.trim() || '';
+            const text = item.querySelector('p, a')?.textContent.trim() || '';
+            
+            if (title && text) {
+                const emoji = icon.includes('envelope') ? '📧' : 
+                             icon.includes('phone') ? '📱' : 
+                             icon.includes('location') ? '📍' : '•';
+                lines.push(`<span class="terminal-text">${emoji} ${title}: ${text}</span>`);
+            }
+        });
+        
+        // Add social links
+        const socialLinks = document.querySelectorAll('.social-links a');
+        if (socialLinks.length > 0) {
+            lines.push('');
+            lines.push('<span class="terminal-text">Social Links:</span>');
+            socialLinks.forEach(link => {
+                const icon = link.querySelector('i')?.className || '';
+                const platform = icon.includes('github') ? '🐙 GitHub' :
+                                icon.includes('linkedin') ? '💼 LinkedIn' :
+                                icon.includes('facebook') ? '📘 Facebook' :
+                                icon.includes('twitter') ? '🐦 Twitter' :
+                                icon.includes('instagram') ? '📸 Instagram' : '🔗 Link';
+                lines.push(`<span class="terminal-text">  ${platform}: ${link.href}</span>`);
+            });
+        }
+        
+        lines.push('');
+        lines.push('<span class="terminal-text info">Type \'email\' to send me an email</span>');
+        lines.push('<span class="terminal-text info">Navigate to #contact section to use contact form</span>');
+        return lines;
+    }
+
     showWelcome() {
         const ascii = `
      ___  ____     ____             __  ____      ___      
@@ -125,91 +260,152 @@ class InteractiveTerminal {
         
         this.addLine(`<span class="terminal-welcome ascii-art">${ascii}</span>`);
         this.addLine(`<span class="terminal-welcome">Welcome to Jan Dale's Interactive Portfolio Terminal!</span>`);
-        this.addLine(`<span class="terminal-text info">Type 'help' to see available commands, or use the quick commands below.</span>`);
+        this.addLine(`<span class="terminal-text info">Type 'help' to see available commands, or 'ls' to list sections.</span>`);
         this.addLine('');
     }
 
     helpCommand() {
         this.addLine('<span class="terminal-help-title">Available Commands:</span>');
         this.addLine('<div class="terminal-command-list">');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">help</span><span class="terminal-command-desc">Show this help message</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">about</span><span class="terminal-command-desc">Learn about me</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">skills</span><span class="terminal-command-desc">View my technical skills</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">projects</span><span class="terminal-command-desc">See my projects</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">Navigation</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">ls</span><span class="terminal-command-desc">List available sections</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">cd &lt;section&gt;</span><span class="terminal-command-desc">Navigate to a section (home, about, skills, projects, contact)</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">pwd</span><span class="terminal-command-desc">Print current location</span></div>');
+        this.addLine('');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">Information</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">cat &lt;section&gt;</span><span class="terminal-command-desc">Display section content (about, skills, projects, contact)</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">about</span><span class="terminal-command-desc">Learn about me (alias for \'cat about\')</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">skills</span><span class="terminal-command-desc">View technical skills (alias for \'cat skills\')</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">projects</span><span class="terminal-command-desc">See projects (alias for \'cat projects\')</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">contact</span><span class="terminal-command-desc">Get contact info (alias for \'cat contact\')</span></div>');
         this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">srv</span><span class="terminal-command-desc">Learn about SRV startup</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">contact</span><span class="terminal-command-desc">Get my contact information</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">social</span><span class="terminal-command-desc">View my social media links</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">cv/resume</span><span class="terminal-command-desc">Download my CV</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">email</span><span class="terminal-command-desc">Send me an email</span></div>');
+        this.addLine('');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">Utility</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">clear</span><span class="terminal-command-desc">Clear the terminal screen</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">help</span><span class="terminal-command-desc">Show this help message</span></div>');
         this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">whoami</span><span class="terminal-command-desc">Display current user</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">ls</span><span class="terminal-command-desc">List sections</span></div>');
-        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">clear</span><span class="terminal-command-desc">Clear the terminal</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">date</span><span class="terminal-command-desc">Show current date and time</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">echo &lt;text&gt;</span><span class="terminal-command-desc">Print a message</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">history</span><span class="terminal-command-desc">Show command history</span></div>');
+        this.addLine('');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">Quick Actions</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">social</span><span class="terminal-command-desc">View social media links</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">cv/resume</span><span class="terminal-command-desc">Download CV</span></div>');
+        this.addLine('  <div class="terminal-command-item"><span class="terminal-command-name">email</span><span class="terminal-command-desc">Send me an email</span></div>');
         this.addLine('</div>');
+        this.addLine('');
+        this.addLine('<span class="terminal-text info">Examples:</span>');
+        this.addLine('<span class="terminal-text">  cd about       - Navigate to about section</span>');
+        this.addLine('<span class="terminal-text">  cat skills     - Display skills content</span>');
+        this.addLine('<span class="terminal-text">  cd romantic.html - Navigate to romantic page</span>');
     }
 
+    // ls command - list sections
+    lsCommand() {
+        this.addLine('<span class="terminal-text">Available sections:</span>');
+        this.addLine('<span class="terminal-text">  home/          - Hero/Landing section</span>');
+        this.addLine('<span class="terminal-text">  about/         - About me</span>');
+        this.addLine('<span class="terminal-text">  skills/        - Technical skills</span>');
+        this.addLine('<span class="terminal-text">  projects/      - My projects</span>');
+        this.addLine('<span class="terminal-text">  srv/           - SRV startup info</span>');
+        this.addLine('<span class="terminal-text">  contact/       - Contact information</span>');
+        this.addLine('<span class="terminal-text">  terminal/      - This terminal</span>');
+        this.addLine('');
+        this.addLine('<span class="terminal-text">Files:</span>');
+        this.addLine('<span class="terminal-text">  romantic.html  - Special romantic page</span>');
+        this.addLine('');
+        this.addLine('<span class="terminal-text info">Use \'cd &lt;section&gt;\' to navigate or \'cat &lt;section&gt;\' to view content.</span>');
+    }
+
+    // pwd command - print working directory
+    pwdCommand() {
+        const path = this.currentPath === '~' ? '/portfolio' : `/portfolio/${this.currentPath}`;
+        this.addLine(`<span class="terminal-text">${path}</span>`);
+    }
+
+    // cd command - change directory/navigate
+    cdCommand(args) {
+        if (args.length === 0 || args[0] === '~') {
+            this.currentPath = '~';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            this.addLine('<span class="terminal-text success">Navigated to home</span>');
+            return;
+        }
+        
+        const target = args[0].toLowerCase().replace('.html', '').replace('/', '');
+        
+        // Check for page navigation
+        if (target === 'romantic') {
+            this.addLine('<span class="terminal-text success">Navigating to romantic.html...</span>');
+            setTimeout(() => {
+                window.location.href = 'romantic.html';
+            }, 500);
+            return;
+        }
+        
+        // Check for section navigation
+        const section = document.getElementById(target);
+        if (section) {
+            this.currentPath = target;
+            section.scrollIntoView({ behavior: 'smooth' });
+            this.addLine(`<span class="terminal-text success">Navigated to ${target} section</span>`);
+        } else {
+            this.addLine(`<span class="terminal-text error">cd: ${args[0]}: No such section or page</span>`);
+            this.addLine(`<span class="terminal-text">Try 'ls' to see available sections</span>`);
+        }
+    }
+
+    // cat command - display content
+    catCommand(args) {
+        if (args.length === 0) {
+            this.addLine('<span class="terminal-text">Usage: cat &lt;section&gt;</span>');
+            this.addLine('<span class="terminal-text">Available: about, skills, projects, contact</span>');
+            return;
+        }
+        
+        const section = args[0].toLowerCase();
+        let lines = [];
+        
+        switch(section) {
+            case 'about':
+                lines = this.extractAboutContent();
+                break;
+            case 'skills':
+                lines = this.extractSkillsContent();
+                break;
+            case 'projects':
+                lines = this.extractProjectsContent();
+                break;
+            case 'contact':
+                lines = this.extractContactContent();
+                break;
+            default:
+                this.addLine(`<span class="terminal-text error">cat: ${section}: No such section</span>`);
+                this.addLine(`<span class="terminal-text">Available: about, skills, projects, contact</span>`);
+                return;
+        }
+        
+        // Add each line to the terminal
+        lines.forEach(line => {
+            this.addLine(line);
+        });
+    }
+
+    // Alias commands that use dynamic content
     aboutCommand() {
-        this.addLine('<span class="terminal-text info">════════════════════════════════════════════════════════</span>');
-        this.addLine('<span class="terminal-text success">About Jan Dale D. Zarate</span>');
-        this.addLine('<span class="terminal-text info">════════════════════════════════════════════════════════</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">👨‍💻 IT Student & Tech Enthusiast</span>');
-        this.addLine('<span class="terminal-text">📍 Based in Baguio City, Philippines</span>');
-        this.addLine('<span class="terminal-text">🎓 Pursuing Bachelor\'s in Information Technology</span>');
-        this.addLine('<span class="terminal-text">💼 CEO & Founder of SRV Digital Solutions Co.</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">I\'m passionate about creating innovative solutions to real-world</span>');
-        this.addLine('<span class="terminal-text">problems. Currently building SRV - a platform connecting clients</span>');
-        this.addLine('<span class="terminal-text">with local freelance service providers in Baguio.</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text info">Type \'skills\' to see my technical expertise</span>');
-        this.addLine('<span class="terminal-text info">Type \'projects\' to view my work</span>');
-        this.addLine('<span class="terminal-text info">Type \'srv\' to learn about my startup</span>');
+        this.catCommand(['about']);
     }
 
     skillsCommand() {
-        this.addLine('<span class="terminal-text success">Technical Skills:</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">🎨 <span class="terminal-text warning">Frontend:</span></span>');
-        this.addLine('<span class="terminal-text">   • HTML5, CSS3, JavaScript (ES6+)</span>');
-        this.addLine('<span class="terminal-text">   • React.js, Vue.js</span>');
-        this.addLine('<span class="terminal-text">   • Responsive Design, Bootstrap, Tailwind CSS</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">⚙️ <span class="terminal-text warning">Backend:</span></span>');
-        this.addLine('<span class="terminal-text">   • Node.js, Express.js</span>');
-        this.addLine('<span class="terminal-text">   • Python, Django</span>');
-        this.addLine('<span class="terminal-text">   • RESTful APIs, GraphQL</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">🗄️ <span class="terminal-text warning">Database:</span></span>');
-        this.addLine('<span class="terminal-text">   • MySQL, PostgreSQL</span>');
-        this.addLine('<span class="terminal-text">   • MongoDB, Firebase</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">⛓️ <span class="terminal-text warning">Blockchain:</span></span>');
-        this.addLine('<span class="terminal-text">   • Smart Contracts (Solidity, Move)</span>');
-        this.addLine('<span class="terminal-text">   • Sui Network, Ethereum</span>');
-        this.addLine('<span class="terminal-text">   • Web3.js, NFT Development</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">🛠️ <span class="terminal-text warning">Tools & Other:</span></span>');
-        this.addLine('<span class="terminal-text">   • Git, GitHub, Docker</span>');
-        this.addLine('<span class="terminal-text">   • VS Code, Figma</span>');
-        this.addLine('<span class="terminal-text">   • Agile, Scrum</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text info">Navigate to #skills section to see detailed proficiency levels</span>');
+        this.catCommand(['skills']);
     }
 
     projectsCommand() {
-        this.addLine('<span class="terminal-text success">Featured Projects:</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text warning">1. SRV - Serbisyo, Rito, Valid</span>');
-        this.addLine('<span class="terminal-text">   A blockchain-powered marketplace for local services</span>');
-        this.addLine('<span class="terminal-text">   Tech: React, Node.js, Sui Blockchain, Smart Contracts</span>');
-        this.addLine('<span class="terminal-text">   Type \'srv\' for more details</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text warning">2. Portfolio Website (NFT Certificate)</span>');
-        this.addLine('<span class="terminal-text">   Personal portfolio with blockchain certification</span>');
-        this.addLine('<span class="terminal-text">   Tech: HTML, CSS, JavaScript, Sui Network</span>');
-        this.addLine('<span class="terminal-text">   Status: <span class="terminal-text success">You\'re viewing it right now!</span></span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text info">Scroll to #projects section to see all projects</span>');
+        this.catCommand(['projects']);
+    }
+
+    contactCommand() {
+        this.catCommand(['contact']);
     }
 
     srvCommand() {
@@ -231,20 +427,7 @@ class InteractiveTerminal {
         this.addLine('<span class="terminal-text">Home Repairs • Auto Services • Tech Support</span>');
         this.addLine('<span class="terminal-text">Cleaning • Beauty • Delivery • Tutoring</span>');
         this.addLine('');
-        this.addLine('<span class="terminal-text info">Navigate to #srv section for complete information</span>');
-    }
-
-    contactCommand() {
-        this.addLine('<span class="terminal-text success">Contact Information:</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text">📧 Email: zaratejandale15@gmail.com</span>');
-        this.addLine('<span class="terminal-text">📍 Location: Baguio City, Benguet, Philippines</span>');
-        this.addLine('<span class="terminal-text">💼 LinkedIn: /in/jan-dale-zarate-1bbb67188/</span>');
-        this.addLine('<span class="terminal-text">🐙 GitHub: @jadolation</span>');
-        this.addLine('');
-        this.addLine('<span class="terminal-text info">Type \'social\' to see all social media links</span>');
-        this.addLine('<span class="terminal-text info">Type \'email\' to send me an email</span>');
-        this.addLine('<span class="terminal-text info">Navigate to #contact section to use contact form</span>');
+        this.addLine('<span class="terminal-text info">Type \'cd srv\' to navigate to the full SRV section</span>');
     }
 
     socialCommand() {
@@ -263,6 +446,7 @@ class InteractiveTerminal {
         setTimeout(() => {
             window.open('assets/documents/Jan Dale Zarate - CV.pdf', '_blank');
             this.addLine('<span class="terminal-text info">CV opened in a new tab</span>');
+            this.scrollToBottom();
         }, 500);
     }
 
@@ -271,6 +455,7 @@ class InteractiveTerminal {
         setTimeout(() => {
             window.location.href = 'mailto:zaratejandale15@gmail.com';
             this.addLine('<span class="terminal-text info">Email client opened</span>');
+            this.scrollToBottom();
         }, 500);
     }
 
@@ -279,6 +464,7 @@ class InteractiveTerminal {
         setTimeout(() => {
             window.open('https://github.com/jadolation', '_blank');
             this.addLine('<span class="terminal-text info">GitHub profile opened in a new tab</span>');
+            this.scrollToBottom();
         }, 500);
     }
 
@@ -287,11 +473,8 @@ class InteractiveTerminal {
         setTimeout(() => {
             window.open('https://www.linkedin.com/in/jan-dale-zarate-1bbb67188/', '_blank');
             this.addLine('<span class="terminal-text info">LinkedIn profile opened in a new tab</span>');
+            this.scrollToBottom();
         }, 500);
-    }
-
-    lsCommand() {
-        this.addLine('<span class="terminal-text">about/     skills/     projects/     srv/     contact/</span>');
     }
 
     whoamiCommand() {
@@ -308,6 +491,18 @@ class InteractiveTerminal {
         this.addLine(`<span class="terminal-text">${args.join(' ')}</span>`);
     }
 
+    historyCommand() {
+        if (this.commandHistory.length === 0) {
+            this.addLine('<span class="terminal-text">No commands in history</span>');
+            return;
+        }
+        
+        this.addLine('<span class="terminal-text">Command History:</span>');
+        this.commandHistory.forEach((cmd, i) => {
+            this.addLine(`<span class="terminal-text">  ${i + 1}  ${cmd}</span>`);
+        });
+    }
+
     sudoCommand(args) {
         const command = args.join(' ');
         if (command === 'rm -rf /' || command === 'rm -rf /*') {
@@ -318,6 +513,7 @@ class InteractiveTerminal {
             setTimeout(() => {
                 this.addLine('<span class="terminal-text error">Sorry, you don\'t have sudo privileges here!</span>');
                 this.addLine('<span class="terminal-text">But feel free to explore using available commands 😊</span>');
+                this.scrollToBottom();
             }, 1000);
         }
     }
