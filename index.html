@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="romantic-theme.css">
     <link rel="stylesheet" href="terminal.css">
+    <link rel="stylesheet" href="github-stats.css">
     <!-- Favicons (place your files in assets/pictures/) -->
     <link rel="icon" href="assets/pictures/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/pictures/favicon.png" type="image/png">
@@ -45,6 +46,7 @@
                     <li><a href="#about" class="nav-link">About</a></li>
                     <li><a href="#terminal" class="nav-link"><i class="fas fa-terminal"></i> Terminal</a></li>
                     <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#github-stats" class="nav-link"><i class="fab fa-github"></i> GitHub</a></li>
                     <li><a href="#srv" class="nav-link srv-link">SRV</a></li>
                     <li><a href="#projects" class="nav-link">Projects</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -170,6 +172,8 @@
             </div>
         </div>
     </section>
+
+  
 
     <!-- Interactive Terminal Section -->
     <section class="terminal-section" id="terminal">
@@ -498,6 +502,85 @@
         </div>
     </section>
 
+      <!-- GitHub Stats Section -->
+    <section id="github-stats" class="github-stats">
+        <div class="container">
+            <h2 class="section-title" data-aos="fade-up">
+                <i class="fab fa-github"></i> GitHub Activity
+            </h2>
+            <p class="section-subtitle" data-aos="fade-up">
+                Real-time stats from my GitHub profile
+            </p>
+
+            <!-- Stats Grid -->
+            <div class="github-stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div class="stat-value loading" id="github-repos">
+                        <span class="spinner"></span>
+                    </div>
+                    <div class="stat-label">Public Repositories</div>
+                </div>
+
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value loading" id="github-followers">
+                        <span class="spinner"></span>
+                    </div>
+                    <div class="stat-label">Followers</div>
+                </div>
+
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-value loading" id="github-stars">
+                        <span class="spinner"></span>
+                    </div>
+                    <div class="stat-label">Total Stars</div>
+                </div>
+
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="stat-value loading" id="github-contributions">
+                        <span class="spinner"></span>
+                    </div>
+                    <div class="stat-label">Active Repositories</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="github-activity" data-aos="fade-up">
+                <h3>
+                    <i class="fas fa-history"></i> Recent Activity
+                </h3>
+                <ul class="activity-list" id="github-activity-list">
+                    <li class="activity-item">
+                        <span class="spinner"></span> Loading recent activity...
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Top Languages -->
+            <div class="github-chart" data-aos="fade-up">
+                <h3>
+                    <i class="fas fa-chart-bar"></i> Top Languages
+                </h3>
+                <div class="language-bars" id="language-bars">
+                    <div style="color: rgba(255,255,255,0.5); text-align: center; padding: 20px;">
+                        <span class="spinner"></span> Loading language statistics...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact" class="contact">
         <div class="container">
@@ -576,6 +659,9 @@
     
     <!-- Interactive Terminal -->
     <script src="terminal.js"></script>
+    
+    <!-- GitHub Stats -->
+    <script src="github-stats.js"></script>
     
     <!-- Custom JavaScript -->
     <script src="script.js"></script>

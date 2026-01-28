@@ -305,11 +305,12 @@ class InteractiveTerminal {
         this.addLine('<span class="terminal-text">Available sections:</span>');
         this.addLine('<span class="terminal-text">  home/          - Hero/Landing section</span>');
         this.addLine('<span class="terminal-text">  about/         - About me</span>');
+        this.addLine('<span class="terminal-text">  terminal/      - Interactive terminal</span>');
         this.addLine('<span class="terminal-text">  skills/        - Technical skills</span>');
+        this.addLine('<span class="terminal-text">  github-stats/  - Live GitHub statistics</span>');
         this.addLine('<span class="terminal-text">  projects/      - My projects</span>');
         this.addLine('<span class="terminal-text">  srv/           - SRV startup info</span>');
         this.addLine('<span class="terminal-text">  contact/       - Contact information</span>');
-        this.addLine('<span class="terminal-text">  terminal/      - This terminal</span>');
         this.addLine('');
         this.addLine('<span class="terminal-text">Files:</span>');
         this.addLine('<span class="terminal-text">  romantic.html  - Special romantic page</span>');
