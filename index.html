@@ -20,6 +20,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="romantic-theme.css">
+    <link rel="stylesheet" href="terminal.css">
     <!-- Favicons (place your files in assets/pictures/) -->
     <link rel="icon" href="assets/pictures/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/pictures/favicon.png" type="image/png">
@@ -42,6 +43,7 @@
                         <i class="fas fa-heart"></i> Love Letters
                     </a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#terminal" class="nav-link"><i class="fas fa-terminal"></i> Terminal</a></li>
                     <li><a href="#skills" class="nav-link">Skills</a></li>
                     <li><a href="#srv" class="nav-link srv-link">SRV</a></li>
                     <li><a href="#projects" class="nav-link">Projects</a></li>
@@ -164,6 +166,59 @@
                         </div>
                     </div>
                     <a href="assets/documents/Jan Dale Zarate - CV.pdf" class="btn btn-primary" target="_blank" rel="noopener noreferrer">View CV <i class="fas fa-external-link-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Terminal Section -->
+    <section class="terminal-section" id="terminal">
+        <div class="terminal-container">
+            <div class="terminal-header" data-aos="fade-up">
+                <h2><i class="fas fa-terminal"></i> Interactive Terminal</h2>
+                <p>Explore my portfolio through a command-line interface</p>
+            </div>
+
+            <div class="terminal-wrapper" data-aos="zoom-in">
+                <div class="terminal-titlebar">
+                    <div class="terminal-buttons">
+                        <span class="terminal-button close"></span>
+                        <span class="terminal-button minimize"></span>
+                        <span class="terminal-button maximize"></span>
+                    </div>
+                    <span class="terminal-title">guest@jd-portfolio: ~</span>
+                </div>
+                
+                <div class="terminal-body" id="interactiveTerminal">
+                    <div class="terminal-output"></div>
+                    <div class="terminal-input-line">
+                        <span class="terminal-input-prompt">guest@jd-portfolio:~$</span>
+                        <input type="text" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal-quick-commands" data-aos="fade-up">
+                <p class="terminal-quick-title">Quick Commands:</p>
+                <div class="terminal-chips">
+                    <button class="terminal-chip" data-command="help">
+                        <i class="fas fa-question-circle"></i> help
+                    </button>
+                    <button class="terminal-chip" data-command="about">
+                        <i class="fas fa-user"></i> about
+                    </button>
+                    <button class="terminal-chip" data-command="skills">
+                        <i class="fas fa-code"></i> skills
+                    </button>
+                    <button class="terminal-chip" data-command="projects">
+                        <i class="fas fa-folder"></i> projects
+                    </button>
+                    <button class="terminal-chip" data-command="contact">
+                        <i class="fas fa-envelope"></i> contact
+                    </button>
+                    <button class="terminal-chip" data-command="clear">
+                        <i class="fas fa-trash"></i> clear
+                    </button>
                 </div>
             </div>
         </div>
@@ -518,6 +573,9 @@
     
     <!-- Romantic Content -->
     <script src="romantic-content.js"></script>
+    
+    <!-- Interactive Terminal -->
+    <script src="terminal.js"></script>
     
     <!-- Custom JavaScript -->
     <script src="script.js"></script>
