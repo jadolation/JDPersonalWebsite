@@ -1,4 +1,4 @@
-/* JD Personal Website - Rule-based Chat Widget (Option 2)
+/* JD Personal Website - Rule-based Chat Widget 
  * - Self-contained: injects its own HTML + scoped CSS
  * - No external deps
  * - Avoids touching existing globals (single window.JDChatbot namespace)
@@ -632,12 +632,12 @@
 
       @media (max-width: 768px) {
         .jd-chatbot { 
-          right: 18px; 
+          right: 30px; 
           bottom: 100px;
         }
         .jd-chatbot__panel { 
           border-radius: 14px;
-          right: 18px;
+          right: 30px;
           bottom: 168px;
         }
       }
