@@ -421,6 +421,11 @@
         outline-offset: 2px;
       }
 
+      /* Hide FAB when panel is open */
+      .jd-chatbot__panel[data-open="true"] ~ .jd-chatbot__fab {
+        display: none;
+      }
+
       .jd-chatbot__panel {
         width: min(360px, calc(100vw - 32px));
         height: min(520px, calc(100vh - 110px));
