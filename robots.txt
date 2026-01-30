@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Let crawlers discover your sitemap.
+Sitemap: /sitemap.xml
+
