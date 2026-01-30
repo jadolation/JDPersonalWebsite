@@ -184,21 +184,67 @@ class GitHubStats {
         return languageStats;
     }
 
-    // Format activity for display
-    formatActivity(events) {
-        return events.slice(0, 5).map(event => {
-            let action = '';
-            let message = '';
+    // Format activity for display (now async to fetch commit details)
+    async formatActivity(events) {
+        console.log('Formatting activity events:', events); // Debug log
+        
+        const formattedEvents = await Promise.all(
+            events.slice(0, 5).map(async event => {
+                let action = '';
+                let message = '';
 
-            switch (event.type) {
-                case 'PushEvent':
-                    action = 'Pushed';
-                    const commits = event.payload.commits?.length || 0;
-                    message = `${commits} commit${commits !== 1 ? 's' : ''}`;
-                    if (event.payload.commits?.[0]?.message) {
-                        message += `: ${event.payload.commits[0].message}`;
-                    }
-                    break;
+                switch (event.type) {
+                    case 'PushEvent':
+                        action = 'Pushed';
+                        console.log('PushEvent payload:', event.payload); // Debug log
+                        const commits = event.payload.commits?.length;
+                        if (commits) {
+                            // If commits array is available, show count and first message
+                            message = `${commits} commit${commits !== 1 ? 's' : ''}`;
+                            if (event.payload.commits[0]?.message) {
+                                message += `: ${event.payload.commits[0].message}`;
+                            }
+                        } else if (event.payload.head && event.repo) {
+                            // Fetch the actual commit details from the Commits API
+                            try {
+                                const commitSha = event.payload.head;
+                                const cacheKey = `commit_${commitSha}`;
+                                let commitData = this.cache?.[cacheKey];
+                                
+                                if (!commitData) {
+                                    const commitResponse = await fetch(
+                                        `${this.apiBase}/repos/${event.repo.name}/commits/${commitSha}`
+                                    );
+                                    if (commitResponse.ok) {
+                                        commitData = await commitResponse.json();
+                                        if (this.cache) this.cache[cacheKey] = commitData;
+                                    }
+                                }
+                                
+                                if (commitData) {
+                                    const size = event.payload.size || 1;
+                                    message = `${size} commit${size !== 1 ? 's' : ''}`;
+                                    if (commitData.commit?.message) {
+                                        // Get first line of commit message
+                                        const firstLine = commitData.commit.message.split('\n')[0];
+                                        message += `: ${firstLine}`;
+                                    }
+                                }
+                            } catch (error) {
+                                console.warn('Failed to fetch commit details:', error);
+                                // Fallback to size
+                                const size = event.payload.size || 1;
+                                message = `${size} commit${size !== 1 ? 's' : ''}`;
+                            }
+                        } else if (event.payload.size) {
+                            // Fallback: use the size property if commits array is missing
+                            message = `${event.payload.size} commit${event.payload.size !== 1 ? 's' : ''}`;
+                        } else {
+                            // If neither is available, just show "to branch"
+                            const branch = event.payload.ref?.replace('refs/heads/', '') || 'main';
+                            message = `to ${branch}`;
+                        }
+                        break;
                 case 'CreateEvent':
                     action = 'Created';
                     message = event.payload.ref_type === 'repository' 
@@ -230,7 +276,9 @@ class GitHubStats {
                 message: message.length > 80 ? message.substring(0, 80) + '...' : message,
                 time: this.timeAgo(new Date(event.created_at))
             };
-        });
+        }));
+        
+        return formattedEvents;
     }
 
     // Time ago helper
@@ -269,19 +317,19 @@ class GitHubStats {
             el.classList.remove('loading');
         });
 
-        // Update activity
-        this.updateActivityDisplay(activity);
+        // Update activity (async - may fetch commit details)
+        await this.updateActivityDisplay(activity);
 
         // Update language stats (async - fetches additional data)
         await this.updateLanguageStats(repos);
     }
 
     // Update activity display
-    updateActivityDisplay(events) {
+    async updateActivityDisplay(events) {
         const activityList = document.getElementById('github-activity-list');
         if (!activityList) return;
 
-        const formattedActivity = this.formatActivity(events);
+        const formattedActivity = await this.formatActivity(events);
         
         if (formattedActivity.length === 0) {
             activityList.innerHTML = `
