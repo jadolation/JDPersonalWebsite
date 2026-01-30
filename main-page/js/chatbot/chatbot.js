@@ -96,6 +96,17 @@
         : escapeHtml(m);
     });
 
+    // Special-case: turn "Click here to view: /path/to/file.pdf" into a friendly link.
+    out = out.replace(
+      /(Click here to view:)\s*(\/(?:main-page|romantic-page)\/[\w\-./%]+(?:\.html|\.pdf))/gi,
+      (_m, label, href) => {
+        if (!isSafeHref(href)) return `${escapeHtml(label)} ${escapeHtml(href)}`;
+        const isPdf = href.toLowerCase().endsWith('.pdf');
+        const downloadAttr = isPdf ? ' download' : '';
+        return `${escapeHtml(label)} <a class="jd-chatbot__link" href="${href}" target="_blank" rel="noopener noreferrer"${downloadAttr}>Open CV (PDF)</a>`;
+      }
+    );
+
     // Linkify some known site paths (root-relative)
     out = out.replace(/(\/(?:main-page|romantic-page)\/[\w\-./%]+(?:\.html|\.pdf))/g, (m) => {
       if (!isSafeHref(m)) return escapeHtml(m);
@@ -307,7 +318,11 @@
     }
 
     if (has('resume', 'cv')) {
-      return `📄 Here's my CV/Resume:\n\nClick here to view: ${SITE.cv}\n\nIt will open in a new tab and you can download it too!`;
+      return (
+        `📄 Here's my CV/Resume:\n\n` +
+        `Click here to view: ${SITE.cv}\n\n` +
+        `It will open in a new tab and you can download it too!`
+      );
     }
 
     if (has('srv', 'startup', 'serbisyo', 'rito', 'valid')) {
