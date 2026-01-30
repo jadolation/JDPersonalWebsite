@@ -67,6 +67,30 @@
     }
   }
 
+  function toViewUrl(href) {
+    // For same-origin paths, encode spaces so the URL resolves correctly.
+    // We keep this minimal on purpose (avoid double-encoding existing %20).
+    const raw = String(href || '');
+    if (raw.startsWith('/')) {
+      return raw.replace(/\s/g, '%20');
+    }
+    return raw;
+  }
+
+  function resolveSitePath(href) {
+    // When chatting from /romantic-page/, a relative link like
+    // "assets/documents/..." must point to /main-page/assets/... (where the PDF lives).
+    // When already root-relative ("/...") we leave it as-is.
+    const raw = String(href || '').trim();
+    if (!raw) return raw;
+    if (raw.startsWith('/')) return raw;
+    const ctx = detectPageContext();
+    if (ctx === 'main') return `/main-page/${raw.replace(/^\.\//, '')}`;
+    if (ctx === 'romantic') return `/main-page/${raw.replace(/^\.\//, '')}`;
+    // If loaded from repo root, still assume main-page is the canonical container
+    return `/main-page/${raw.replace(/^\.\//, '')}`;
+  }
+
   function linkify(text) {
     // Convert plain URLs and a few known internal tokens into anchors.
     // Keep it conservative + safe.
@@ -83,7 +107,9 @@
       ['#contact', '#contact']
     ];
 
-    let out = escapeHtml(raw);
+  // We intentionally do a multi-pass linkify to avoid nested anchors.
+  // Pass A: start from escaped text.
+  let out = escapeHtml(raw);
     for (const [k] of tokens) {
       const safeK = escapeHtml(k);
       out = out.replaceAll(safeK, `<a class="jd-chatbot__link" href="${k}">${safeK}</a>`);
@@ -96,24 +122,31 @@
         : escapeHtml(m);
     });
 
-    // Special-case: turn "Click here to view: /path/to/file.pdf" into a friendly link.
+    // Special-case: "Click here to view: ...pdf" should become ONE friendly link.
+    // We protect it with a placeholder so later linkify passes won't touch it.
+    const protectedBlocks = [];
     out = out.replace(
-      /(Click here to view:)\s*(\/(?:main-page|romantic-page)\/[\w\-./%]+(?:\.html|\.pdf))/gi,
+      /(Click here to view:)\s*([\w\-./%\s]+\.pdf)/gi,
       (_m, label, href) => {
-        if (!isSafeHref(href)) return `${escapeHtml(label)} ${escapeHtml(href)}`;
-        const isPdf = href.toLowerCase().endsWith('.pdf');
-        const downloadAttr = isPdf ? ' download' : '';
-        return `${escapeHtml(label)} <a class="jd-chatbot__link" href="${href}" target="_blank" rel="noopener noreferrer"${downloadAttr}>Open CV (PDF)</a>`;
+        const normalized = resolveSitePath(href);
+        const viewHref = toViewUrl(normalized);
+        if (!isSafeHref(viewHref)) return `${escapeHtml(label)} ${escapeHtml(href)}`;
+
+        const html = `${escapeHtml(label)} <a class="jd-chatbot__link" href="${viewHref}" target="_blank" rel="noopener noreferrer">Open CV (PDF)</a>`;
+        const idx = protectedBlocks.push(html) - 1;
+        return `__JDCHAT_PROTECTED_${idx}__`;
       }
     );
 
-    // Linkify some known site paths (root-relative)
-    out = out.replace(/(\/(?:main-page|romantic-page)\/[\w\-./%]+(?:\.html|\.pdf))/g, (m) => {
-      if (!isSafeHref(m)) return escapeHtml(m);
-      const isPdf = m.toLowerCase().endsWith('.pdf');
-      const downloadAttr = isPdf ? ' download' : '';
-      return `<a class="jd-chatbot__link" href="${m}" target="_blank" rel="noopener noreferrer"${downloadAttr}>${escapeHtml(m)}</a>`;
+    // Linkify root-relative html/pdf paths (e.g., /main-page/... or /romantic-page/...)
+    out = out.replace(/(\/(?:main-page|romantic-page)\/[\w\-./%\s]+(?:\.html|\.pdf))/g, (m) => {
+      const viewHref = toViewUrl(m);
+      if (!isSafeHref(viewHref)) return escapeHtml(m);
+      return `<a class="jd-chatbot__link" href="${viewHref}" target="_blank" rel="noopener noreferrer">${escapeHtml(m)}</a>`;
     });
+
+  // Restore protected "Click here to view" blocks LAST.
+  out = out.replace(/__JDCHAT_PROTECTED_(\d+)__/g, (_m, n) => protectedBlocks[Number(n)] || '');
 
     return out;
   }
@@ -140,7 +173,8 @@
     linkedin: 'https://www.linkedin.com/in/jan-dale-zarate-1bbb67188/',
     facebook: 'https://www.facebook.com/jandale.ii/',
     instagram: 'https://www.instagram.com/jadolation/',
-    cv: '/main-page/assets/documents/Jan Dale Zarate - CV.pdf',
+  // Match the About-section "View CV" button (relative to /main-page/)
+  cv: 'assets/documents/Jan Dale Zarate - CV.pdf',
     srv: {
       name: 'SRV (Serbisyo, Rito, Valid)',
       url: 'https://srvpinoy.com/',
@@ -234,7 +268,7 @@
         `• Skills: #skills\n` +
         `• GitHub activity: #github-stats\n` +
         `• Contact: #contact\n\n` +
-        `You can also ask about SRV, resume/CV, or the romantic page.`
+  `You can also ask about SRV, my CV, or the romantic page.`
       );
     }
 
@@ -246,7 +280,7 @@
         `• "skills" – tech stack\n` +
         `• "github" – profile + repos\n` +
         `• "srv" – startup summary\n` +
-        `• "resume" – open CV PDF\n` +
+  `• "cv" (or "resume") – open my Curriculum Vitae (PDF)\n` +
         `• "contact" – email + social links\n` +
         `• "romantic" – romantic page links`
       );
@@ -319,8 +353,8 @@
 
     if (has('resume', 'cv')) {
       return (
-        `📄 Here's my CV/Resume:\n\n` +
-        `Click here to view: ${SITE.cv}\n\n` +
+  `📄 Here's my Curriculum Vitae (CV):\n\n` +
+  `Click here to view: /main-page/${SITE.cv}\n\n` +
         `It will open in a new tab and you can download it too!`
       );
     }
@@ -349,7 +383,7 @@
     // fallback
     return (
       `I didn't catch that.\n` +
-      `Try: about, projects, top projects, skills, github, srv, resume, contact.`
+  `Try: about, projects, top projects, skills, github, srv, cv, contact.`
     );
   }
 
@@ -719,7 +753,7 @@
     const messages = createEl('div', { class: 'jd-chatbot__messages', role: 'log', 'aria-live': 'polite' });
 
     const chipRow = createEl('div', { class: 'jd-chatbot__chiprow' });
-    const chips = ['Projects', 'Skills', 'Contact', 'GitHub', 'Resume'];
+  const chips = ['Projects', 'Skills', 'Contact', 'GitHub', 'CV'];
     chips.forEach((label) => {
       chipRow.appendChild(createEl('button', { class: 'jd-chatbot__chip', type: 'button', text: label }));
     });
