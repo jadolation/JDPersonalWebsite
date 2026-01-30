@@ -285,8 +285,9 @@ class InteractiveTerminal {
  |_|_|||_||____/  |_|     |___| |_____|_| |_||__| |_|_|    
         `;
         
-        this.addLine(`<span class="terminal-welcome ascii-art">${ascii}</span>`);
-        this.addLine(`<span class="terminal-welcome">Welcome to Jan Dale's Interactive Portfolio Terminal!</span>`);
+    // Use a <pre> block for ASCII art so spacing is preserved reliably
+    this.addLine(`<pre class="terminal-ascii">${ascii}</pre>`);
+    this.addLine(`<span class="terminal-welcome">Welcome to Jan Dale's Interactive Portfolio Terminal!</span>`);
         this.addLine(`<span class="terminal-text info">Type 'help' to see available commands, or 'ls' to list sections.</span>`);
         this.addLine('');
     }

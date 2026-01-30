@@ -242,8 +242,24 @@
 .terminal-welcome .ascii-art {
     color: #8a2be2;
     font-size: 12px;
-    line-height: 1.2;
+    line-height: 1.0;
     margin-bottom: 10px;
+    white-space: pre; /* preserve ASCII spacing */
+    font-family: 'Courier New', 'Monaco', monospace;
+    display: block;
+    overflow-x: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Preformatted ASCII art block */
+.terminal-ascii {
+    white-space: pre;
+    font-family: 'Courier New', 'Monaco', monospace;
+    color: #8a2be2;
+    font-size: 12px;
+    line-height: 1.0;
+    margin: 0 0 10px 0;
+    overflow-x: auto;
 }
 
 .terminal-help {
@@ -380,7 +396,9 @@
     }
 
     .terminal-welcome .ascii-art {
-        font-size: 10px;
+    font-size: 10px;
+    line-height: 1.0;
+    white-space: pre;
     }
 }
 
