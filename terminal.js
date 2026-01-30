@@ -102,12 +102,21 @@ class InteractiveTerminal {
         // Show command in output
         const promptPath = this.currentPath === '~' ? '~' : `~/${this.currentPath}`;
         this.addLine(`<span class="terminal-prompt">guest@jd-portfolio:${promptPath}$</span> <span class="terminal-command">${input}</span>`);
-
         if (this.commands[command.toLowerCase()]) {
             this.commands[command.toLowerCase()](args);
         } else if (command) {
             this.addLine(`<span class="terminal-text error">bash: ${command}: command not found</span>`);
             this.addLine(`<span class="terminal-text">Type 'help' for available commands.</span>`);
+        }
+
+        // Clear the input after executing a command (covers programmatic calls too)
+        try {
+            if (this.input) {
+                this.input.value = '';
+                this.input.focus();
+            }
+        } catch (e) {
+            // ignore
         }
 
         this.scrollToBottom();
