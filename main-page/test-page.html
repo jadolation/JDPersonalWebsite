@@ -203,7 +203,7 @@
         function testContentLoading() {
             const result = document.getElementById('contentResult');
             
-            fetch('./romantic-content.js')
+            fetch('./js/theme/romantic-content.js')
                 .then(response => {
                     if (response.ok) {
                         result.innerHTML = '<div class="status success">✅ romantic-content.js is accessible</div>';
@@ -248,7 +248,7 @@
             const input = document.getElementById('testPassword').value;
             
             // Try to load the password from love-letters.js
-            fetch('./love-letters.js')
+            fetch('../romantic-page/js/love-letters/love-letters.js')
                 .then(response => response.text())
                 .then(text => {
                     // Extract password from file
@@ -258,7 +258,7 @@
                         const actualPassword = match[1];
                         
                         if (actualPassword === 'myspecialsecret123') {
-                            result.innerHTML = '<div class="status error">⚠️ WARNING: You haven\'t changed the default password yet! Change it in love-letters.js</div>';
+                            result.innerHTML = '<div class="status error">⚠️ WARNING: You haven\'t changed the default password yet! Change it in romantic-page/js/love-letters/love-letters.js</div>';
                         } else if (input === actualPassword) {
                             result.innerHTML = '<div class="status success">✅ Password is correct!</div>';
                         } else {
