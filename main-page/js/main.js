@@ -206,8 +206,7 @@ if (forceTech) {
 }
 
 if (!forceTech && savedTheme === 'romantic') {
-    // Legacy behavior: do not auto-redirect from root script to romantic.html.
-    // The site now uses a separate `romantic-page/` folder and the root index redirects to `main-page/index.html`.
+    // Don't auto-redirect away from the main page; only navigate to romantic when the user clicks the button/link.
 }
 updateThemeIcon();
 
@@ -227,8 +226,7 @@ updateThemeIcon();
 
 themeToggleBtn.addEventListener('click', () => {
     localStorage.setItem('portfolio-theme', 'romantic');
-    // Navigate to the new romantic page location
-    window.location.href = 'romantic-page/index.html';
+    window.location.href = '../romantic-page/index.html';
 });
 
 // Content Swapping Function
@@ -297,7 +295,7 @@ function applyContentTheme(isRomantic) {
             if (primaryBtn && content.hero.buttons.primary) {
                 if (isRomantic) {
                     primaryBtn.textContent = content.hero.buttons.primary;
-                    primaryBtn.href = 'love-letters.html';
+                    primaryBtn.href = '../romantic-page/love-letters.html';
                 } else {
                     primaryBtn.textContent = content.hero.buttons.primary;
                     primaryBtn.href = '#contact';
@@ -418,7 +416,7 @@ function restoreTechSkills() {
     }, 300);
 }
 
-// (Romantic mode now uses a dedicated page: romantic.html)
+// (Romantic mode now uses a dedicated page: ../romantic-page/index.html)
 
 // Project cards
 const projectCards = document.querySelectorAll('.project-card');
@@ -617,7 +615,7 @@ console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 1
     })();
 
     async function loadProjects() {
-        const response = await fetch('./projects.json');
+    const response = await fetch('./projects.json');
         const projects = await response.json();
         const grid = document.querySelector('.projects-grid');
 

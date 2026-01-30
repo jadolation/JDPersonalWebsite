@@ -14,6 +14,7 @@
         el.href = href + '?v=' + Date.now();
     }
 
+    // Paths are resolved relative to the document, not the JS file. Use document-relative paths.
     updateLink('icon', 'assets/images/favicons/kr/favicon_io/favicon.ico');
     updateLink('icon', 'assets/images/favicons/kr/favicon_io/favicon-16x16.png', '16x16');
     updateLink('icon', 'assets/images/favicons/kr/favicon_io/favicon-32x32.png', '32x32');
@@ -132,7 +133,8 @@ window.addEventListener('scroll', () => {
 
 themeToggleBtn.addEventListener('click', () => {
     localStorage.setItem('portfolio-theme', 'techy');
-    window.location.href = 'index.html';
+    // Navigate back to the sibling main page
+    window.location.href = '../main-page/index.html';
 });
 
 // Ensure hero logo animations start when the logo becomes visible (similar to main page)
