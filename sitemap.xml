@@ -11,6 +11,11 @@
 		<priority>1.0</priority>
 	</url>
 	<url>
+		<loc>https://jadolation.github.io/JDPersonalWebsite/main-page/personal-interests.html</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
 		<loc>https://jadolation.github.io/JDPersonalWebsite/romantic-page/index.html</loc>
 		<changefreq>monthly</changefreq>
 		<priority>0.6</priority>

@@ -280,13 +280,12 @@
         `• "skills" – tech stack\n` +
         `• "github" – profile + repos\n` +
         `• "srv" – startup summary\n` +
-  `• "cv" (or "resume") – open my Curriculum Vitae (PDF)\n` +
+        `• "hobbies" – life outside coding\n` +
+        `• "cv" (or "resume") – open my Curriculum Vitae (PDF)\n` +
         `• "contact" – email + social links\n` +
         `• "romantic" – romantic page links`
       );
-    }
-
-    if (has('about', 'who are you', 'who is', 'bio', 'background')) {
+    }    if (has('about', 'who are you', 'who is', 'bio', 'background')) {
       const link = ctx === 'main' ? '#about' : '/main-page/index.html#about';
       return (
         `${SITE.name} — ${SITE.role}.\n` +
@@ -369,6 +368,14 @@
       );
     }
 
+    if (has('hobbies', 'interests', 'hobby', 'outside', 'afk', 'personal', 'life outside')) {
+      return (
+        `Want to know me beyond the code?\n\n` +
+        `Check out my personal interests page: /main-page/personal-interests.html\n\n` +
+        `Sports, anime, superheroes, and more—plus a special section about the most important person in my life! 💕`
+      );
+    }
+
     if (has('romantic', 'love', 'letters')) {
       return (
         `Romantic page: ${SITE.romantic.page}\n` +
@@ -383,11 +390,9 @@
     // fallback
     return (
       `I didn't catch that.\n` +
-  `Try: about, projects, top projects, skills, github, srv, cv, contact.`
+      `Try: about, projects, top projects, skills, github, srv, hobbies, cv, contact.`
     );
-  }
-
-  function createEl(tag, attrs, children) {
+  }  function createEl(tag, attrs, children) {
     const el = document.createElement(tag);
     if (attrs) {
       for (const [k, v] of Object.entries(attrs)) {
