@@ -278,12 +278,12 @@ class InteractiveTerminal {
 
     showWelcome() {
         const ascii = `
-     ___  ____     ____             __  ____      ___      
-    |_  ||  _  \\  |  _ \\           |  ||  __| __ |_  |     
-      | ||  |  |  | |_) |  ___   _ |  ||  _| |  | | | |    
-  _ _ | ||  |  |  |  __/  | _ | |  |  ||  _  |  | | | |    
- |_|_|||_||____/  |_|     |___| |_____|_| |_||__| |_|_|    
-        `;
+     ___  ____           ______
+    |_  ||  _ \\         |___  /
+ _    | || | | |  ___      / /
+| |__ | || |_| | |___|    / /__
+|____||_||____/          /_____|
+`;
         
     // Use a <pre> block for ASCII art so spacing is preserved reliably
     this.addLine(`<pre class="terminal-ascii">${ascii}</pre>`);
