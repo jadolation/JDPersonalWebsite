@@ -168,6 +168,54 @@
     box-shadow: 0 8px 30px rgba(255, 107, 157, 0.3);
 }
 
+/* Special Valentine's Letter Card */
+.letter-card.special-letter {
+    background: linear-gradient(135deg, #800020 0%, #dc143c 100%);
+    border: 3px solid #ffd700;
+    position: relative;
+    overflow: hidden;
+}
+
+.letter-card.special-letter::before {
+    content: '💕';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    animation: heartPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes heartPulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+.letter-card.special-letter .letter-envelope {
+    color: #ffd700;
+    animation: glowEnvelope 2s ease-in-out infinite;
+}
+
+@keyframes glowEnvelope {
+    0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5)); }
+    50% { filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8)); }
+}
+
+.letter-card.special-letter .letter-card-title,
+.letter-card.special-letter .letter-date {
+    color: #ffffff;
+}
+
+.letter-card.special-letter .btn-open-letter {
+    background: #ffd700;
+    color: #800020;
+    font-weight: 600;
+}
+
+.letter-card.special-letter .btn-open-letter:hover {
+    background: #ffed4e;
+    transform: scale(1.05);
+}
+
 .letter-envelope {
     font-size: 4rem;
     color: var(--primary-color);

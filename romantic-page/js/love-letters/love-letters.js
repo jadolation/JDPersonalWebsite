@@ -41,16 +41,32 @@ With love, Jan Dale D. Zarate`,
     date: 'January 27, 2026'
 };
 
+// Valentine's special letter
+const valentineLetter = {
+    id: 'valentines-2026',
+    title: '💐 Our Valentine\'s Day Plans 💐',
+    isSpecial: true,
+    specialLink: 'valentines-letter.html',
+    date: 'February 4, 2026'
+};
+
 // Initialize letters from localStorage
 function getLetters() {
     const stored = localStorage.getItem(LETTERS_STORAGE_KEY);
     if (!stored) {
-        // Initialize with welcome letter
-        const letters = [welcomeLetter];
+        // Initialize with welcome letter and valentine letter
+        const letters = [valentineLetter, welcomeLetter];
         localStorage.setItem(LETTERS_STORAGE_KEY, JSON.stringify(letters));
         return letters;
     }
-    return JSON.parse(stored);
+    const letters = JSON.parse(stored);
+    // Make sure valentine letter is always included
+    const hasValentine = letters.some(l => l.id === 'valentines-2026');
+    if (!hasValentine) {
+        letters.unshift(valentineLetter);
+        localStorage.setItem(LETTERS_STORAGE_KEY, JSON.stringify(letters));
+    }
+    return letters;
 }
 
 function saveLetters(letters) {
@@ -80,6 +96,9 @@ function renderLetters() {
     letters.forEach(letter => {
         const card = document.createElement('div');
         card.className = 'letter-card';
+        if (letter.isSpecial) {
+            card.classList.add('special-letter');
+        }
         card.setAttribute('data-letter-id', letter.id);
         
         card.innerHTML = `
@@ -90,18 +109,26 @@ function renderLetters() {
                 <h3 class="letter-card-title">${escapeHtml(letter.title)}</h3>
                 <p class="letter-date">${escapeHtml(letter.date)}</p>
                 <button class="btn-open-letter">
-                    <i class="fas fa-envelope-open"></i> Open Letter
+                    <i class="fas fa-envelope-open"></i> ${letter.isSpecial ? 'Open Special Letter' : 'Open Letter'}
                 </button>
             </div>
         `;
         
         card.querySelector('.btn-open-letter').addEventListener('click', (e) => {
             e.stopPropagation();
-            openLetter(letter.id);
+            if (letter.isSpecial && letter.specialLink) {
+                window.location.href = letter.specialLink;
+            } else {
+                openLetter(letter.id);
+            }
         });
         
         card.addEventListener('click', () => {
-            openLetter(letter.id);
+            if (letter.isSpecial && letter.specialLink) {
+                window.location.href = letter.specialLink;
+            } else {
+                openLetter(letter.id);
+            }
         });
         
         grid.appendChild(card);

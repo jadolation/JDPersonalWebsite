@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Valentine's Letter to You 💕</title>
+    <meta name="description" content="A special Valentine's letter">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/valentines-letter.css">
+
+    <!-- Favicons -->
+    <link rel="icon" href="assets/images/favicons/kr/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/favicons/kr/favicon_io/favicon-16x16.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="assets/images/favicons/kr/favicon_io/favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="assets/images/favicons/kr/favicon_io/apple-touch-icon.png">
+</head>
+<body>
+    <!-- Back Navigation -->
+    <div class="back-nav">
+        <a href="love-letters.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Letters
+        </a>
+    </div>
+
+    <!-- Letter Book Container -->
+    <div class="letter-book-container">
+        <div class="book-wrapper">
+            <!-- Page 1: Orange Flower Animation -->
+            <div class="book-page active" id="page1">
+                <div class="page-content flower-page">
+                    <div class="flower-container">
+                        <div class="flower-bloom">
+                            <!-- Stem -->
+                            <div class="flower-stem"></div>
+                            
+                            <!-- Outer layer petals (larger, lighter) -->
+                            <div class="petal outer-petal petal-1"></div>
+                            <div class="petal outer-petal petal-2"></div>
+                            <div class="petal outer-petal petal-3"></div>
+                            <div class="petal outer-petal petal-4"></div>
+                            <div class="petal outer-petal petal-5"></div>
+                            <div class="petal outer-petal petal-6"></div>
+                            <div class="petal outer-petal petal-7"></div>
+                            <div class="petal outer-petal petal-8"></div>
+                            
+                            <!-- Middle layer petals -->
+                            <div class="petal middle-petal petal-9"></div>
+                            <div class="petal middle-petal petal-10"></div>
+                            <div class="petal middle-petal petal-11"></div>
+                            <div class="petal middle-petal petal-12"></div>
+                            <div class="petal middle-petal petal-13"></div>
+                            <div class="petal middle-petal petal-14"></div>
+                            <div class="petal middle-petal petal-15"></div>
+                            <div class="petal middle-petal petal-16"></div>
+                            
+                            <!-- Inner layer petals (smaller, darker) -->
+                            <div class="petal inner-petal petal-17"></div>
+                            <div class="petal inner-petal petal-18"></div>
+                            <div class="petal inner-petal petal-19"></div>
+                            <div class="petal inner-petal petal-20"></div>
+                            <div class="petal inner-petal petal-21"></div>
+                            <div class="petal inner-petal petal-22"></div>
+                            
+                            <!-- Flower center -->
+                            <div class="flower-center">
+                                <div class="center-detail"></div>
+                                <div class="center-ring"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="flower-title">For My Beautiful Valentine</h1>
+                    <p class="flower-subtitle">A special letter, just for you 💕</p>
+                </div>
+                <div class="page-footer">
+                    <button class="nav-btn next-btn" onclick="nextPage()">
+                        <span>Continue</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page 2: Date Options -->
+            <div class="book-page" id="page2">
+                <div class="page-content">
+                    <div class="page-header">
+                        <i class="fas fa-calendar-heart page-icon"></i>
+                        <h2 class="page-title">Let's Plan Our Valentine's Day</h2>
+                    </div>
+                    <div class="page-body">
+                        <p class="intro-text">
+                            My dearest love, I know how busy you've been with your mock exams and everything else. 
+                            I want to plan something special for us, but most importantly, I want it to work with your schedule.
+                        </p>
+                        
+                        <div class="date-options">
+                            <h3 class="section-title">Here are three options for our special date:</h3>
+                            
+                            <div class="date-card">
+                                <div class="date-number">1</div>
+                                <div class="date-details">
+                                    <h4><i class="fas fa-calendar-check"></i> This Saturday</h4>
+                                    <p>Right after your mock exams - A celebration of your hard work and us! 🎉</p>
+                                </div>
+                            </div>
+                            
+                            <div class="date-card">
+                                <div class="date-number">2</div>
+                                <div class="date-details">
+                                    <h4><i class="fas fa-calendar-check"></i> February 22nd</h4>
+                                    <p>A perfect day when you're less busy and we can truly relax together 💖</p>
+                                </div>
+                            </div>
+                            
+                            <div class="date-card">
+                                <div class="date-number">3</div>
+                                <div class="date-details">
+                                    <h4><i class="fas fa-calendar-check"></i> Another Day That Works</h4>
+                                    <p>If you're still not available, we can choose any day that's perfect for you ✨</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="emphasis-text">
+                            I understand that you'll be busy on Valentine's Day and the days around it. 
+                            That's completely okay! For me, <span class="highlight">Valentine's Day is any day I get to spend with you.</span> 
+                            Your presence is the only gift I need. 💕
+                        </p>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <button class="nav-btn prev-btn" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button class="nav-btn next-btn" onclick="nextPage()">
+                        <span>Continue</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page 3: The Plan -->
+            <div class="book-page" id="page3">
+                <div class="page-content">
+                    <div class="page-header">
+                        <i class="fas fa-heart-circle-plus page-icon"></i>
+                        <h2 class="page-title">Our Special Evening</h2>
+                    </div>
+                    <div class="page-body">
+                        <p class="intro-text">
+                            I've been thinking about making this day extra special for us. 
+                            Here's what I have in mind... 🌹
+                        </p>
+                        
+                        <div class="plan-section">
+                            <div class="plan-item">
+                                <div class="plan-icon">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="plan-content">
+                                    <h3>Evening Dinner</h3>
+                                    <p>A romantic dinner at a lovely place - my treat, of course! 
+                                    We'll enjoy good food, great conversation, and just being together. 
+                                    I can't wait to see your beautiful smile across the table. 🍽️✨</p>
+                                </div>
+                            </div>
+                            
+                            <div class="plan-item">
+                                <div class="plan-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="plan-content">
+                                    <h3>A Moment of Intimacy</h3>
+                                    <p>Quality time just for us - talking, laughing, holding hands, 
+                                    and creating beautiful memories together. No rush, no distractions, 
+                                    just you and me in our own little world. 💑</p>
+                                </div>
+                            </div>
+                            
+                            <div class="plan-item surprise">
+                                <div class="plan-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <div class="plan-content">
+                                    <h3>Special Surprises</h3>
+                                    <p>I have a few more surprises planned, but those will remain a secret for now! 
+                                    I promise they'll make you smile. 😊🎁</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="sweet-note">
+                            <i class="fas fa-sparkles"></i>
+                            Everything is designed with one goal: to make you feel loved, appreciated, 
+                            and special - because that's exactly what you are to me.
+                            <i class="fas fa-sparkles"></i>
+                        </p>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <button class="nav-btn prev-btn" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button class="nav-btn next-btn" onclick="nextPage()">
+                        <span>Continue</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page 4: Apology -->
+            <div class="book-page" id="page4">
+                <div class="page-content">
+                    <div class="page-header">
+                        <i class="fas fa-dove page-icon"></i>
+                        <h2 class="page-title">I'm Sorry, My Love</h2>
+                    </div>
+                    <div class="page-body apology-page">
+                        <p class="intro-text">
+                            I need to say something important...
+                        </p>
+                        
+                        <div class="apology-content">
+                            <p>
+                                I'm truly sorry for these past bad days. School, stress, reviews - I know they're not excuses, 
+                                but I want you to understand what's been happening. These challenges have made me less patient, 
+                                less understanding, and less present than you deserve. I've been so caught up in my own world 
+                                that I forgot to be there for you the way you've always been there for me.
+                            </p>
+                            
+                            <div class="divider">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            
+                            <p>
+                                You've always been my rock, my safe place, my constant source of support. Through every exam, 
+                                every stressful moment, every doubt I've had - you were there. You listened when I needed to vent, 
+                                you encouraged me when I wanted to give up, you believed in me even when I didn't believe in myself. 
+                                And how have I repaid that? By being distant, by being irritable, by not giving you the attention 
+                                and care you deserve.
+                            </p>
+                            
+                            <div class="divider">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            
+                            <p>
+                                I see now how my actions have affected you, and it breaks my heart. You deserve someone who shows up, 
+                                not just physically but emotionally too. You deserve someone who makes time for you, who listens to you, 
+                                who cherishes every moment with you. I want to be that person for you - I know I can be, because 
+                                I have been before, and I'm committed to being that person again.
+                            </p>
+                            
+                            <div class="divider">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            
+                            <p>
+                                I'm here now. Really, truly here. Present and committed to us, to you, to everything we're building together. 
+                                I'm working on myself, on managing my stress better, on being more mindful of how I show up in our relationship. 
+                                If you still need time and space, if you're not ready to talk right now, <span class="emphasis">I completely 
+                                understand, and I will wait.</span>
+                            </p>
+                            
+                            <div class="divider">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            
+                            <p class="final-apology">
+                                I'll wait as long as you need because you're worth it. You're worth every moment, every effort, 
+                                every change I need to make. When you're ready, I'll be here with open arms and an open heart, 
+                                ready to show you every day how much you mean to me. I promise to do better, to be better, 
+                                because you deserve nothing less than the best version of me.
+                            </p>
+                        </div>
+                        
+                        <div class="apology-signature">
+                            <p>With deepest regret and endless love,</p>
+                            <p class="signature-name">Jan Dale</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <button class="nav-btn prev-btn" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button class="nav-btn next-btn" onclick="nextPage()">
+                        <span>Continue</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page 5: I Love You -->
+            <div class="book-page" id="page5">
+                <div class="page-content final-page">
+                    <div class="love-declaration">
+                        <div class="hearts-background">
+                            <i class="fas fa-heart heart-float heart-1"></i>
+                            <i class="fas fa-heart heart-float heart-2"></i>
+                            <i class="fas fa-heart heart-float heart-3"></i>
+                            <i class="fas fa-heart heart-float heart-4"></i>
+                            <i class="fas fa-heart heart-float heart-5"></i>
+                            <i class="fas fa-heart heart-float heart-6"></i>
+                        </div>
+                        
+                        <h1 class="main-love-title">I Love You</h1>
+                        <h2 class="sub-love-title">So Much, Much, Much</h2>
+                        
+                        <div class="love-content">
+                            <p class="love-paragraph">
+                                Valentine's Day isn't just February 14th for me. It's every single day I get to spend with you.
+                                It's not about the roses, the chocolates, or the fancy dinners - though I want to give you all of those too.
+                                It's about the everyday moments that make my life beautiful because you're in it.
+                            </p>
+                            
+                            <p class="love-paragraph">
+                                It's every laugh we share when something silly happens, every deep conversation we have at 2 AM when 
+                                neither of us can sleep, every time you look at me with those beautiful eyes and I forget what I was saying. 
+                                It's the way you understand me without words, the way you make me feel safe, the way you believe in our future together.
+                            </p>
+                            
+                            <p class="love-paragraph">
+                                It's in the quiet moments when we're just together, content in each other's presence, not needing to fill 
+                                the silence because being near you is enough. It's in the exciting adventures we embark on, the new places 
+                                we explore, the memories we create that I know I'll treasure forever. Every moment with you becomes a memory 
+                                I want to hold onto.
+                            </p>
+                            
+                            <div class="emphasis-box">
+                                <p class="emphasis-large">
+                                    <i class="fas fa-infinity"></i>
+                                    You are very dear to me
+                                    <i class="fas fa-infinity"></i>
+                                </p>
+                            </div>
+                            
+                            <p class="love-paragraph special">
+                                Every day with you is Valentine's Day because every day you choose to be with me is a gift. 
+                                Every day you share your thoughts, your dreams, your fears with me is a privilege. Every day 
+                                you love me despite my flaws is a celebration. You see me - really see me - the good and the bad, 
+                                and you choose to stay. That's the greatest gift anyone has ever given me.
+                            </p>
+                            
+                            <p class="love-paragraph">
+                                I love how you make me want to be better. I love how you challenge me to grow while accepting me exactly 
+                                as I am. I love your strength, your kindness, your intelligence, your humor. I love the way you care about 
+                                the people in your life. I love your dreams and how passionate you are about the things that matter to you. 
+                                I love everything about you, even the little things you think are flaws.
+                            </p>
+                            
+                            <p class="love-paragraph final">
+                                Thank you for being you. Thank you for being mine. Thank you for every moment we've shared and every moment 
+                                we will share. Thank you for your patience, your love, your trust. Thank you for choosing me, every single day. 
+                                Thank you for making my life infinitely better just by being in it. I promise to spend every day showing you 
+                                how much you mean to me, how much I appreciate you, how deeply and completely I love you.
+                            </p>
+                            
+                            <div class="final-declaration">
+                                <h3 class="forever-love">Forever and Always,</h3>
+                                <h2 class="my-love">My Love is Yours</h2>
+                            </div>
+                            
+                            <div class="signature-section">
+                                <p class="signature-text">All my love, today and every day,</p>
+                                <p class="signature-name-final">Jan Dale D. Zarate</p>
+                                <div class="signature-hearts">
+                                    <i class="fas fa-heart"></i>
+                                    <i class="fas fa-heart"></i>
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <p class="date-stamp">February 4, 2026</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-footer final-footer">
+                    <button class="nav-btn prev-btn" onclick="prevPage()">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <button class="nav-btn restart-btn" onclick="restartLetter()">
+                        <i class="fas fa-redo"></i>
+                        <span>Read Again</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page Indicator -->
+        <div class="page-indicator">
+            <span class="indicator-dot active" data-page="1"></span>
+            <span class="indicator-dot" data-page="2"></span>
+            <span class="indicator-dot" data-page="3"></span>
+            <span class="indicator-dot" data-page="4"></span>
+            <span class="indicator-dot" data-page="5"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/valentines-letter.js"></script>
+</body>
+</html>
