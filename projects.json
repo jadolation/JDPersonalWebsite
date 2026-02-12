@@ -21,6 +21,13 @@
     "language": null
   },
   {
+    "name": "sillag-website",
+    "description": null,
+    "url": "https://github.com/jadolation/sillag-website",
+    "stars": 0,
+    "language": null
+  },
+  {
     "name": "my_coin_template",
     "description": "A coin template for those building their coin in SUI",
     "url": "https://github.com/jadolation/my_coin_template",
