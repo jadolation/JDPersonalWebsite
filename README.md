@@ -64,7 +64,7 @@ Change the phrases in `script.js`:
 const phrases = [
     'IT Student',
     'Web Developer',
-    // Add your own phrases
+    
 ];
 ```
 
