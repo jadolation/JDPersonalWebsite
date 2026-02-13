@@ -33,5 +33,12 @@
     "url": "https://github.com/jadolation/my_coin_template",
     "stars": 0,
     "language": "Move"
+  },
+  {
+    "name": "SeminarActivity",
+    "description": null,
+    "url": "https://github.com/jadolation/SeminarActivity",
+    "stars": 0,
+    "language": "HTML"
   }
 ]
