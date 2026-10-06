@@ -56,8 +56,8 @@
         'github.com',
         'www.linkedin.com',
         'www.facebook.com',
-  'www.instagram.com',
-  'instagram.com',
+        'www.instagram.com',
+        'instagram.com',
         'srvpinoy.com',
         'suiscan.xyz'
       ]);
@@ -232,14 +232,14 @@
 
     // Name-based questions (Jan Dale)
     if (
-      has('who is', 'who’s', 'whos', 'who') &&
+      has('who is', 'who's', 'whos', 'who') &&
       SITE.aliases.some((a) => t.includes(a))
     ) {
       const link = ctx === 'main' ? '#about' : '/main-page/index.html#about';
       return (
         `${SITE.name} — ${SITE.role}.\n` +
         `A ${SITE.age}-year-old BSIT student based in ${SITE.location}.\n\n` +
-        `He’s also the CEO/founder of SRV Digital Solutions Co., co-leading SRV (Serbisyo, Rito, Valid), a web app connecting clients with local freelance service providers in Baguio.\n\n` +
+        `He's also the CEO/founder of SRV Digital Solutions Co., co-leading SRV (Serbisyo, Rito, Valid), a web app connecting clients with local freelance service providers in Baguio.\n\n` +
         `About section: ${link}\n` +
         `CV: ${SITE.cv}\n` +
         `GitHub: ${SITE.github}`
@@ -248,11 +248,11 @@
 
     // Name-based questions (Khryz Ryn Mauri / KR)
     if (
-      has('who is', 'who’s', 'whos', 'who') &&
+      has('who is', 'who's', 'whos', 'who') &&
       SITE.romantic.her.aliases.some((a) => t.includes(a))
     ) {
       return (
-        `${SITE.romantic.her.name} 💕\n\n` +
+        `${SITE.romantic.her.name} \n\n` +
         `${SITE.romantic.her.about}\n\n` +
         `About Her section: ${SITE.romantic.aboutHerAnchor}\n` +
         `Instagram: ${SITE.romantic.her.instagram}`
@@ -352,7 +352,7 @@
 
     if (has('resume', 'cv')) {
       return (
-  `📄 Here's my Curriculum Vitae (CV):\n\n` +
+  `Here's my Curriculum Vitae (CV):\n\n` +
   `Click here to view: /main-page/${SITE.cv}\n\n` +
         `It will open in a new tab and you can download it too!`
       );
@@ -372,7 +372,7 @@
       return (
         `Want to know me beyond the code?\n\n` +
         `Check out my personal interests page: /main-page/personal-interests.html\n\n` +
-        `Sports, anime, superheroes, and more—plus a special section about the most important person in my life! 💕`
+        `Sports, anime, superheroes, and more—plus a special section about the most important person in my life!`
       );
     }
 
@@ -418,14 +418,14 @@
     const style = createEl('style', { id: 'jd-chatbot-styles' });
     style.textContent = `
       :root {
-        --jd-chat-bg: #0f172a;
-        --jd-chat-panel: rgba(15, 23, 42, 0.92);
-        --jd-chat-border: rgba(255,255,255,0.10);
-        --jd-chat-text: #e5e7eb;
-        --jd-chat-muted: rgba(229,231,235,0.75);
-        --jd-chat-primary: #3b82f6;
-        --jd-chat-bubble-user: #2563eb;
-        --jd-chat-bubble-bot: rgba(255,255,255,0.09);
+        --jd-chat-bg: var(--space);
+        --jd-chat-panel: var(--space-raised);
+        --jd-chat-border: var(--rule);
+        --jd-chat-text: var(--text);
+        --jd-chat-muted: var(--text-dim);
+        --jd-chat-primary: var(--accent);
+        --jd-chat-bubble-user: var(--accent);
+        --jd-chat-bubble-bot: var(--space);
         --jd-chat-shadow: 0 18px 50px rgba(0,0,0,0.35);
       }
 
@@ -434,44 +434,31 @@
         right: 100px;
         bottom: 30px;
         z-index: 9999;
-        font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
       }
 
       .jd-chatbot__fab {
         width: 56px;
         height: 56px;
-        border-radius: 16px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
-        background: linear-gradient(135deg, #00d4ff, #0099ff);
-        color: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        background: var(--jd-chat-primary);
+        color: var(--jd-chat-bg);
+        box-shadow: var(--jd-chat-shadow);
         display: grid;
         place-items: center;
         cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        transition: background-color 0.15s, color 0.15s;
         font-size: 1.6rem;
       }
 
       .jd-chatbot__fab:hover {
-        transform: translateY(-5px) scale(1.1);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        background: var(--jd-chat-text);
+        color: var(--jd-chat-bg);
       }
 
-      .jd-chatbot__fab:active {
-        transform: translateY(-3px) scale(1.05);
-      }
-
-      body.romantic-theme .jd-chatbot__fab {
-        background: linear-gradient(135deg, #ff6b9d, #ff8fab);
-        box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
-      }
-
-      body.romantic-theme .jd-chatbot__fab:hover {
-        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.5);
-      }
-
-      .jd-chatbot__fab:focus {
-        outline: 2px solid rgba(59,130,246,0.7);
+      .jd-chatbot__fab:focus-visible {
+        outline: 2px solid var(--jd-chat-primary);
         outline-offset: 2px;
       }
 
@@ -484,18 +471,12 @@
         width: min(360px, calc(100vw - 32px));
         height: min(520px, calc(100vh - 110px));
         margin-bottom: 12px;
-        border-radius: 16px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
         background: var(--jd-chat-panel);
-        backdrop-filter: blur(10px);
         box-shadow: var(--jd-chat-shadow);
         overflow: hidden;
         display: none;
-      }
-
-      body.romantic-theme .jd-chatbot__panel {
-        border: 2px solid rgba(255, 179, 217, 0.3);
-        box-shadow: 0 8px 30px rgba(255, 107, 157, 0.2);
       }
 
       .jd-chatbot__panel[data-open="true"] {
@@ -523,8 +504,8 @@
       .jd-chatbot__avatar {
         width: 28px;
         height: 28px;
-        border-radius: 10px;
-        background: rgba(255,255,255,0.10);
+        border-radius: 4px;
+        background: var(--jd-chat-bg);
         display: grid;
         place-items: center;
         border: 1px solid var(--jd-chat-border);
@@ -542,9 +523,9 @@
       .jd-chatbot__close {
         width: 32px;
         height: 32px;
-        border-radius: 10px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
-        background: rgba(255,255,255,0.07);
+        background: var(--jd-chat-bg);
         color: var(--jd-chat-text);
         cursor: pointer;
       }
@@ -561,7 +542,7 @@
   .jd-chatbot__msg {
         max-width: 85%;
         padding: 10px 12px;
-        border-radius: 14px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
         color: var(--jd-chat-text);
         font-size: 13px;
@@ -571,28 +552,25 @@
       }
 
       .jd-chatbot__link {
-        color: rgba(147, 197, 253, 1);
+        color: var(--jd-chat-primary);
         text-decoration: underline;
       }
 
       .jd-chatbot__link:hover {
-        color: rgba(191, 219, 254, 1);
+        color: var(--jd-chat-text);
       }
 
       .jd-chatbot__msg--bot {
         align-self: flex-start;
         background: var(--jd-chat-bubble-bot);
-        border-top-left-radius: 10px;
+        border-top-left-radius: 4px;
       }
 
       .jd-chatbot__msg--user {
         align-self: flex-end;
-        background: rgba(37,99,235,0.85);
-        border-top-right-radius: 10px;
-      }
-
-      body.romantic-theme .jd-chatbot__msg--user {
-        background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+        background: var(--jd-chat-primary);
+        color: var(--jd-chat-bg);
+        border-top-right-radius: 4px;
       }
 
       .jd-chatbot__time {
@@ -613,34 +591,28 @@
       .jd-chatbot__input {
         flex: 1;
         height: 40px;
-        border-radius: 12px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
-        background: rgba(2,6,23,0.35);
+        background: var(--jd-chat-bg);
         color: var(--jd-chat-text);
         padding: 0 12px;
         font-size: 13px;
+        font-family: 'Hanken Grotesk', sans-serif;
       }
 
       .jd-chatbot__input::placeholder {
-        color: rgba(229,231,235,0.55);
+        color: var(--jd-chat-muted);
       }
 
       .jd-chatbot__send {
         width: 44px;
         height: 40px;
-        border-radius: 12px;
+        border-radius: 4px;
         border: 1px solid var(--jd-chat-border);
-        background: rgba(59,130,246,0.95);
-        color: white;
+        background: var(--jd-chat-primary);
+        color: var(--jd-chat-bg);
         cursor: pointer;
-      }
-
-      body.romantic-theme .jd-chatbot__send {
-        background: linear-gradient(135deg, #ff6b9d, #ff8fab);
-      }
-
-      body.romantic-theme .jd-chatbot__send:hover {
-        background: linear-gradient(135deg, #ff5a8c, #ff789a);
+        font-size: 1rem;
       }
 
       .jd-chatbot__chiprow {
@@ -653,20 +625,16 @@
       .jd-chatbot__chip {
         font-size: 12px;
         color: var(--jd-chat-text);
-        background: rgba(255,255,255,0.07);
+        background: var(--jd-chat-bg);
         border: 1px solid var(--jd-chat-border);
         padding: 6px 10px;
-        border-radius: 999px;
+        border-radius: 4px;
         cursor: pointer;
       }
 
-      body.romantic-theme .jd-chatbot__chip {
-        background: rgba(255, 107, 157, 0.15);
-        border-color: rgba(255, 179, 217, 0.3);
-      }
-
-      body.romantic-theme .jd-chatbot__chip:hover {
-        background: linear-gradient(135deg, #ff6b9d, #ff8fab);
+      .jd-chatbot__chip:hover {
+        border-color: var(--jd-chat-primary);
+        color: var(--jd-chat-primary);
       }
 
       @media (max-width: 768px) {
@@ -675,7 +643,7 @@
           bottom: 100px;
         }
         .jd-chatbot__panel { 
-          border-radius: 14px;
+          border-radius: 4px;
           right: 30px;
           bottom: 168px;
         }
@@ -740,7 +708,7 @@
 
     const titleBlock = createEl('div', { class: 'jd-chatbot__title' });
     const avatar = createEl('div', { class: 'jd-chatbot__avatar', 'aria-hidden': 'true' }, [
-      createEl('span', { text: '💬' })
+      createEl('span', { text: '' })
     ]);
 
     const titleTextWrap = createEl('div');
@@ -784,7 +752,7 @@
       class: 'jd-chatbot__fab',
       type: 'button',
       'aria-label': 'Open chat'
-    }, [createEl('span', { text: '💬' })]);
+    });
 
     root.appendChild(panel);
     root.appendChild(fab);

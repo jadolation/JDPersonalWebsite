@@ -186,8 +186,6 @@ class GitHubStats {
 
     // Format activity for display (now async to fetch commit details)
     async formatActivity(events) {
-        console.log('Formatting activity events:', events); // Debug log
-        
         const formattedEvents = await Promise.all(
             events.slice(0, 5).map(async event => {
                 let action = '';
@@ -196,16 +194,13 @@ class GitHubStats {
                 switch (event.type) {
                     case 'PushEvent':
                         action = 'Pushed';
-                        console.log('PushEvent payload:', event.payload); // Debug log
                         const commits = event.payload.commits?.length;
                         if (commits) {
-                            // If commits array is available, show count and first message
                             message = `${commits} commit${commits !== 1 ? 's' : ''}`;
                             if (event.payload.commits[0]?.message) {
                                 message += `: ${event.payload.commits[0].message}`;
                             }
                         } else if (event.payload.head && event.repo) {
-                            // Fetch the actual commit details from the Commits API
                             try {
                                 const commitSha = event.payload.head;
                                 const cacheKey = `commit_${commitSha}`;
@@ -225,22 +220,18 @@ class GitHubStats {
                                     const size = event.payload.size || 1;
                                     message = `${size} commit${size !== 1 ? 's' : ''}`;
                                     if (commitData.commit?.message) {
-                                        // Get first line of commit message
                                         const firstLine = commitData.commit.message.split('\n')[0];
                                         message += `: ${firstLine}`;
                                     }
                                 }
                             } catch (error) {
                                 console.warn('Failed to fetch commit details:', error);
-                                // Fallback to size
                                 const size = event.payload.size || 1;
                                 message = `${size} commit${size !== 1 ? 's' : ''}`;
                             }
                         } else if (event.payload.size) {
-                            // Fallback: use the size property if commits array is missing
                             message = `${event.payload.size} commit${event.payload.size !== 1 ? 's' : ''}`;
                         } else {
-                            // If neither is available, just show "to branch"
                             const branch = event.payload.ref?.replace('refs/heads/', '') || 'main';
                             message = `to ${branch}`;
                         }
@@ -269,14 +260,14 @@ class GitHubStats {
                     action = event.type.replace('Event', '');
             }
 
-            return {
-                type: action,
-                repo: event.repo.name,
-                repoUrl: `https://github.com/${event.repo.name}`,
-                message: message.length > 80 ? message.substring(0, 80) + '...' : message,
-                time: this.timeAgo(new Date(event.created_at))
-            };
-        }));
+                return {
+                    type: action,
+                    repo: event.repo.name,
+                    repoUrl: `https://github.com/${event.repo.name}`,
+                    message: message.length > 80 ? message.substring(0, 80) + '...' : message,
+                    time: this.timeAgo(new Date(event.created_at))
+                };
+            }));
         
         return formattedEvents;
     }
@@ -306,11 +297,15 @@ class GitHubStats {
 
     // Update DOM with stats
     async updateStatsDisplay(userData, repos, activity) {
-        // Update stat cards
-        document.getElementById('github-repos').textContent = userData.public_repos;
+        const reposCount = userData.public_repos;
+        const activeCount = repos.length;
+        const reposText = activeCount > 0 && activeCount !== reposCount
+            ? `${reposCount} repositories (${activeCount} active)`
+            : `${reposCount} repositories`;
+
+        document.getElementById('github-repos').textContent = reposText;
         document.getElementById('github-followers').textContent = userData.followers;
         document.getElementById('github-stars').textContent = this.calculateTotalStars(repos);
-        document.getElementById('github-contributions').textContent = repos.length;
 
         // Remove loading class
         document.querySelectorAll('.stat-value').forEach(el => {
@@ -344,7 +339,6 @@ class GitHubStats {
             <li class="activity-item">
                 <div>
                     <a href="${item.repoUrl}" target="_blank" rel="noopener noreferrer" class="activity-repo">
-                        <i class="fab fa-github"></i>
                         ${item.repo}
                     </a>
                     <span class="activity-type">${item.type}</span>
@@ -378,7 +372,6 @@ class GitHubStats {
         const warning = document.createElement('div');
         warning.className = 'rate-limit-warning';
         warning.innerHTML = `
-            <i class="fas fa-exclamation-triangle"></i>
             <div>
                 <strong>Rate Limit Warning:</strong> 
                 GitHub API rate limit is low. Data updates may be limited.
@@ -397,7 +390,6 @@ class GitHubStats {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `
-            <i class="fas fa-exclamation-circle"></i>
             <div>
                 <strong>Error loading GitHub stats:</strong> ${message}
                 ${this.cache ? '<br><small>Displaying cached data from previous visit.</small>' : ''}
@@ -463,7 +455,6 @@ class GitHubStats {
 
 // Initialize GitHub stats when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Replace 'jadolation' with your actual GitHub username
     const githubUsername = 'jadolation';
     
     if (document.querySelector('.github-stats')) {

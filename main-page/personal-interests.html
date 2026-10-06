@@ -22,13 +22,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css">
@@ -38,301 +32,6 @@
     <link rel="icon" href="assets/images/favicons/main/favicon_io/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicons/main/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/images/brand/logo.png">
-
-    <style>
-        /* Personal Interests Page Styles - Using main page color scheme */
-        .interests-hero {
-            min-height: 50vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-primary);
-            position: relative;
-            overflow: hidden;
-            padding: 120px 0 60px;
-        }
-
-        .interests-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 50%);
-            animation: float 15s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .interests-hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-        }
-
-        .interests-hero h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .interests-hero p {
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            transition: var(--transition);
-            background: var(--bg-card);
-        }
-
-        .back-link:hover {
-            background: var(--bg-secondary);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .interests-section {
-            padding: 80px 0;
-        }
-
-        .interests-section:nth-child(even) {
-            background: var(--bg-secondary);
-        }
-
-        .interest-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            margin-bottom: 2rem;
-        }
-
-        .interest-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-color);
-        }
-
-        .interest-card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .interest-icon {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--gradient-primary);
-            border-radius: 15px;
-            color: var(--text-primary);
-            font-size: 1.8rem;
-        }
-
-        .interest-card h3 {
-            font-size: 1.8rem;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .interest-card p {
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .interest-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            font-weight: 500;
-        }
-
-        /* Special card for girlfriend */
-        .love-card {
-            background: linear-gradient(135deg, #ff6b9d 0%, #ffc3a0 100%);
-            border-color: #ff6b9d;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .love-card::before {
-            content: '💕';
-            position: absolute;
-            right: -20px;
-            top: -20px;
-            font-size: 10rem;
-            opacity: 0.1;
-        }
-
-        .love-card h3,
-        .love-card p {
-            color: white;
-            position: relative;
-            z-index: 1;
-        }
-
-        .love-card .interest-icon {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .love-card .tag {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .interests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .mini-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
-
-        .mini-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary-color);
-        }
-
-        .mini-card i {
-            font-size: 2.5rem;
-            background: var(--gradient-primary);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .mini-card h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .mini-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Image placeholder styles */
-        .interest-image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .interest-image-placeholder {
-            position: relative;
-            width: 100%;
-            padding-top: 75%; /* 4:3 aspect ratio - will be overridden when images added */
-            background: var(--bg-secondary);
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: var(--transition);
-            min-height: 200px; /* Ensure minimum height for images */
-        }
-
-        .interest-image-placeholder:hover {
-            border-color: var(--primary-color);
-            background: var(--bg-primary);
-        }
-
-        .interest-image-placeholder-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .interest-image-placeholder i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            opacity: 0.5;
-        }
-
-        .interest-image-placeholder span {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .interests-hero h1 {
-                font-size: 2rem;
-            }
-
-            .interests-hero p {
-                font-size: 1rem;
-            }
-
-            .interest-card {
-                padding: 1.5rem;
-            }
-
-            .interests-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -340,25 +39,22 @@
         <div class="container">
             <div class="nav-logo">
                 <a href="index.html">
-                    <img src="assets/images/brand/logo.png" alt="JD logo" class="nav-logo-img">
+                    <img src="assets/images/brand/logo.png" alt="JD logo" class="nav-logo-img" width="40" height="40">
                 </a>
             </div>
             <div class="nav-menu" id="navMenu">
                 <ul class="nav-list">
                     <li><a href="index.html" class="nav-link">Home</a></li>
-                    <li><a href="../romantic-page/love-letters.html" class="nav-link love-letters-link" style="display: none;">
-                        <i class="fas fa-heart"></i> Love Letters
-                    </a></li>
                     <li><a href="index.html#about" class="nav-link">About</a></li>
-                    <li><a href="index.html#srv" class="nav-link srv-link">SRV</a></li>
-                    <li><a href="index.html#terminal" class="nav-link"><i class="fas fa-terminal"></i> Terminal</a></li>
+                    <li><a href="index.html#srv" class="nav-link">SRV</a></li>
+                    <li><a href="index.html#terminal" class="nav-link">Terminal</a></li>
                     <li><a href="index.html#skills" class="nav-link">Skills</a></li>
                     <li><a href="index.html#projects" class="nav-link">Projects</a></li>
-                    <li><a href="index.html#github-stats" class="nav-link"><i class="fab fa-github"></i> GitHub</a></li>
+                    <li><a href="index.html#github-stats" class="nav-link">GitHub</a></li>
                     <li><a href="index.html#contact" class="nav-link">Contact</a></li>
                 </ul>
             </div>
-            <div class="nav-toggle" id="navToggle">
+            <div class="nav-toggle" id="navToggle" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -369,26 +65,19 @@
     <!-- Hero Section -->
     <section class="interests-hero">
         <div class="container">
-            <div class="interests-hero-content" data-aos="fade-up">
+            <div class="interests-hero-content">
                 <h1>Life Outside Coding</h1>
                 <p>AFK (Away From Keyboard) - Getting to know the human behind the developer from Baguio</p>
-                <a href="index.html#about" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Back to Portfolio
-                </a>
+                <a href="index.html#about" class="btn btn-secondary">Back to Portfolio</a>
             </div>
         </div>
     </section>
 
-    <!-- Most Important: Girlfriend Section -->
+    <!-- Girlfriend Section -->
     <section class="interests-section">
         <div class="container">
-            <div class="interest-card love-card" data-aos="fade-up">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>The Most Important Person in My Life</h3>
-                </div>
+            <h2 class="section-title">The Most Important Person in My Life</h2>
+            <div class="interest-card">
                 <p>
                     <strong>Khryz Ryn Mauri</strong> – The person who makes every day brighter and every challenge worth facing. 
                     She's not just my girlfriend; she's my best friend, my inspiration, and the reason I strive to be better every day.
@@ -399,39 +88,15 @@
                     supports my dreams while pursuing her own with incredible passion and determination.
                 </p>
                 <p>
-                    <i class="fas fa-quote-left" style="margin-right: 0.5rem; opacity: 0.7;"></i>
-                    <em>She's the balance to my code, the colors to my terminal, and the home in my heart.</em>
-                    <i class="fas fa-quote-right" style="margin-left: 0.5rem; opacity: 0.7;"></i>
+                    She's the balance to my code, the colors to my terminal, and the home in my heart.
                 </p>
                 <div class="interest-tags">
-                    <span class="tag">💕 Love of My Life</span>
-                    <span class="tag">🌟 My Inspiration</span>
-                    <span class="tag">🏠 My Home</span>
-                    <span class="tag">👑 My Queen</span>
+                    <span class="tag">Love of My Life</span>
+                    <span class="tag">My Inspiration</span>
+                    <span class="tag">My Home</span>
                 </div>
                 <div style="margin-top: 1.5rem;">
-                    <a href="../romantic-page/index.html" style="color: white; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.8rem 1.5rem; background: rgba(255,255,255,0.2); border-radius: 50px; backdrop-filter: blur(10px); transition: all 0.3s ease;">
-                        <i class="fas fa-heart"></i> Visit Our Special Page
-                    </a>
-                </div>
-
-                <!-- Image placeholders for girlfriend photos -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/girlfriend-1.jpg" 
-                             alt="Khryz Ryn Mauri - Photo 1" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/girlfriend-2.jpg" 
-                             alt="Khryz Ryn Mauri - Photo 2" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/girlfriend-3.jpg" 
-                             alt="Khryz Ryn Mauri - Photo 3" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <a href="../romantic-page/index.html" class="btn btn-secondary">Visit Our Special Page</a>
                 </div>
             </div>
         </div>
@@ -440,71 +105,38 @@
     <!-- Sports & Fitness Section -->
     <section class="interests-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Sports & Fitness</h2>
-            <div class="interest-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-dumbbell"></i>
-                    </div>
-                    <h3>Staying Active in Baguio</h3>
-                </div>
+            <h2 class="section-title">Sports & Fitness</h2>
+            <div class="interest-card">
+                <h3>Staying Active in Baguio</h3>
                 <p>
                     Physical fitness isn't just about staying healthy—it's about discipline, pushing limits, and building mental toughness. 
                     Growing up in Baguio City, with its hills and fresh mountain air, staying active comes naturally.
                 </p>
                 
                 <div class="interests-grid">
-                    <div class="mini-card" data-aos="fade-up" data-aos-delay="200">
-                        <i class="fas fa-dumbbell"></i>
+                    <div class="mini-card">
                         <h4>Gym / Fitness</h4>
                         <p>Regular strength training and cardio sessions. Building both physical and mental resilience.</p>
                     </div>
-                    <div class="mini-card" data-aos="fade-up" data-aos-delay="250">
-                        <i class="fas fa-basketball-ball"></i>
+                    <div class="mini-card">
                         <h4>Basketball</h4>
                         <p>Team sports teach communication and strategy—skills that translate well to software development.</p>
                     </div>
-                    <div class="mini-card" data-aos="fade-up" data-aos-delay="300">
-                        <i class="fas fa-bicycle"></i>
+                    <div class="mini-card">
                         <h4>Cycling</h4>
                         <p>Exploring Baguio's scenic routes and challenging uphill climbs. Great for clearing the mind.</p>
                     </div>
-                    <div class="mini-card" data-aos="fade-up" data-aos-delay="350">
-                        <i class="fas fa-table-tennis"></i>
+                    <div class="mini-card">
                         <h4>Pickleball (Soon!)</h4>
                         <p>Looking forward to trying this fast-growing sport. It's all about quick reflexes and strategy.</p>
                     </div>
                 </div>
 
                 <div class="interest-tags" style="margin-top: 1.5rem;">
-                    <span class="tag">💪 Discipline</span>
-                    <span class="tag">🏀 Teamwork</span>
-                    <span class="tag">🚴 Endurance</span>
-                    <span class="tag">⛰️ Baguio Hills</span>
-                </div>
-
-                <!-- Image placeholders for sports activities -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/gym-workout.jpg" 
-                             alt="Gym workout session" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/basketball.jpg" 
-                             alt="Playing basketball" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/cycling-baguio.jpg" 
-                             alt="Cycling in Baguio" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/sports-action.jpg" 
-                             alt="Sports activity" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <span class="tag">Discipline</span>
+                    <span class="tag">Teamwork</span>
+                    <span class="tag">Endurance</span>
+                    <span class="tag">Baguio Hills</span>
                 </div>
             </div>
         </div>
@@ -513,14 +145,9 @@
     <!-- Superheroes Section -->
     <section class="interests-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Superheroes & Comics</h2>
-            <div class="interest-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>DC & Marvel Universes</h3>
-                </div>
+            <h2 class="section-title">Superheroes & Comics</h2>
+            <div class="interest-card">
+                <h3>DC & Marvel Universes</h3>
                 <p>
                     Superheroes represent the best of humanity—courage, hope, and the determination to do the right thing even when it's hard. 
                     I've been a fan of both DC and Marvel for years, but <strong>Superman</strong> holds a special place in my heart.
@@ -536,33 +163,14 @@
                 </p>
 
                 <div class="interest-tags">
-                    <span class="tag">🦸 Superman #1</span>
-                    <span class="tag">🦇 Batman</span>
-                    <span class="tag">🕷️ Spider-Man</span>
-                    <span class="tag">⚡ The Flash</span>
-                    <span class="tag">🛡️ Captain America</span>
-                    <span class="tag">💚 Hulk</span>
-                    <span class="tag">⚔️ Wonder Woman</span>
-                    <span class="tag">🤖 Iron Man</span>
-                </div>
-
-                <!-- Image placeholders for superhero collection/memorabilia -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="https://static0.gamerantimages.com/wordpress/wp-content/uploads/2025/07/superman-in-a-memorable-scene-from-superman.jpg?w=1600&h=900&fit=crop" 
-                             alt="Superman collection and memorabilia" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/comics-merch.jpg" 
-                             alt="Comics and superhero merchandise" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/favorite-heroes.jpg" 
-                             alt="Favorite superhero characters" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <span class="tag">Superman #1</span>
+                    <span class="tag">Batman</span>
+                    <span class="tag">Spider-Man</span>
+                    <span class="tag">The Flash</span>
+                    <span class="tag">Captain America</span>
+                    <span class="tag">Hulk</span>
+                    <span class="tag">Wonder Woman</span>
+                    <span class="tag">Iron Man</span>
                 </div>
             </div>
         </div>
@@ -571,14 +179,9 @@
     <!-- Anime Section -->
     <section class="interests-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Anime & Manga</h2>
-            <div class="interest-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-dragon"></i>
-                    </div>
-                    <h3>A Love for Storytelling</h3>
-                </div>
+            <h2 class="section-title">Anime & Manga</h2>
+            <div class="interest-card">
+                <h3>A Love for Storytelling</h3>
                 <p>
                     Anime isn't just entertainment—it's art, philosophy, and emotion all wrapped into beautifully crafted stories. 
                     I love how anime explores themes like perseverance, friendship, ambition, and what it means to chase your dreams.
@@ -600,38 +203,14 @@
                 </p>
 
                 <div class="interest-tags">
-                    <span class="tag">🌌 Gurren Lagann</span>
-                    <span class="tag">🏴‍☠️ One Piece</span>
-                    <span class="tag">⚔️ Demon Slayer</span>
-                    <span class="tag">🎯 Hunter x Hunter</span>
-                    <span class="tag">🥋 Dragon Ball</span>
-                    <span class="tag">🎸 Cowboy Bebop</span>
-                    <span class="tag">🔥 My Hero Academia</span>
-                    <span class="tag">🗡️ Attack on Titan</span>
-                </div>
-
-                <!-- Image placeholders for anime screenshots/posters -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/gurren_lagann_big.png" 
-                             alt="Tengen Toppa Gurren Lagann" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="https://occ-0-8407-2219.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABURj5IDk5oCinFriJlxNjIrooPk24OeaNy-KHh3RAkpL5dpQ7MUzboD2AFpyMgWR-XElhv9Fsgd2W5ISE-Z3eXYMjU2D7vk0TW1J.jpg?r=588" 
-                             alt="One Piece anime" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="https://occ-0-8407-2218.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABVJLA0a9PivqxUuZ-4psU3gTjEyJUQgni5YxXTnZYH3qwtJ4YMcjH2L-EytBU7DScg8gh_sX01XpyibKNVWnH2TQolWwnAQyH9CB.jpg?r=858" 
-                             alt="Favorite anime series" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="https://imgsrv.crunchyroll.com/cdn-cgi/image/fit=cover,format=auto,quality=85,width=1920/keyart/GQWH0M9N8-backdrop_wide" 
-                             alt="Anime collection and posters" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <span class="tag">Gurren Lagann</span>
+                    <span class="tag">One Piece</span>
+                    <span class="tag">Demon Slayer</span>
+                    <span class="tag">Hunter x Hunter</span>
+                    <span class="tag">Dragon Ball</span>
+                    <span class="tag">Cowboy Bebop</span>
+                    <span class="tag">My Hero Academia</span>
+                    <span class="tag">Attack on Titan</span>
                 </div>
             </div>
         </div>
@@ -640,14 +219,9 @@
     <!-- Movies & TV Shows Section -->
     <section class="interests-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Movies & TV Shows</h2>
-            <div class="interest-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-film"></i>
-                    </div>
-                    <h3>Selective but Passionate</h3>
-                </div>
+            <h2 class="section-title">Movies & TV Shows</h2>
+            <div class="interest-card">
+                <h3>Selective but Passionate</h3>
                 <p>
                     I love movies—especially those that make you think, feel, or see the world differently. From superhero blockbusters 
                     to indie dramas, sci-fi epics to thought-provoking thrillers, I appreciate films that tell compelling stories.
@@ -668,31 +242,11 @@
                 </p>
 
                 <div class="interest-tags">
-                    <span class="tag">📺 FRIENDS</span>
-                    <span class="tag">🥋 Cobra Kai</span>
-                    <span class="tag">🎬 Marvel Cinematic Universe</span>
-                    <span class="tag">🎥 DC Films</span>
-                    <span class="tag">🎞️ Sci-Fi</span>
-                    <span class="tag">🍿 Thrillers</span>
-                </div>
-
-                <!-- Image placeholders for movie/TV watching moments -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/movie-night.jpg" 
-                             alt="Movie night setup" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/favorite-shows.jpg" 
-                             alt="FRIENDS and Cobra Kai" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/cinema.jpg" 
-                             alt="Cinema experience" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <span class="tag">FRIENDS</span>
+                    <span class="tag">Cobra Kai</span>
+                    <span class="tag">Marvel Cinematic Universe</span>
+                    <span class="tag">Sci-Fi</span>
+                    <span class="tag">Thrillers</span>
                 </div>
             </div>
         </div>
@@ -701,14 +255,9 @@
     <!-- Pets Section -->
     <section class="interests-section">
         <div class="container">
-            <h2 class="section-title" data-aos="fade-up">Pets & Animals</h2>
-            <div class="interest-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="interest-card-header">
-                    <div class="interest-icon">
-                        <i class="fas fa-paw"></i>
-                    </div>
-                    <h3>Dog Lover (Selective with Cats)</h3>
-                </div>
+            <h2 class="section-title">Pets & Animals</h2>
+            <div class="interest-card">
+                <h3>Dog Lover (Selective with Cats)</h3>
                 <p>
                     <strong>Dogs are the best.</strong> Their loyalty, energy, and unconditional love make them incredible companions. 
                     There's something special about coming home to a wagging tail and pure excitement—no matter how tough the day was.
@@ -719,38 +268,14 @@
                 </p>
                 <p>
                     <strong>Cats?</strong> I can appreciate them—especially if they have a unique personality or are particularly 
-                    affectionate. But I'm selective. Dogs will always have my heart. 🐾
+                    affectionate. But I'm selective. Dogs will always have my heart.
                 </p>
 
                 <div class="interest-tags">
-                    <span class="tag">🐕 Dogs #1</span>
-                    <span class="tag">🐾 Loyalty</span>
-                    <span class="tag">❤️ Unconditional Love</span>
-                    <span class="tag">🐈 Selective with Cats</span>
-                </div>
-
-                <!-- Image placeholders for pet photos -->
-                <div class="interest-image-grid" style="margin-top: 2rem;">
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/dog-1.jpg" 
-                             alt="My dog - Photo 1" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/dog-2.jpg" 
-                             alt="My dog - Photo 2" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/pet-moments.jpg" 
-                             alt="Pet moments and memories" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
-                    <div class="interest-image-placeholder">
-                        <img src="assets/images/interests/furry-friends.jpg" 
-                             alt="Furry friends" 
-                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 10px;">
-                    </div>
+                    <span class="tag">Dogs #1</span>
+                    <span class="tag">Loyalty</span>
+                    <span class="tag">Unconditional Love</span>
+                    <span class="tag">Selective with Cats</span>
                 </div>
             </div>
         </div>
@@ -759,53 +284,42 @@
     <!-- Call to Action -->
     <section class="interests-section" style="text-align: center; padding: 60px 0;">
         <div class="container">
-            <div data-aos="fade-up">
-                <h2 class="section-title">Let's Connect</h2>
-                <p style="max-width: 600px; margin: 0 auto 2rem; color: #666; font-size: 1.1rem;">
-                    Want to talk about anime, sports, superheroes, or just life in general? I'm always up for a good conversation.
-                </p>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <a href="index.html#contact" class="btn btn-primary">
-                        <i class="fas fa-envelope"></i> Get In Touch
-                    </a>
-                    <a href="index.html#projects" class="btn btn-secondary">
-                        <i class="fas fa-code"></i> See My Work
-                    </a>
-                </div>
+            <h2 class="section-title">Let's Connect</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem; color: var(--text-dim); font-size: 1.1rem;">
+                Want to talk about anime, sports, superheroes, or just life in general? I'm always up for a good conversation.
+            </p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html#contact" class="btn btn-primary">
+                    Get In Touch
+                </a>
+                <a href="index.html#projects" class="btn btn-secondary">
+                    See My Work
+                </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer style="background: var(--bg-secondary); color: var(--text-primary); padding: 2rem 0; text-align: center; border-top: 1px solid var(--border-color);">
+    <footer class="footer">
         <div class="container">
-            <p style="color: var(--text-secondary);">&copy; 2026 Jan Dale D. Zarate. Built with passion in Baguio City. 🏔️</p>
-            <div class="social-links" style="margin-top: 1rem; justify-content: center;">
-                <a href="https://github.com/jadolation" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/jan-dale-zarate-1bbb67188/" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                <a href="https://www.facebook.com/jandale.ii/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.instagram.com/jadolation/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <div class="footer-content">
+                <p>&copy; 2026 Jan Dale D. Zarate. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="index.html" class="footer-romantic-link">Home</a>
+                    <a href="../romantic-page/index.html" class="footer-romantic-link">Romantic</a>
+                    <a href="https://github.com/jadolation" target="_blank" rel="noopener" aria-label="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
+                    <a href="https://www.linkedin.com/in/jan-dale-zarate-1bbb67188/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                    <a href="https://www.facebook.com/jandale.ii/" target="_blank" rel="noopener" aria-label="Facebook"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                    <a href="https://www.instagram.com/jadolation/" target="_blank" rel="noopener" aria-label="Instagram"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- AOS Animation Library -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
     <!-- Main JS -->
     <script src="js/main.js"></script>
     
     <!-- Chatbot -->
     <script src="js/chatbot/chatbot.js"></script>
-
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true,
-            offset: 100
-        });
-    </script>
 </body>
 </html>
