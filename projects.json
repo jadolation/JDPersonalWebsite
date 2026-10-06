@@ -14,6 +14,13 @@
     "language": "JavaScript"
   },
   {
+    "name": "tsuper-app",
+    "description": null,
+    "url": "https://github.com/jadolation/tsuper-app",
+    "stars": 0,
+    "language": "TypeScript"
+  },
+  {
     "name": "simpl_nft",
     "description": "Simple NFT ",
     "url": "https://github.com/jadolation/simpl_nft",
@@ -26,6 +33,13 @@
     "url": "https://github.com/jadolation/sillag-website",
     "stars": 0,
     "language": "CSS"
+  },
+  {
+    "name": "new-creation-517-bakery-POS",
+    "description": null,
+    "url": "https://github.com/jadolation/new-creation-517-bakery-POS",
+    "stars": 0,
+    "language": "TypeScript"
   },
   {
     "name": "my_coin_template",
