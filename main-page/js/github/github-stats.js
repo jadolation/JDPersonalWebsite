@@ -329,7 +329,7 @@ class GitHubStats {
         if (formattedActivity.length === 0) {
             activityList.innerHTML = `
                 <li class="activity-item">
-                    <span class="terminal-text">No recent public activity found.</span>
+                    <span>No recent public activity found.</span>
                 </li>
             `;
             return;
