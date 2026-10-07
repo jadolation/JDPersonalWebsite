@@ -189,6 +189,9 @@ async function loadProjects() {
             ? '<span class="project-site-label">This site</span>'
             : '';
 
+        const repoStars = typeof repo.stars === 'number' ? repo.stars : 0;
+        const repoForks = typeof repo.forks === 'number' ? repo.forks : 0;
+
         const descLine = repoDesc
             ? `<p class="project-desc">${repoDesc}</p>`
             : '';
@@ -230,6 +233,11 @@ async function loadProjects() {
                     </div>
                     ${descLine}
                     ${langLine ? `<div class="project-tags">${langLine}</div>` : ''}
+                    <div class="project-meta">
+                        ${repoStars ? `<span>${repoStars} stars</span>` : ''}
+                        ${repoStars && repoForks ? '<span aria-hidden="true"> · </span>' : ''}
+                        ${repoForks ? `<span>${repoForks} forks</span>` : ''}
+                    </div>
                 </div>
             </a>
         </article>

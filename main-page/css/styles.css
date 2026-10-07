@@ -1128,6 +1128,15 @@ body.romantic-theme .navbar.scrolled {
     background: none;
 }
 
+.project-meta {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
  /* Contact */
 .contact {
     padding: var(--section-padding);

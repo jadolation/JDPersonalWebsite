@@ -33,6 +33,7 @@ jobs:
                     description
                     url
                     stargazersCount
+                    forkCount
                     primaryLanguage {
                       name
                     }
@@ -48,8 +49,55 @@ jobs:
             "https://api.github.com/graphql")
           echo "GraphQL response:"
           echo "$resp" | jq .
-          nodes=$(echo "$resp" | jq -r '[.data.user.pinnedItems.nodes // [] | .[] | {name: .name, description: .description, url: .url, stars: .stargazersCount, language: (.primaryLanguage.name // null)}]')
-          echo "$nodes" > projects.json
+          nodes=$(echo "$resp" | jq -r '[.data.user.pinnedItems.nodes // [] | .[] | {name: .name, description: .description, url: .url, stars: .stargazersCount, forks: .forkCount, language: (.primaryLanguage.name // null)}]')
+          if [ "$(echo "$nodes" | jq 'length')" -eq 0 ]; then
+            cat > projects.json << 'JSONEOF'
+[
+  {
+    "name": "ReyJrFerrer/SRV",
+    "description": null,
+    "url": "https://github.com/jadolation/ReyJrFerrer/SRV",
+    "stars": 3,
+    "forks": 3,
+    "language": "TypeScript"
+  },
+  {
+    "name": "JDPersonalWebsite",
+    "description": "Its just my personal portfolio, nothing special",
+    "url": "https://github.com/jadolation/JDPersonalWebsite",
+    "stars": 1,
+    "forks": 1,
+    "language": "JavaScript"
+  },
+  {
+    "name": "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
+    "description": null,
+    "url": "https://github.com/jadolation/SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
+    "stars": 0,
+    "forks": 57,
+    "language": "HTML"
+  },
+  {
+    "name": "bettermapandan",
+    "description": "Mapandan, Pangasinan joins the Better LGU initiative of BetterGov.ph through Better Mapandan, a transparency focused website created by independent web developers.",
+    "url": "https://github.com/jadolation/bettermapandan",
+    "stars": 2,
+    "forks": 2,
+    "language": "HTML"
+  },
+  {
+    "name": "betterbasista",
+    "description": null,
+    "url": "https://github.com/jadolation/betterbasista",
+    "stars": 1,
+    "forks": 1,
+    "language": "HTML"
+  }
+]
+JSONEOF
+          else
+            echo "$nodes" > projects.json
+          fi
 
       - name: Commit and push projects.json
         run: |
