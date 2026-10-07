@@ -77,10 +77,10 @@ const formStatus = document.getElementById('formStatus');
 if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData(contactForm);
         const data = Object.fromEntries(formData);
-        
+
         if (!data.name || !data.email || !data.message) {
             if (formStatus) {
                 formStatus.textContent = 'Please fill in all required fields.';
@@ -88,22 +88,64 @@ if (contactForm) {
             }
             return;
         }
-        
-        // No backend configured - show info in form
-        if (formStatus) {
-            formStatus.textContent = 'Form is ready but has no backend configured. In production, this would send your message to zaratejandale15@gmail.com.';
-            formStatus.className = 'form-status success';
+
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending…';
         }
-        
-        contactForm.reset();
-        
-        // Clear message after a few seconds
-        setTimeout(() => {
-            if (formStatus) {
-                formStatus.textContent = '';
-                formStatus.className = 'form-status';
-            }
-        }, 8000);
+        if (formStatus) {
+            formStatus.textContent = 'Sending your message…';
+            formStatus.className = 'form-status';
+        }
+
+        fetch('https://formsubmit.co/ajax/zaratejandale15@gmail.com', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: data.name,
+                email: data.email,
+                subject: data.subject || 'Portfolio contact form',
+                message: data.message,
+                _honey: data._honey || '',
+                _captcha: 'false',
+                _template: 'table',
+                _subject: 'Portfolio contact: ' + (data.subject || 'New message')
+            })
+        })
+            .then((res) => res.json().then((json) => ({ ok: res.ok, json })).catch(() => ({ ok: res.ok, json: {} })))
+            .then(({ ok, json }) => {
+                if (!ok || (json && json.success === 'false')) {
+                    throw new Error((json && json.message) || 'Send failed.');
+                }
+                if (formStatus) {
+                    formStatus.textContent = 'Thanks — your message was sent. I\'ll get back to you soon.';
+                    formStatus.className = 'form-status success';
+                }
+                contactForm.reset();
+                setTimeout(() => {
+                    if (formStatus) {
+                        formStatus.textContent = '';
+                        formStatus.className = 'form-status';
+                    }
+                }, 8000);
+            })
+            .catch(() => {
+                if (formStatus) {
+                    formStatus.textContent = 'Couldn\'t send just now — please email me directly at zaratejandale15@gmail.com.';
+                    formStatus.className = 'form-status error';
+                }
+            })
+            .finally(() => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                }
+            });
     });
 }
 
