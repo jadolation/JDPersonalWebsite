@@ -1471,7 +1471,7 @@ body.romantic-theme .navbar.scrolled {
 }
 
 @media (min-width: 968px) {
-    .srv-section .container {
+    .srv-columns {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -1490,6 +1490,7 @@ body.romantic-theme .navbar.scrolled {
         margin-bottom: 0;
         position: sticky;
         top: 120px;
+        align-self: start;
     }
 }
 
@@ -1569,6 +1570,55 @@ body.romantic-theme .navbar.scrolled {
     color: var(--text-dim);
     margin: 0;
     line-height: 1.6;
+}
+
+/* Shared full-width accomplishment band (bakery + SRV) */
+.achievements {
+    margin-top: 4rem;
+}
+
+.achievements--cols-4 {
+    --cols: 4;
+}
+
+.achievements--cols-5 {
+    --cols: 5;
+}
+
+.achievements-title {
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem;
+}
+
+.achievements-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    column-gap: 2rem;
+    row-gap: 0.5rem;
+}
+
+.achievements-list li {
+    color: var(--text-dim);
+    line-height: 1.6;
+    border-top: 1px solid var(--rule);
+    padding-top: 1rem;
+}
+
+@media (max-width: 1023px) {
+    .achievements-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .achievements-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }
 
 .srv-cta {
@@ -1785,7 +1835,7 @@ body.romantic-theme .navbar.scrolled {
 }
 
 @media (min-width: 968px) {
-    .bakery .container {
+    .bakery-columns {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -1805,6 +1855,7 @@ body.romantic-theme .navbar.scrolled {
         position: sticky;
         top: 120px;
         text-align: left;
+        align-self: start;
     }
 }
 
