@@ -1738,3 +1738,120 @@ body.romantic-theme .navbar.scrolled {
 .love-letters-link {
     display: none !important;
 }
+
+/* Bakery */
+.bakery {
+    padding: var(--section-padding);
+    background: var(--space);
+}
+
+.bakery-content {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 4rem;
+    margin-top: 3rem;
+    position: relative;
+}
+
+.bakery-text p {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 62ch;
+    margin-bottom: 2rem;
+}
+
+.bakery-facts {
+    border-top: 1px solid var(--rule);
+}
+
+.bakery-fact-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+}
+
+.bakery-fact-row dt {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+.bakery-fact-row dd {
+    color: var(--text);
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.bakery-est {
+    color: var(--star);
+    font-weight: 500;
+}
+
+.bakery-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.bakery-logo-wrap {
+    width: 220px;
+    flex-shrink: 0;
+}
+
+.bakery-logo-wrap img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    display: block;
+}
+
+.bakery-mascot-wrap {
+    width: 280px;
+    flex-shrink: 0;
+    margin-top: auto;
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 2;
+}
+
+.bakery-mascot-wrap img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 968px) {
+    .bakery-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .bakery-images {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+    }
+
+    .bakery-logo-wrap {
+        width: 180px;
+        order: -1;
+    }
+
+    .bakery-mascot-wrap {
+        width: 200px;
+        margin-bottom: -1px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bakery-fact-row {
+        grid-template-columns: 1fr;
+        gap: 0.25rem;
+    }
+}
