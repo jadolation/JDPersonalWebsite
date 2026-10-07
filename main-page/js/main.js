@@ -35,18 +35,23 @@ navLinks.forEach(link => {
 window.addEventListener('scroll', () => {
     let current = '';
     const sections = document.querySelectorAll('section');
-    
+
     sections.forEach(section => {
+        // Skip hidden sections (e.g. #valentine is display:none, so its
+        // offsetTop reads 0 and would otherwise claim every scroll position).
+        if (section.clientHeight === 0) return;
         const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
         if (scrollY >= sectionTop - 200) {
             current = section.getAttribute('id');
         }
     });
-    
+
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href').slice(1) === current) {
+        const href = link.getAttribute('href') || '';
+        const hashIndex = href.indexOf('#');
+        const targetId = hashIndex === -1 ? '' : href.slice(hashIndex + 1);
+        if (targetId !== '' && targetId === current) {
             link.classList.add('active');
         }
     });
