@@ -42,61 +42,37 @@ jobs:
               }
             }
           }'
+
           resp=$(curl -s -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg q "$query" '{query: $q}')" \
-            "https://api.github.com/graphql")
+            "https://api.github.com/graphql") || true
+
           echo "GraphQL response:"
-          echo "$resp" | jq .
-          nodes=$(echo "$resp" | jq -r '[.data.user.pinnedItems.nodes // [] | .[] | {name: .name, description: .description, url: .url, stars: .stargazersCount, forks: .forkCount, language: (.primaryLanguage.name // null)}]')
-          if [ "$(echo "$nodes" | jq 'length')" -eq 0 ]; then
-            cat > projects.json << 'JSONEOF'
-[
-  {
-    "name": "ReyJrFerrer/SRV",
-    "description": null,
-    "url": "https://github.com/jadolation/ReyJrFerrer/SRV",
-    "stars": 3,
-    "forks": 3,
-    "language": "TypeScript"
-  },
-  {
-    "name": "JDPersonalWebsite",
-    "description": "Its just my personal portfolio, nothing special",
-    "url": "https://github.com/jadolation/JDPersonalWebsite",
-    "stars": 1,
-    "forks": 1,
-    "language": "JavaScript"
-  },
-  {
-    "name": "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
-    "description": null,
-    "url": "https://github.com/jadolation/SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
-    "stars": 0,
-    "forks": 57,
-    "language": "HTML"
-  },
-  {
-    "name": "bettermapandan",
-    "description": "Mapandan, Pangasinan joins the Better LGU initiative of BetterGov.ph through Better Mapandan, a transparency focused website created by independent web developers.",
-    "url": "https://github.com/jadolation/bettermapandan",
-    "stars": 2,
-    "forks": 2,
-    "language": "HTML"
-  },
-  {
-    "name": "betterbasista",
-    "description": null,
-    "url": "https://github.com/jadolation/betterbasista",
-    "stars": 1,
-    "forks": 1,
-    "language": "HTML"
-  }
-]
-JSONEOF
-          else
+          echo "$resp" | jq . || true
+
+          nodes=$(echo "$resp" | jq -r '
+            [
+              (.data.user.pinnedItems.nodes // [])[]
+              | select(.name != null)
+              | {
+                  name: .name,
+                  description: .description,
+                  url: .url,
+                  stars: .stargazersCount,
+                  forks: .forkCount,
+                  language: (.primaryLanguage.name // null)
+                }
+            ]
+          ')
+
+          count=$(echo "$nodes" | jq 'length')
+
+          if [ "$count" -gt 0 ]; then
             echo "$nodes" > projects.json
+          else
+            echo "No pinned items returned; keeping existing projects.json"
           fi
 
       - name: Commit and push projects.json
