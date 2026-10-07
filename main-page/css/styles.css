@@ -961,6 +961,16 @@ body.romantic-theme .navbar.scrolled {
     margin-bottom: 2rem;
 }
 
+.projects-loading,
+.projects-error {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.projects-error a {
+    color: var(--accent);
+}
+
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));

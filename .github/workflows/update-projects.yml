@@ -71,13 +71,14 @@ jobs:
 
           if [ "$count" -gt 0 ]; then
             echo "$nodes" > projects.json
+            cp projects.json main-page/projects.json
           else
             echo "No pinned items returned; keeping existing projects.json"
           fi
 
       - name: Commit and push projects.json
         run: |
-          git add projects.json || true
+          git add projects.json main-page/projects.json || true
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0

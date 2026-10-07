@@ -162,9 +162,8 @@ const IMG_FALLBACK_HTML = (name) =>
 
 // Project rows
 async function loadProjects() {
-    const response = await fetch('./projects.json');
-    const projects = await response.json();
     const list = document.getElementById('projectsList');
+    if (!list) return;
 
     const escapeHtml = (value) => String(value ?? '')
         .replaceAll('&', '&amp;')
@@ -173,7 +172,22 @@ async function loadProjects() {
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
 
-    if (!list) return;
+    list.innerHTML = '<p class="projects-loading">Loading projects…</p>';
+
+    let projects;
+    try {
+        const response = await fetch('./projects.json');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        projects = await response.json();
+    } catch {
+        list.innerHTML = '<p class="projects-error">Couldn\'t load projects — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
+        return;
+    }
+
+    if (!Array.isArray(projects) || projects.length === 0) {
+        list.innerHTML = '<p class="projects-error">No projects to show yet — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
+        return;
+    }
 
     list.innerHTML = projects.map((repo, index) => {
         const repoName = escapeHtml(repo.name);
@@ -191,6 +205,8 @@ async function loadProjects() {
 
         const repoStars = typeof repo.stars === 'number' ? repo.stars : 0;
         const repoForks = typeof repo.forks === 'number' ? repo.forks : 0;
+        const starsLabel = `${repoStars} star${repoStars === 1 ? '' : 's'}`;
+        const forksLabel = `${repoForks} fork${repoForks === 1 ? '' : 's'}`;
 
         const descLine = repoDesc
             ? `<p class="project-desc">${repoDesc}</p>`
@@ -234,9 +250,9 @@ async function loadProjects() {
                     ${descLine}
                     ${langLine ? `<div class="project-tags">${langLine}</div>` : ''}
                     <div class="project-meta">
-                        ${repoStars ? `<span>${repoStars} stars</span>` : ''}
-                        ${repoStars && repoForks ? '<span aria-hidden="true"> · </span>' : ''}
-                        ${repoForks ? `<span>${repoForks} forks</span>` : ''}
+                        <span>★ ${starsLabel}</span>
+                        <span aria-hidden="true"> · </span>
+                        <span>${forksLabel}</span>
                     </div>
                 </div>
             </a>
