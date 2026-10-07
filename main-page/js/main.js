@@ -154,12 +154,6 @@ console.log('%c Hello, Developer!', 'font-size: 20px; color: #8DB4FF; font-weigh
 console.log('%cWelcome to my portfolio. Looking for something?', 'font-size: 14px; color: #9BA4B8;');
 console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 12px; color: #F0CE86;');
 
-// SVG external-link arrow (reused in every card overlay)
-const EXTERNAL_LINK_SVG = '<svg class="project-overlay-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
-
-const IMG_FALLBACK_HTML = (name) =>
-    `<div class="project-img-fallback" aria-hidden="true">${name}</div>`;
-
 // Project rows
 async function loadProjects() {
     const list = document.getElementById('projectsList');
@@ -189,7 +183,7 @@ async function loadProjects() {
         return;
     }
 
-    list.innerHTML = projects.map((repo, index) => {
+    list.innerHTML = projects.map((repo) => {
         const repoName = escapeHtml(repo.name);
         const repoUrl = escapeHtml(repo.url);
         const repoDesc = repo.description
@@ -215,33 +209,9 @@ async function loadProjects() {
             ? `<span class="project-lang">${repoLang}</span>`
             : '';
 
-        const imgSrc =
-            `https://opengraph.githubassets.com/1/${encodeURIComponent(repo.name)}`;
-        const imgW = 640;
-        const imgH = 320;
-        const isAboveFold = index < 3;
-        const lazyAttr = isAboveFold ? '' : ' loading="lazy"';
-        const altText = `${repoName} repository preview`;
-        const imgErrorHandler = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
-
         return `
         <article class="project-card${isPersonalWebsite ? ' project-card--this-site' : ''}">
             <a href="${repoUrl}" target="_blank" rel="noopener" class="project-card-link">
-                <div class="project-img-wrap">
-                    <img
-                        class="project-card-img"
-                        src="${imgSrc}"
-                        width="${imgW}"
-                        height="${imgH}"
-                        alt="${altText}"
-                        ${lazyAttr ? `loading="lazy"` : ''}
-                        onerror="${imgErrorHandler}"
-                    >
-                    ${IMG_FALLBACK_HTML(repoName)}
-                    <span class="project-overlay" aria-hidden="true">
-                        <span class="project-overlay-text">View on GitHub${EXTERNAL_LINK_SVG}</span>
-                    </span>
-                </div>
                 <div class="project-card-body">
                     <div class="project-card-header">
                         <h3 class="project-card-title">${repoName}</h3>

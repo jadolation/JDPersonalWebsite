@@ -210,9 +210,9 @@ class InteractiveTerminal {
         
         const projectCards = projectsSection.querySelectorAll('.project-card');
         projectCards.forEach((card, index) => {
-            const title = card.querySelector('.project-title')?.textContent.trim() || `Project ${index + 1}`;
-            const description = card.querySelector('.project-description')?.textContent.trim() || '';
-            const tags = Array.from(card.querySelectorAll('.project-tag'))
+            const title = card.querySelector('.project-card-title')?.textContent.trim() || `Project ${index + 1}`;
+            const description = card.querySelector('.project-desc')?.textContent.trim() || '';
+            const tags = Array.from(card.querySelectorAll('.project-lang'))
                 .map(tag => tag.textContent.trim());
             
             lines.push(`<span class="terminal-text warning">${index + 1}. ${title}</span>`);
