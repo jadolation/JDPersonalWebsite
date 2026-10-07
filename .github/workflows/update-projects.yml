@@ -46,7 +46,10 @@ jobs:
             -H "Content-Type: application/json" \
             -d "$(jq -n --arg q "$query" '{query: $q}')" \
             "https://api.github.com/graphql")
-          echo "$resp" | jq '[.data.user.pinnedItems.nodes[] | {name: .name, description: .description, url: .url, stars: .stargazersCount, language: (.primaryLanguage.name // null)}]' > projects.json
+          echo "GraphQL response:"
+          echo "$resp" | jq .
+          nodes=$(echo "$resp" | jq -r '[.data.user.pinnedItems.nodes // [] | .[] | {name: .name, description: .description, url: .url, stars: .stargazersCount, language: (.primaryLanguage.name // null)}]')
+          echo "$nodes" > projects.json
 
       - name: Commit and push projects.json
         run: |
