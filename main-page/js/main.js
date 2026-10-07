@@ -154,6 +154,9 @@ console.log('%c Hello, Developer!', 'font-size: 20px; color: #8DB4FF; font-weigh
 console.log('%cWelcome to my portfolio. Looking for something?', 'font-size: 14px; color: #9BA4B8;');
 console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 12px; color: #F0CE86;');
 
+// SVG external-link arrow (card overlay only)
+const EXTERNAL_LINK_SVG = '<svg class="project-overlay-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
 // Project rows
 async function loadProjects() {
     const list = document.getElementById('projectsList');
@@ -183,7 +186,7 @@ async function loadProjects() {
         return;
     }
 
-    list.innerHTML = projects.map((repo) => {
+    list.innerHTML = projects.map((repo, cardIndex) => {
         const repoName = escapeHtml(repo.name);
         const repoUrl = escapeHtml(repo.url);
         const repoDesc = repo.description
@@ -209,9 +212,71 @@ async function loadProjects() {
             ? `<span class="project-lang">${repoLang}</span>`
             : '';
 
+        // Card media: manual/auto logo > vendored social preview >
+        // GitHub default social image > text fallback (last resort only).
+        const logoSrc = (typeof repo.logo === 'string' && repo.logo)
+            ? escapeHtml(repo.logo)
+            : '';
+        const logoPlate = repo.logoPlate === 'dark' ? 'dark' : 'light';
+        const previewSrc = (typeof repo.preview === 'string' && repo.preview)
+            ? escapeHtml(repo.preview)
+            : '';
+        // Owner comes from the repo URL so cross-owner pins (e.g. SRV) work.
+        const ogOwner = ((typeof repo.url === 'string' && repo.url.match(/github\.com\/([^/]+)/)) || [])[1] || 'jadolation';
+        const ogSrc = `https://opengraph.githubassets.com/1/${encodeURIComponent(ogOwner)}/${encodeURIComponent(repo.name)}`;
+        const lazyAttr = cardIndex < 3 ? '' : ' loading="lazy"';
+        const swapToFallback = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
+        const overlayHtml = `
+                        <span class="project-overlay" aria-hidden="true">
+                            <span class="project-overlay-text">View on GitHub${EXTERNAL_LINK_SVG}</span>
+                        </span>`;
+
+        let mediaBlock;
+        if (logoSrc) {
+            mediaBlock = `
+                <div class="project-img-wrap project-img-wrap--logo" data-plate="${logoPlate}">
+                    <img
+                        class="project-logo"
+                        src="./${logoSrc}"
+                        alt="${repoName} logo"
+                        decoding="async"${lazyAttr}
+                        onerror="${swapToFallback}"
+                    >
+                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
+                </div>`;
+        } else if (previewSrc) {
+            mediaBlock = `
+                <div class="project-img-wrap">
+                    <img
+                        class="project-card-img"
+                        src="./${previewSrc}"
+                        alt="${repoName} preview"
+                        decoding="async"${lazyAttr}
+                        onerror="${swapToFallback}"
+                    >
+                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
+                </div>`;
+        } else {
+            const coverSrc = previewSrc ? `./${previewSrc}` : ogSrc;
+            const coverAlt = previewSrc ? `${repoName} preview` : `${repoName} repository preview`;
+            mediaBlock = `
+                <div class="project-img-wrap">
+                    <img
+                        class="project-card-img"
+                        src="${coverSrc}"
+                        alt="${coverAlt}"
+                        width="640"
+                        height="320"
+                        decoding="async"${lazyAttr}
+                        onerror="${swapToFallback}"
+                    >
+                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
+                </div>`;
+        }
+
         return `
         <article class="project-card${isPersonalWebsite ? ' project-card--this-site' : ''}">
-            <a href="${repoUrl}" target="_blank" rel="noopener" class="project-card-link">
+            <a href="${repoUrl}" target="_blank" rel="noopener" class="project-card-link">${mediaBlock}
                 <div class="project-card-body">
                     <div class="project-card-header">
                         <h3 class="project-card-title">${repoName}</h3>

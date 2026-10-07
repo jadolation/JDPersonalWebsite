@@ -24,18 +24,48 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
+          # NOTE: "logo"/"preview" paths in projects.json are relative to
+          # main-page/ (only main.js loadProjects() reads them). Both JSON
+          # copies stay byte-identical by design.
+          LOGODIR="main-page/assets/project-logos"
+          AUTODIR="$LOGODIR/auto"
+          mkdir -p "$AUTODIR"
           query='query {
             user(login: "'"$GITHUB_USER"'") {
               pinnedItems(first: 6, types: REPOSITORY) {
                 nodes {
                   ... on Repository {
                     name
+                    nameWithOwner
                     description
                     url
                     stargazersCount
                     forkCount
                     primaryLanguage {
                       name
+                    }
+                    usesCustomOpenGraphImage
+                    openGraphImageUrl
+                    root: object(expression: "HEAD:") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_assets: object(expression: "HEAD:assets") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_public: object(expression: "HEAD:public") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_docs: object(expression: "HEAD:docs") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_images: object(expression: "HEAD:images") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_static: object(expression: "HEAD:static") {
+                      ... on Tree { entries { name type } }
+                    }
+                    dir_dotgithub: object(expression: "HEAD:.github") {
+                      ... on Tree { entries { name type } }
                     }
                   }
                 }
@@ -52,33 +82,195 @@ jobs:
           echo "GraphQL response:"
           echo "$resp" | jq . || true
 
-          nodes=$(echo "$resp" | jq -r '
-            [
-              (.data.user.pinnedItems.nodes // [])[]
+          echo "$resp" | jq '
+            [ (.data.user.pinnedItems.nodes // [])[]
               | select(.name != null)
               | {
                   name: .name,
+                  nameWithOwner: .nameWithOwner,
                   description: .description,
                   url: .url,
                   stars: .stargazersCount,
                   forks: .forkCount,
-                  language: (.primaryLanguage.name // null)
+                  language: (.primaryLanguage.name // null),
+                  usesCustomOpenGraphImage: .usesCustomOpenGraphImage,
+                  openGraphImageUrl: .openGraphImageUrl,
+                  trees: {
+                    "": (.root.entries // []),
+                    "assets": (.dir_assets.entries // []),
+                    "public": (.dir_public.entries // []),
+                    "docs": (.dir_docs.entries // []),
+                    "images": (.dir_images.entries // []),
+                    "static": (.dir_static.entries // []),
+                    ".github": (.dir_dotgithub.entries // [])
+                  }
                 }
             ]
-          ')
+          ' > repos.json
 
-          count=$(echo "$nodes" | jq 'length')
+          count=$(jq 'length' repos.json)
 
-          if [ "$count" -gt 0 ]; then
-            echo "$nodes" > projects.json
-            cp projects.json main-page/projects.json
-          else
+          if [ "$count" -eq 0 ]; then
             echo "No pinned items returned; keeping existing projects.json"
+          else
+            # Ranked logo candidates per repo (top 3). Manual files in
+            # $LOGODIR always win; this only proposes auto-detectable files.
+            # Re-run scoped per repo to keep nameWithOwner attached.
+            jq -c '.[]' repos.json | while read -r row; do
+              rname=$(echo "$row" | jq -r '.name')
+              nwo=$(echo "$row" | jq -r '.nameWithOwner // ""')
+              echo "$row" | jq --arg r "$rname" '
+                def rankdir: {"":0,"assets":1,"public":2,"docs":3,"images":4,"static":5,".github":6};
+                def extrank: {"svg":0,"png":1,"webp":2,"jpg":3};
+                ($r | ascii_downcase) as $rl |
+                { name: $r, nameWithOwner: .nameWithOwner,
+                  candidates: (
+                    [ .trees | to_entries[]
+                      | .key as $dir | .value[]?
+                      | select(.type == "blob")
+                      | .name as $f
+                      | ($f | ascii_downcase) as $lf
+                      | select($lf | test("\\.(svg|png|webp|jpe?g)$"))
+                      | ($lf | sub(".*\\."; "") | sub("jpeg$"; "jpg")) as $ext
+                      | ($lf | sub("\\.[^.]+$"; "")) as $base
+                      | select($lf | test("banner|screenshot|social|preview|hero|favicon") | not)
+                      | select(($base | test("^(logo|icon|brand|wordmark|app[-_]?icon)([-_.].*)?$"))
+                                or ($lf == ($rl + ".svg")) or ($lf == ($rl + ".png")))
+                      | { dir: $dir, file: $f, ext: $ext,
+                          k: [ (if ($base | contains("logo")) then 0 else 1 end),
+                               (if ($base == "logo") then 0 else 1 end),
+                               extrank[$ext], rankdir[$dir], $f ] }
+                    ] | sort_by(.k) | map(del(.k)) | .[:3]
+                  ) }
+              '
+            done | jq -s '.' > candidates.json || echo "[]" > candidates.json
+
+            # Plate overrides (optional file, default "light").
+            if [ -f "$LOGODIR/overrides.json" ]; then
+              jq -e . "$LOGODIR/overrides.json" > /dev/null 2>&1 || echo "{}" > "$LOGODIR/overrides.json"
+            fi
+
+            : > logos.jsonl
+            jq -c '.[]' candidates.json | while read -r cand; do
+              rname=$(echo "$cand" | jq -r '.name')
+              nwo=$(echo "$cand" | jq -r '.nameWithOwner // ""')
+              plate="light"
+              if [ -f "$LOGODIR/overrides.json" ]; then
+                p=$(jq -r --arg r "$rname" '.[$r].plate // "light"' "$LOGODIR/overrides.json")
+                if [ "$p" = "dark" ] || [ "$p" = "light" ]; then plate="$p"; fi
+              fi
+              # Manual override wins: <repo-name>.<ext> in $LOGODIR (never in auto/).
+              manual=""
+              for e in svg png webp jpg jpeg; do
+                if [ -f "$LOGODIR/$rname.$e" ]; then manual="$rname.$e"; break; fi
+              done
+              logo="null"
+              if [ -n "$manual" ]; then
+                v=$(sha1sum "$LOGODIR/$manual" | cut -c1-8)
+                logo="\"assets/project-logos/$manual?v=$v\""
+              else
+                echo "$cand" | jq -c '.candidates[]?' | while read -r c; do
+                  dir=$(echo "$c" | jq -r '.dir')
+                  file=$(echo "$c" | jq -r '.file')
+                  ext=$(echo "$c" | jq -r '.ext')
+                  [ -n "$nwo" ] || continue
+                  path="$file"
+                  [ -z "$dir" ] || path="$dir/$file"
+                  tmp=$(mktemp)
+                  if curl -fsSL "https://raw.githubusercontent.com/$nwo/HEAD/$path" -o "$tmp" 2>/dev/null; then
+                    size=$(stat -c%s "$tmp")
+                    cap=307200
+                    [ "$ext" = "svg" ] && cap=102400
+                    if [ "$size" -le "$cap" ]; then
+                      mime=$(file -b --mime-type "$tmp")
+                      ok=0
+                      case "$mime" in
+                        image/svg+xml) [ "$ext" = "svg" ] && ok=1 ;;
+                        image/png) [ "$ext" = "png" ] && ok=1 ;;
+                        image/webp) [ "$ext" = "webp" ] && ok=1 ;;
+                        image/jpeg) { [ "$ext" = "jpg" ] || [ "$ext" = "jpeg" ]; } && ok=1 ;;
+                        text/xml|application/xml)
+                          [ "$ext" = "svg" ] && grep -q '<svg' "$tmp" 2>/dev/null && ok=1 ;;
+                      esac
+                      if [ "$ok" -eq 1 ]; then
+                        safe=$(printf '%s' "$rname" | tr -cd 'A-Za-z0-9._-')
+                        dest="$AUTODIR/$safe.$ext"
+                        mv "$tmp" "$dest"
+                        v=$(sha1sum "$dest" | cut -c1-8)
+                        echo "AUTOLOGO $rname <- $nwo $path"
+                        echo "$dest?v=$v" > "/tmp/autologo_$rname"
+                        rm -f "$tmp"
+                        break
+                      fi
+                    fi
+                  fi
+                  rm -f "$tmp"
+                done
+                if [ -f "/tmp/autologo_$rname" ]; then
+                  # Stored path is relative to main-page/ (see NOTE above).
+                  autopath=$(cat "/tmp/autologo_$rname")
+                  autopath="assets/project-logos/auto/$(basename "$autopath")"
+                  logo="\"$autopath\""
+                  rm -f "/tmp/autologo_$rname"
+                fi
+              fi
+              # Custom social preview: only when no logo was found AND the
+              # owner uploaded one (never the default generated image).
+              preview="null"
+              if [ "$logo" = "null" ]; then
+                custom=$(jq -r --arg r "$rname" '[.[] | select(.name==$r)][0].usesCustomOpenGraphImage // false' repos.json)
+                ogurl=$(jq -r --arg r "$rname" '[.[] | select(.name==$r)][0].openGraphImageUrl // empty' repos.json)
+                if [ "$custom" = "true" ] && [ -n "$ogurl" ]; then
+                  tmp=$(mktemp)
+                  if curl -fsSL "$ogurl" -o "$tmp" 2>/dev/null; then
+                    size=$(stat -c%s "$tmp")
+                    if [ "$size" -le 409600 ]; then
+                      mime=$(file -b --mime-type "$tmp")
+                      pext=""
+                      case "$mime" in
+                        image/png) pext="png" ;;
+                        image/jpeg) pext="jpg" ;;
+                        image/webp) pext="webp" ;;
+                      esac
+                      if [ -n "$pext" ]; then
+                        safe=$(printf '%s' "$rname" | tr -cd 'A-Za-z0-9._-')
+                        pdest="$AUTODIR/$safe-preview.$pext"
+                        mv "$tmp" "$pdest"
+                        pv=$(sha1sum "$pdest" | cut -c1-8)
+                        echo "AUTOPREVIEW $rname"
+                        preview="\"assets/project-logos/auto/$safe-preview.$pext?v=$pv\""
+                      fi
+                    fi
+                  fi
+                  rm -f "$tmp"
+                fi
+              fi
+              echo "{\"name\": $(echo "$cand" | jq '.name'), \"logo\": $logo, \"logoPlate\": \"$plate\", \"preview\": $preview}" >> logos.jsonl
+            done
+
+            # Prune auto/ files for repos that are no longer pinned or lost logos.
+            jq -r -s 'map((.logo, .preview) | select(. != null) | split("?")[0] | split("/")[-1]) | .[]' logos.jsonl 2>/dev/null | sort -u > /tmp/keep_autos || : > /tmp/keep_autos
+            for f in "$AUTODIR"/*; do
+              [ -e "$f" ] || continue
+              b=$(basename "$f")
+              grep -qx "$b" /tmp/keep_autos 2>/dev/null || { echo "Pruning unpinned logo $b"; rm -f "$f"; }
+            done
+
+            # Assemble final payload (both copies stay byte-identical).
+            jq --slurpfile L <(jq -s 'map({(.name): {logo: .logo, logoPlate: .logoPlate, preview: .preview}}) | add // {}' logos.jsonl) '
+              [ $L[0] as $logos | .[] |
+                .name as $n | ($logos[$n] // {logo: null, logoPlate: "light", preview: null}) as $lp |
+                { name: .name, description: .description, url: .url,
+                  stars: .stars, forks: .forks, language: .language,
+                  logo: $lp.logo, logoPlate: $lp.logoPlate, preview: $lp.preview }
+              ]
+            ' repos.json > projects.json
+            cp projects.json main-page/projects.json
           fi
 
       - name: Commit and push projects.json
         run: |
-          git add projects.json main-page/projects.json || true
+          git add projects.json main-page/projects.json main-page/assets/project-logos/ || true
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0

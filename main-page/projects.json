@@ -5,7 +5,10 @@
     "url": "https://github.com/ReyJrFerrer/SRV",
     "stars": 3,
     "forks": 0,
-    "language": "TypeScript"
+    "language": "TypeScript",
+    "logo": "assets/project-logos/SRV.png?v=a572be4e",
+    "logoPlate": "light",
+    "preview": null
   },
   {
     "name": "JDPersonalWebsite",
@@ -13,7 +16,10 @@
     "url": "https://github.com/jadolation/JDPersonalWebsite",
     "stars": 1,
     "forks": 0,
-    "language": "JavaScript"
+    "language": "JavaScript",
+    "logo": "assets/project-logos/JDPersonalWebsite.png?v=d70f5c3b",
+    "logoPlate": "light",
+    "preview": null
   },
   {
     "name": "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
@@ -21,7 +27,10 @@
     "url": "https://github.com/jadolation/SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity",
     "stars": 0,
     "forks": 57,
-    "language": "HTML"
+    "language": "HTML",
+    "logo": null,
+    "logoPlate": "light",
+    "preview": null
   },
   {
     "name": "bettermapandan",
@@ -29,7 +38,10 @@
     "url": "https://github.com/jadolation/bettermapandan",
     "stars": 2,
     "forks": 0,
-    "language": "HTML"
+    "language": "HTML",
+    "logo": "assets/project-logos/bettermapandan.svg?v=646612df",
+    "logoPlate": "dark",
+    "preview": null
   },
   {
     "name": "betterbasista",
@@ -37,6 +49,9 @@
     "url": "https://github.com/jadolation/betterbasista",
     "stars": 1,
     "forks": 0,
-    "language": "HTML"
+    "language": "HTML",
+    "logo": "assets/project-logos/betterbasista.svg?v=a0f3cee2",
+    "logoPlate": "light",
+    "preview": null
   }
 ]
