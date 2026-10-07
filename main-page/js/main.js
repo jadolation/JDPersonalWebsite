@@ -112,6 +112,12 @@ console.log('%c Hello, Developer!', 'font-size: 20px; color: #8DB4FF; font-weigh
 console.log('%cWelcome to my portfolio. Looking for something?', 'font-size: 14px; color: #9BA4B8;');
 console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 12px; color: #F0CE86;');
 
+// SVG external-link arrow (reused in every card overlay)
+const EXTERNAL_LINK_SVG = '<svg class="project-overlay-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
+const IMG_FALLBACK_HTML = (name) =>
+    `<div class="project-img-fallback" aria-hidden="true">${name}</div>`;
+
 // Project rows
 async function loadProjects() {
     const response = await fetch('./projects.json');
@@ -127,28 +133,64 @@ async function loadProjects() {
 
     if (!list) return;
 
-    list.innerHTML = projects.map((repo) => {
+    list.innerHTML = projects.map((repo, index) => {
         const repoName = escapeHtml(repo.name);
         const repoUrl = escapeHtml(repo.url);
-        const repoDesc = repo.description ? escapeHtml(repo.description) : null;
-        const repoLang = repo.language ? escapeHtml(repo.language) : '';
-        const stars = typeof repo.stars === 'number' ? repo.stars : 0;
+        const repoDesc = repo.description
+            ? escapeHtml(repo.description)
+            : null;
+        const repoLang = repo.language
+            ? escapeHtml(repo.language)
+            : '';
         const isPersonalWebsite = repo.name === 'JDPersonalWebsite';
-        const siteLabel = isPersonalWebsite ? '<span class="project-special-note">This site</span>' : '';
+        const siteLabel = isPersonalWebsite
+            ? '<span class="project-site-label">This site</span>'
+            : '';
 
-        const descLine = repoDesc ? `<p class="project-desc">${repoDesc}</p>` : '';
-        const langLine = repoLang ? `<span class="project-lang">${repoLang}</span>` : '';
-        const metaLine = langLine || stars ? `<span class="project-meta">${langLine}${langLine && stars ? ' / ' : ''}${stars > 0 ? stars + ' stars' : ''}</span>` : '';
+        const descLine = repoDesc
+            ? `<p class="project-desc">${repoDesc}</p>`
+            : '';
+        const langLine = repoLang
+            ? `<span class="project-lang">${repoLang}</span>`
+            : '';
+
+        const imgSrc =
+            `https://opengraph.githubassets.com/1/${encodeURIComponent(repo.name)}`;
+        const imgW = 640;
+        const imgH = 320;
+        const isAboveFold = index < 3;
+        const lazyAttr = isAboveFold ? '' : ' loading="lazy"';
+        const altText = `${repoName} repository preview`;
+        const imgErrorHandler = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
 
         return `
-        <div class="project-row">
-            <div>
-                <a href="${repoUrl}" target="_blank" rel="noopener">${repoName}</a>
-                ${siteLabel}
-                ${descLine}
-            </div>
-            ${metaLine ? `<div class="project-meta">${metaLine}</div>` : ''}
-        </div>
+        <article class="project-card${isPersonalWebsite ? ' project-card--this-site' : ''}">
+            <a href="${repoUrl}" target="_blank" rel="noopener" class="project-card-link">
+                <div class="project-img-wrap">
+                    <img
+                        class="project-card-img"
+                        src="${imgSrc}"
+                        width="${imgW}"
+                        height="${imgH}"
+                        alt="${altText}"
+                        ${lazyAttr ? `loading="lazy"` : ''}
+                        onerror="${imgErrorHandler}"
+                    >
+                    ${IMG_FALLBACK_HTML(repoName)}
+                    <span class="project-overlay" aria-hidden="true">
+                        <span class="project-overlay-text">View on GitHub${EXTERNAL_LINK_SVG}</span>
+                    </span>
+                </div>
+                <div class="project-card-body">
+                    <div class="project-card-header">
+                        <h3 class="project-card-title">${repoName}</h3>
+                        ${siteLabel}
+                    </div>
+                    ${descLine}
+                    ${langLine ? `<div class="project-tags">${langLine}</div>` : ''}
+                </div>
+            </a>
+        </article>
         `;
     }).join('');
 }
@@ -226,7 +268,7 @@ loadProjects();
 (function() {
     const modal = document.getElementById('logoModal');
     if (!modal) return;
-    const openBtn = document.querySelector('.hero-logo-link');
+    const openBtn = modal.querySelector('.hero-logo-link');
     const closeBtn = modal.querySelector('.logo-modal-close');
     const backdrop = modal.querySelector('.logo-modal-backdrop');
 
