@@ -814,6 +814,9 @@ body.romantic-theme .navbar.scrolled {
 .projects-browser {
     display: flex;
     flex-direction: column;
+    /* Portrait plate: the narrow column shows the site's mobile layout,
+       so trade width for height to reveal real homepage content. */
+    aspect-ratio: 3 / 4;
 }
 
 .projects-browser-bar {
