@@ -84,6 +84,14 @@
       "status": "Live, in active development",
       "role": "Lead Developer — Data Architecture & Full-Stack; built the municipal data integration pipeline, entity resolution system, evidence-backed relationship graph, and Project Explorer",
       "language": "Python, JavaScript, HTML, CSS"
+    },
+    "betterbasista": {
+      "description": "Starter transparency portal for Basista, Pangasinan under the BetterGov.ph BetterLGU initiative — four built pages from a Python static-site builder with shared partials; statistics and transparency pages deferred until civic data is verified.",
+      "website": "https://jadolation.github.io/betterbasista/",
+      "ownership": "Independent Project / Contributor",
+      "status": "Live, in active development",
+      "role": "Lead Developer — Full-Stack; built the starter site, build system, and shared partials in partnership with the project's lead researcher",
+      "language": "Python, HTML, CSS, JavaScript"
     }
   }
 }
