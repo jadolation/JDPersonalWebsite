@@ -723,6 +723,7 @@ body.romantic-theme .navbar.scrolled {
     position: relative;
     display: grid;
     margin-top: 3rem;
+    transition: height 150ms ease;
 }
 
 .projects-panel {
@@ -830,7 +831,6 @@ body.romantic-theme .navbar.scrolled {
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-    margin-top: auto;
 }
 
 .projects-gh-link {
@@ -991,6 +991,7 @@ body.romantic-theme .navbar.scrolled {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .projects-panels,
     .projects-panel,
     .projects-cell img,
     .projects-cell-mark,

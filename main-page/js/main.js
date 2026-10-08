@@ -437,6 +437,27 @@ async function loadProjects() {
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
             tab.setAttribute('tabindex', active ? '0' : '-1');
         });
+        syncHeight(index);
+    }
+
+    // Shrink the stacked container to the active panel so short projects
+    // don't float above dead space (container defaults to tallest panel).
+    // Hidden panels still occupy layout and fixed container height stretches
+    // the active panel, so release both before measuring; everything runs
+    // synchronously, so only the final value paints and the CSS transition
+    // animates from the last painted height.
+    function syncHeight(index) {
+        const active = panels[index];
+        if (!active) return;
+        panelsEl.style.height = 'auto';
+        panels.forEach((panel) => {
+            if (panel !== active) panel.style.display = 'none';
+        });
+        const h = active.offsetHeight;
+        panels.forEach((panel) => {
+            panel.style.display = '';
+        });
+        panelsEl.style.height = h + 'px';
     }
 
     tabs.forEach((tab, idx) => {
@@ -456,33 +477,31 @@ async function loadProjects() {
         });
     });
 
-    // Pin each CTA row so its vertical center sits on the last facts
-    // row's center (CSS margin-top:auto handles the common case; this
-    // only corrects panels whose last row wraps taller than the button).
-    function pinButtons() {
-        panels.forEach((panel) => {
-            const facts = panel.querySelector('.projects-facts');
-            const ctaRow = panel.querySelector('.projects-cta-row');
-            const side = panel.querySelector('.projects-side');
-            if (!facts || !ctaRow || !side) return;
-            const lastRow = facts.lastElementChild;
-            if (!lastRow) return;
-            const pad = Math.max(0, (lastRow.getBoundingClientRect().height - ctaRow.getBoundingClientRect().height) / 2);
-            side.style.paddingBottom = pad > 1 ? pad.toFixed(1) + 'px' : '';
-        });
+    // Buttons sit in normal flow directly under the project name, so no
+    // pinning logic is needed; only the container height needs syncing.
+    function syncActiveHeight() {
+        const active = panels.findIndex((panel) => panel.hasAttribute('data-active'));
+        syncHeight(active === -1 ? 0 : active);
     }
-    pinButtons();
+    syncHeight(0);
+    // Late image arrivals change panel heights; re-sync when they land.
+    panelsEl.querySelectorAll('img').forEach((img) => {
+        img.addEventListener('load', syncActiveHeight);
+    });
     if (!reducedMotion && window.ResizeObserver) {
         let scheduled = false;
         const ro = new ResizeObserver(() => {
             if (scheduled) return;
             scheduled = true;
-            requestAnimationFrame(() => { scheduled = false; pinButtons(); });
+            requestAnimationFrame(() => {
+                scheduled = false;
+                syncActiveHeight();
+            });
         });
         panels.forEach((panel) => ro.observe(panel));
     }
-    window.addEventListener('resize', pinButtons);
-    window.addEventListener('load', pinButtons);
+    window.addEventListener('resize', syncActiveHeight);
+    window.addEventListener('load', syncActiveHeight);
 }
 
 loadProjects();
