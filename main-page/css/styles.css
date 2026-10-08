@@ -930,6 +930,7 @@ body.romantic-theme .navbar.scrolled {
     display: grid;
     gap: 0;
     margin: 0;
+    width: 100%;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
 }
@@ -1074,6 +1075,7 @@ body.romantic-theme .navbar.scrolled {
     }
     .projects-panel {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
 
@@ -1195,12 +1197,14 @@ body.romantic-theme .navbar.scrolled {
         padding: 1.25rem;
     }
     .srv-detail-row,
-    .bakery-fact-row {
+    .bakery-fact-row,
+    .projects-facts > div {
         flex-direction: column;
         gap: 0.25rem;
     }
     .srv-detail-row dt,
-    .bakery-fact-row dt {
+    .bakery-fact-row dt,
+    .projects-facts dt {
         min-width: 0;
     }
 }

@@ -480,7 +480,9 @@ async function loadProjects() {
     // Hidden panels still occupy layout and fixed container height stretches
     // the active panel, so release both before measuring; everything runs
     // synchronously, so only the final value paints and the CSS transition
-    // animates from the last painted height.
+    // animates from the last painted height. Late growth (fonts, images) is
+    // picked up by the ResizeObserver / load / image hooks below, which is
+    // what prevents overlap — min-height would reintroduce the dead space.
     function syncHeight(index) {
         const active = panels[index];
         if (!active) return;
@@ -528,17 +530,23 @@ async function loadProjects() {
     panelsEl.querySelectorAll('img').forEach((img) => {
         img.addEventListener('load', syncActiveHeight);
     });
-    if (!reducedMotion && window.ResizeObserver) {
+    if (window.ResizeObserver) {
         let scheduled = false;
         const ro = new ResizeObserver(() => {
             if (scheduled) return;
             scheduled = true;
-            requestAnimationFrame(() => {
+            const resync = () => {
                 scheduled = false;
                 syncActiveHeight();
-            });
+            };
+            if (reducedMotion) resync();
+            else requestAnimationFrame(resync);
         });
         panels.forEach((panel) => ro.observe(panel));
+    }
+    // Webfont swaps change text heights after load; re-sync once settled.
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncActiveHeight);
     }
     window.addEventListener('resize', syncActiveHeight);
     window.addEventListener('load', syncActiveHeight);
