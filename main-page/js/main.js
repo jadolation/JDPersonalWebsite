@@ -176,22 +176,44 @@ async function loadProjects() {
 
     list.innerHTML = '<p class="projects-loading">Loading projects…</p>';
 
-    let projects;
-    try {
-        const response = await fetch('./projects.json');
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        projects = await response.json();
-    } catch {
+    // Auto repos (hourly workflow) + hand-maintained link-only entries.
+    // Either source may fail; the grid renders whatever resolved.
+    const [autoRes, manualRes] = await Promise.allSettled([
+        fetch('./projects.json').then((r) => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        }),
+        fetch('./data/manual-projects.json').then((r) => {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+        })
+    ]);
+    const auto = autoRes.status === 'fulfilled' && Array.isArray(autoRes.value)
+        ? autoRes.value
+        : [];
+    const manual = manualRes.status === 'fulfilled' && Array.isArray(manualRes.value)
+        ? manualRes.value.filter((m) => m && typeof m.name === 'string' && typeof m.url === 'string')
+        : [];
+    // Manual entries lead; drop any whose URL duplicates an auto repo.
+    const autoUrls = new Set(auto.map((r) => r && r.url).filter(Boolean));
+    const projects = [
+        ...manual.filter((m) => !autoUrls.has(m.url)),
+        ...auto
+    ];
+
+    if (projects.length === 0) {
         list.innerHTML = '<p class="projects-error">Couldn\'t load projects — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
         return;
     }
+    const autoMissing = auto.length === 0;
+    const autoNote = autoMissing
+        ? '<p class="projects-error">GitHub repos are temporarily unavailable — showing selected work below.</p>'
+        : '';
 
-    if (!Array.isArray(projects) || projects.length === 0) {
-        list.innerHTML = '<p class="projects-error">No projects to show yet — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
-        return;
-    }
-
-    list.innerHTML = projects.map((repo, cardIndex) => {
+    list.innerHTML = autoNote + projects.map((repo, cardIndex) => {
+        // Link-only entries carry no stars/forks; they render the same card
+        // shell with a "Visit site" overlay and no counts row.
+        const isManual = typeof repo.stars !== 'number';
         const repoName = escapeHtml(repo.name);
         const repoUrl = escapeHtml(repo.url);
         const repoDesc = repo.description
@@ -209,6 +231,13 @@ async function loadProjects() {
         const repoForks = typeof repo.forks === 'number' ? repo.forks : 0;
         const starsLabel = `${repoStars} star${repoStars === 1 ? '' : 's'}`;
         const forksLabel = `${repoForks} fork${repoForks === 1 ? '' : 's'}`;
+        const metaLine = isManual
+            ? ''
+            : `                    <div class="project-meta">
+                        <span>★ ${starsLabel}</span>
+                        <span aria-hidden="true"> · </span>
+                        <span>${forksLabel}</span>
+                    </div>`;
 
         const descLine = repoDesc
             ? `<p class="project-desc">${repoDesc}</p>`
@@ -231,9 +260,10 @@ async function loadProjects() {
         const ogSrc = `https://opengraph.githubassets.com/1/${encodeURIComponent(ogOwner)}/${encodeURIComponent(repo.name)}`;
         const lazyAttr = cardIndex < 3 ? '' : ' loading="lazy"';
         const swapToFallback = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
+        const overlayLabel = isManual ? 'Visit site' : 'View on GitHub';
         const overlayHtml = `
                         <span class="project-overlay" aria-hidden="true">
-                            <span class="project-overlay-text">View on GitHub${EXTERNAL_LINK_SVG}</span>
+                            <span class="project-overlay-text">${overlayLabel}${EXTERNAL_LINK_SVG}</span>
                         </span>`;
 
         let mediaBlock;
@@ -260,6 +290,12 @@ async function loadProjects() {
                         onerror="${swapToFallback}"
                     >
                     <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
+                </div>`;
+        } else if (isManual) {
+            // Link-only entries have no generated preview; text fallback.
+            mediaBlock = `
+                <div class="project-img-wrap">
+                    <div class="project-img-fallback project-img-fallback--static" aria-hidden="true">${repoName}</div>${overlayHtml}
                 </div>`;
         } else {
             const coverSrc = previewSrc ? `./${previewSrc}` : ogSrc;
@@ -289,11 +325,7 @@ async function loadProjects() {
                     </div>
                     ${descLine}
                     ${langLine ? `<div class="project-tags">${langLine}</div>` : ''}
-                    <div class="project-meta">
-                        <span>★ ${starsLabel}</span>
-                        <span aria-hidden="true"> · </span>
-                        <span>${forksLabel}</span>
-                    </div>
+                    ${metaLine}
                 </div>
             </a>
         </article>

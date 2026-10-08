@@ -8,6 +8,7 @@
   const prevBtn = dialog.querySelector('[data-lightbox-prev]');
   const nextBtn = dialog.querySelector('[data-lightbox-next]');
   const closeBtn = dialog.querySelector('[data-lightbox-close]');
+  if (!img || !closeBtn) return;
   let currentGroup = [];
   let currentIndex = -1;
 
@@ -64,8 +65,10 @@
   if (prevBtn) prevBtn.addEventListener('click', showPrev);
   if (nextBtn) nextBtn.addEventListener('click', showNext);
 
+  dialog.addEventListener('close', unlockScroll);
+
   dialog.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { closeLightbox(); return; }
+    if (e.key === 'Escape') { e.preventDefault(); closeLightbox(); return; }
     if (e.key === 'ArrowLeft') { e.preventDefault(); showPrev(); }
     if (e.key === 'ArrowRight') { e.preventDefault(); showNext(); }
   });
