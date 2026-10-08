@@ -423,7 +423,7 @@ async function loadProjects() {
         const label = p.isThisSite ? '<span class="projects-site-label">This site</span>' : '';
         const main = (desc || facts)
             ? `<div class="projects-main">${desc}${facts}</div>` : '';
-        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}" data-active${visible ? '' : ' hidden'}>`
+        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}"${visible ? '' : ' hidden'}>`
             + `<div class="projects-side">${mediaBlock(p, i === 0)}`
             + `<h3 class="projects-name">${name}${label}</h3>${cta}</div>${main}</article>`;
     }
@@ -465,6 +465,21 @@ async function loadProjects() {
     const tabs = Array.from(stripEl.querySelectorAll('[role="tab"]'));
 
     const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
+
+    function loadWebsitePreview(container, name) {
+        if (!container || container.dataset.loaded === 'true') return;
+        const url = container.getAttribute('data-preview-url');
+        if (!url) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.loading = 'lazy';
+        iframe.title = 'Live preview of ' + name;
+        iframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+        iframe.setAttribute('referrerpolicy', 'no-referrer');
+        iframe.className = 'projects-live-frame';
+        container.replaceChildren(iframe);
+        container.dataset.loaded = 'true';
+    }
 
     function activate(index) {
         panels.forEach((panel, i) => {
