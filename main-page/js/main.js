@@ -342,8 +342,6 @@ async function loadProjects() {
         return;
     }
 
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     function hostOf(url) {
         const match = typeof url === 'string' && url.match(/^https?:\/\/([^/]+)/i);
         return match ? match[1] : '';
@@ -410,7 +408,12 @@ async function loadProjects() {
         return `<div class="projects-cta-row">${buttons.join('')}</div>`;
     }
 
-    panelsEl.innerHTML = normalized.map((p, i) => {
+    // Only the active panel exists in the DOM. There is nothing to measure,
+    // nothing frozen, and nothing to overlap: the container is always exactly
+    // the visible panel, so the strip always follows its content.
+    function renderPanel(i) {
+        const p = normalized[i];
+        if (!p) return '';
         const name = escapeHtml(p.name);
         const desc = (typeof p.description === 'string' && p.description)
             ? `<p class="projects-intro">${escapeHtml(p.description)}</p>` : '';
@@ -419,10 +422,12 @@ async function loadProjects() {
         const label = p.isThisSite ? '<span class="projects-site-label">This site</span>' : '';
         const main = (desc || facts)
             ? `<div class="projects-main">${desc}${facts}</div>` : '';
-        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}"${i === 0 ? ' data-active' : ''}>`
-            + `<div class="projects-side">${mediaBlock(p, i === 0)}`
+        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}" data-active>`
+            + `<div class="projects-side">${mediaBlock(p, true)}`
             + `<h3 class="projects-name">${name}${label}</h3>${cta}</div>${main}</article>`;
-    }).join('');
+    }
+
+    panelsEl.innerHTML = renderPanel(0);
 
     // Logo strip (hidden for a single project).
     if (normalized.length > 1) {
@@ -440,61 +445,20 @@ async function loadProjects() {
         stripEl.innerHTML = '';
     }
 
-    const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
     const tabs = Array.from(stripEl.querySelectorAll('[role="tab"]'));
 
-    function loadWebsitePreview(container, name) {
-        if (!container || container.dataset.loaded === 'true') return;
-        const url = container.getAttribute('data-preview-url');
-        if (!url) return;
-        const iframe = document.createElement('iframe');
-        iframe.src = url;
-        iframe.loading = 'lazy';
-        iframe.title = 'Live preview of ' + name;
-        iframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
-        iframe.setAttribute('referrerpolicy', 'no-referrer');
-        iframe.className = 'projects-live-frame';
-        container.replaceChildren(iframe);
-        container.dataset.loaded = 'true';
-    }
-
     function activate(index) {
-        panels.forEach((panel, i) => {
-            panel.toggleAttribute('data-active', i === index);
-        });
         tabs.forEach((tab, i) => {
             const active = i === index;
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
             tab.setAttribute('tabindex', active ? '0' : '-1');
         });
-        const activePanel = panels[index];
-        if (activePanel) {
-            const mount = activePanel.querySelector('.projects-live-preview');
+        panelsEl.innerHTML = renderPanel(index);
+        const panel = panelsEl.querySelector('.projects-panel');
+        if (panel) {
+            const mount = panel.querySelector('.projects-live-preview');
             if (mount) loadWebsitePreview(mount, normalized[index] ? normalized[index].name : '');
         }
-        syncHeight(index);
-    }
-
-    // Shrink the stacked container to the active panel so short projects
-    // don't float above dead space (container defaults to tallest panel).
-    // Hidden panels still occupy layout and fixed container height stretches
-    // the active panel, so release both before measuring; everything runs
-    // synchronously, so only the final value paints and the CSS transition
-    // animates from the last painted height. Late growth (fonts, images) is
-    // picked up by the ResizeObserver / load / image hooks below, which is
-    // what prevents overlap — min-height would reintroduce the dead space.
-    function syncHeight(index) {
-        const active = panels[index];
-        if (!active) return;
-        panelsEl.style.height = 'auto';
-        panels.forEach((panel) => {
-            if (panel !== active) panel.style.display = 'none';
-        });
-        const h = active.offsetHeight;
-        panels.forEach((panel) => {
-            panel.style.display = '';
-        });
-        panelsEl.style.height = h + 'px';
     }
 
     tabs.forEach((tab, idx) => {
@@ -514,42 +478,14 @@ async function loadProjects() {
         });
     });
 
-    // Buttons sit in normal flow directly under the project name, so no
-    // pinning logic is needed; only the container height needs syncing.
-    function syncActiveHeight() {
-        const active = panels.findIndex((panel) => panel.hasAttribute('data-active'));
-        syncHeight(active === -1 ? 0 : active);
+    // Mount the initial panel's preview (it never passes through activate).
+    {
+        const panel = panelsEl.querySelector('.projects-panel');
+        if (panel) {
+            const mount = panel.querySelector('.projects-live-preview');
+            if (mount) loadWebsitePreview(mount, normalized[0] ? normalized[0].name : '');
+        }
     }
-    syncHeight(0);
-    // Mount the initially visible panel's preview (it never passes activate).
-    if (panels[0]) {
-        const mount = panels[0].querySelector('.projects-live-preview');
-        if (mount) loadWebsitePreview(mount, normalized[0] ? normalized[0].name : '');
-    }
-    // Late image arrivals change panel heights; re-sync when they land.
-    panelsEl.querySelectorAll('img').forEach((img) => {
-        img.addEventListener('load', syncActiveHeight);
-    });
-    if (window.ResizeObserver) {
-        let scheduled = false;
-        const ro = new ResizeObserver(() => {
-            if (scheduled) return;
-            scheduled = true;
-            const resync = () => {
-                scheduled = false;
-                syncActiveHeight();
-            };
-            if (reducedMotion) resync();
-            else requestAnimationFrame(resync);
-        });
-        panels.forEach((panel) => ro.observe(panel));
-    }
-    // Webfont swaps change text heights after load; re-sync once settled.
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(syncActiveHeight);
-    }
-    window.addEventListener('resize', syncActiveHeight);
-    window.addEventListener('load', syncActiveHeight);
 }
 
 loadProjects();

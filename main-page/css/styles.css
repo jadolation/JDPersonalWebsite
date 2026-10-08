@@ -723,24 +723,18 @@ body.romantic-theme .navbar.scrolled {
     position: relative;
     display: grid;
     margin-top: 3rem;
-    transition: height 150ms ease;
+}
+
+@keyframes projectsFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .projects-panel {
     display: grid;
     grid-template-columns: 320px 1fr;
     gap: 4rem;
-    grid-area: 1 / 1;
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 150ms ease;
-}
-
-.projects-panel[data-active] {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
+    animation: projectsFadeIn 150ms ease;
 }
 
 .projects-side {
@@ -1066,6 +1060,9 @@ body.romantic-theme .navbar.scrolled {
     .projects-cell-mark,
     .projects-cell::after {
         transition: none;
+    }
+    .projects-panel {
+        animation: none;
     }
 }
 
