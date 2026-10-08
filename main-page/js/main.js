@@ -275,7 +275,7 @@ async function loadProjects() {
             status: typeof over.status === 'string' ? over.status : '',
             role: typeof over.role === 'string' ? over.role : '',
             stack: typeof over.stack === 'string' ? over.stack : '',
-            language: repo.language,
+            language: typeof over.language === 'string' && over.language ? over.language : repo.language,
             activity: activityText(stars, forks),
             extraFacts: Array.isArray(over.facts) ? over.facts : [],
             order: typeof over.order === 'number' ? over.order : 100 + pinnedIndex,

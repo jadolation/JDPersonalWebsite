@@ -72,7 +72,18 @@
       "order": 1
     },
     "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity": {
-      "displayName": "SOLID Training"
+      "displayName": "SOLID Training",
+      "description": "Training seminar repo for the 2026 Makerspace Innovhub intern program — SOLID principles, prompt engineering, and Git 101, built around a monolith-to-modular guestbook refactor.",
+      "role": "Git 101 speaker and repo maintainer",
+      "status": "Live"
+    },
+    "bettermapandan": {
+      "description": "Evidence-first municipal transparency platform that brings together public records from DILG-FDP, PhilGEPS, DPWH, and COA into a searchable, source-backed civic information system with project exploration, entity resolution, procurement relationships, and audit data.",
+      "website": "https://bettermapandan.org",
+      "ownership": "Independent Project / Contributor",
+      "status": "Live, in active development",
+      "role": "Lead Developer — Data Architecture & Full-Stack; built the municipal data integration pipeline, entity resolution system, evidence-backed relationship graph, and Project Explorer",
+      "language": "Python, JavaScript, HTML, CSS"
     }
   }
 }
