@@ -1690,17 +1690,14 @@ body.romantic-theme .navbar.scrolled {
     padding: var(--section-padding);
     background: transparent;
 }
-.marketing-group + .marketing-group {
-  margin-top: 64px;
-}
-.marketing-group h3 {
-  color: var(--text);
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 1.5rem;
-}
 .marketing-meta:empty {
   display: none;
+}
+.marketing-caption {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding-top: 0.5rem;
+  text-align: left;
 }
 .marketing-cta-line {
   color: var(--text-dim);
@@ -1731,12 +1728,9 @@ body.romantic-theme .navbar.scrolled {
   display: block;
   transition: border-color 175ms ease;
 }
-.marketing-item--wide {
-  grid-column: span 2;
-}
-.marketing-item--wide img {
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+.marketing-item--landscape img {
+  object-fit: contain;
+  background: var(--space-raised);
 }
 .marketing-open {
   display: block;
@@ -1777,13 +1771,11 @@ body.romantic-theme .navbar.scrolled {
   .marketing-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .marketing-item--wide {
-    grid-column: span 2;
-  }
 }
 @media (max-width: 600px) {
   .marketing-grid {
     display: grid;
+    grid-template-columns: none;
     grid-auto-flow: column;
     grid-auto-columns: 78%;
     gap: 16px;
@@ -1799,16 +1791,13 @@ body.romantic-theme .navbar.scrolled {
   .marketing-grid > * {
     scroll-snap-align: start;
   }
-  .marketing-item--wide {
-    grid-column: auto;
-  }
   .marketing-item img,
   .marketing-placeholder {
     aspect-ratio: auto;
     height: 100%;
   }
-  /* Wide cover keeps its composition: letterboxed instead of center-cropped. */
-  .marketing-item--wide img {
+  /* Landscape cover keeps its composition: letterboxed instead of center-cropped. */
+  .marketing-item--landscape img {
     object-fit: contain;
     background: var(--space-raised);
   }

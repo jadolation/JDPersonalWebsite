@@ -93,11 +93,9 @@
     }
   });
 
-  document.querySelectorAll('.marketing-group').forEach(group => {
-    const triggers = Array.from(group.querySelectorAll('.marketing-open'));
-    if (!triggers.length) return;
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', () => openLightbox(trigger, triggers));
-    });
+  const grid = document.querySelector('#marketing .marketing-grid');
+  const triggers = grid ? Array.from(grid.querySelectorAll('.marketing-open')) : [];
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => openLightbox(trigger, triggers));
   });
 })();
