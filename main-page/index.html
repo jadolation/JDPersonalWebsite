@@ -427,12 +427,15 @@
     <!-- Projects Section -->
     <section id="projects" class="projects">
         <div class="container">
-            <h2 class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Featured Projects</h2>
-            <p class="section-subtitle">Some things I've built</p>
-            <p class="projects-automation-note">Synced hourly from GitHub.</p>
+            <h2 class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</h2>
+            <p class="section-subtitle">Projects I own or have helped build, live and in development.</p>
+            <p class="projects-automation-note">Repository details sync hourly from GitHub.</p>
 
-            <div class="projects-grid" id="projectsList">
-                <!-- Cards rendered by JS -->
+            <div class="projects-panels" id="projectsPanels">
+                <!-- Panels rendered by JS -->
+            </div>
+            <div class="projects-strip" id="projectsStrip" role="tablist" aria-label="Projects">
+                <!-- Tabs rendered by JS -->
             </div>
         </div>
     </section>
@@ -576,8 +579,6 @@
 
     <!-- Galaxy star-field background -->
     <script src="js/starfield.js"></script>
-
-    <script src="js/deployed.js"></script>
 
     <dialog id="lightbox" aria-label="Image preview">
       <img src="" alt="">
