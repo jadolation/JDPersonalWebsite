@@ -1708,7 +1708,7 @@ body.romantic-theme .navbar.scrolled {
 }
 .marketing-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px;
 }
 .marketing-item {
@@ -1785,13 +1785,15 @@ body.romantic-theme .navbar.scrolled {
   .marketing-grid {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 72%;
+    grid-auto-columns: 78%;
     gap: 16px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
     scrollbar-width: thin;
     scrollbar-color: var(--rule) transparent;
     padding-bottom: 8px;
+    /* Fixed height: the img height:100% chain below resolves against it. */
     height: 340px;
   }
   .marketing-grid > * {
@@ -1804,6 +1806,17 @@ body.romantic-theme .navbar.scrolled {
   .marketing-placeholder {
     aspect-ratio: auto;
     height: 100%;
+  }
+  /* Wide cover keeps its composition: letterboxed instead of center-cropped. */
+  .marketing-item--wide img {
+    object-fit: contain;
+    background: var(--space-raised);
+  }
+}
+
+@media (max-width: 600px) and (prefers-reduced-motion: reduce) {
+  .marketing-grid {
+    scroll-snap-type: x proximity;
   }
 }
 
@@ -1825,6 +1838,7 @@ body.romantic-theme .navbar.scrolled {
   max-height: 86vh;
   object-fit: contain;
   margin: 0 auto;
+  touch-action: pan-y;
 }
 .lightbox-controls {
   display: flex;
@@ -1832,6 +1846,7 @@ body.romantic-theme .navbar.scrolled {
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  flex-wrap: wrap;
 }
 .lightbox-counter {
   font-size: 0.9rem;
@@ -1846,9 +1861,25 @@ body.romantic-theme .navbar.scrolled {
   padding: 0.4rem 0.8rem;
   cursor: pointer;
   font-size: 0.85rem;
+  min-height: 44px;
 }
 .lightbox-controls button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  #lightbox {
+    max-height: 92vh;
+    max-height: 92dvh;
+  }
+  #lightbox img {
+    max-height: 64vh;
+    max-height: 64dvh;
+  }
+  .lightbox-controls button {
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+  }
 }
 

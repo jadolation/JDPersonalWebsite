@@ -73,6 +73,26 @@
     if (e.key === 'ArrowRight') { e.preventDefault(); showNext(); }
   });
 
+  // Touch swipe: horizontal swipe navigates, vertical scroll untouched.
+  let touchX = null;
+  let touchY = null;
+  dialog.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { touchX = null; touchY = null; return; }
+    touchX = e.touches[0].clientX;
+    touchY = e.touches[0].clientY;
+  }, { passive: true });
+  dialog.addEventListener('touchend', (e) => {
+    if (touchX === null || touchY === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    const dy = e.changedTouches[0].clientY - touchY;
+    touchX = null;
+    touchY = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) showNext();
+      else showPrev();
+    }
+  });
+
   document.querySelectorAll('.marketing-group').forEach(group => {
     const triggers = Array.from(group.querySelectorAll('.marketing-open'));
     if (!triggers.length) return;
