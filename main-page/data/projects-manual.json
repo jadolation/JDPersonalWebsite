@@ -1,0 +1,65 @@
+{
+  "projects": [
+    {
+      "slug": "example-client-site",
+      "name": "Client Website",
+      "description": "One-line description of the work.",
+      "logo": "assets/project-logos/manual/example-client-site.svg",
+      "logoPlate": "light",
+      "website": "https://example.com",
+      "ownership": "Client project",
+      "status": "Live",
+      "role": "Design and build",
+      "stack": "HTML, CSS, JavaScript",
+      "order": 50,
+      "placeholder": true
+    },
+    {
+      "slug": "example-collab-app",
+      "name": "Collaboration App",
+      "description": "One-line description of the work.",
+      "logo": "assets/project-logos/manual/example-collab-app.svg",
+      "logoPlate": "light",
+      "repoUrl": "https://github.com/example/collab-app",
+      "ownership": "Contributor",
+      "status": "Live, in active development",
+      "role": "Frontend contributor",
+      "stack": "React, TypeScript",
+      "order": 51,
+      "placeholder": true
+    },
+    {
+      "slug": "example-side-project",
+      "name": "Side Project",
+      "description": "One-line description of the work.",
+      "logo": "assets/project-logos/manual/example-side-project.svg",
+      "logoPlate": "dark",
+      "website": "https://example.org",
+      "repoUrl": "https://github.com/example/side-project",
+      "ownership": "Owner",
+      "status": "Live",
+      "role": "Everything",
+      "stack": "Python, SQLite",
+      "facts": [
+        {
+          "label": "Client",
+          "value": "Example Org"
+        }
+      ],
+      "order": 52,
+      "placeholder": true
+    }
+  ],
+  "overrides": {
+    "SRV": {
+      "displayName": "SRV",
+      "website": "https://srvpinoy.com",
+      "status": "Live, in active development",
+      "role": "Frontend developer and co-owner",
+      "order": 1
+    },
+    "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity": {
+      "displayName": "SOLID Training"
+    }
+  }
+}

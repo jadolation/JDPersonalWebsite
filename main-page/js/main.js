@@ -179,13 +179,24 @@ console.log('%c Hello, Developer!', 'font-size: 20px; color: #8DB4FF; font-weigh
 console.log('%cWelcome to my portfolio. Looking for something?', 'font-size: 14px; color: #9BA4B8;');
 console.log('%cFeel free to reach out: zaratejandale15@gmail.com', 'font-size: 12px; color: #F0CE86;');
 
-// SVG external-link arrow (card overlay only)
-const EXTERNAL_LINK_SVG = '<svg class="project-overlay-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+// Projects section: merged panels (synced GitHub repos + manual entries)
+const GITHUB_OWNER = 'jadolation';
 
-// Project rows
+function projectsSafeUrl(value) {
+    if (typeof value !== 'string') return '';
+    const trimmed = value.trim();
+    return /^https?:\/\//i.test(trimmed) ? trimmed : '';
+}
+
+// GitHub mark (exact Simple Icons path, also used by the social links)
+function githubMarkSvg(fill, cls) {
+    return '<svg class="' + cls + '" viewBox="0 0 24 24" fill="' + fill + '" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>';
+}
+
 async function loadProjects() {
-    const list = document.getElementById('projectsList');
-    if (!list) return;
+    const panelsEl = document.getElementById('projectsPanels');
+    const stripEl = document.getElementById('projectsStrip');
+    if (!panelsEl || !stripEl) return;
 
     const escapeHtml = (value) => String(value ?? '')
         .replaceAll('&', '&amp;')
@@ -194,166 +205,288 @@ async function loadProjects() {
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#39;');
 
-    list.innerHTML = '<p class="projects-loading">Loading projects…</p>';
+    panelsEl.innerHTML = '<p class="projects-loading">Loading projects…</p>';
+    stripEl.hidden = true;
+    stripEl.innerHTML = '';
 
-    // Auto repos (hourly workflow) + hand-maintained link-only entries.
-    // Either source may fail; the grid renders whatever resolved.
-    const [autoRes, manualRes] = await Promise.allSettled([
-        fetch('./projects.json').then((r) => {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-        }),
-        fetch('./data/manual-projects.json').then((r) => {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-        })
-    ]);
-    const auto = autoRes.status === 'fulfilled' && Array.isArray(autoRes.value)
-        ? autoRes.value
-        : [];
-    const manual = manualRes.status === 'fulfilled' && Array.isArray(manualRes.value)
-        ? manualRes.value.filter((m) => m && typeof m.name === 'string' && typeof m.url === 'string')
-        : [];
-    // Manual entries lead; drop any whose URL duplicates an auto repo.
-    const autoUrls = new Set(auto.map((r) => r && r.url).filter(Boolean));
-    const projects = [
-        ...manual.filter((m) => !autoUrls.has(m.url)),
-        ...auto
-    ];
+    const showPlaceholders = /[?&]placeholders=1\b/.test(window.location.search);
+    let syncedFailed = false;
 
-    if (projects.length === 0) {
-        list.innerHTML = '<p class="projects-error">Couldn\'t load projects — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
+    async function fetchJson(path) {
+        const response = await fetch(path);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+    }
+
+    let syncedRaw = [];
+    try {
+        const data = await fetchJson('./projects.json');
+        if (Array.isArray(data)) syncedRaw = data;
+    } catch {
+        syncedFailed = true;
+    }
+
+    let manualDoc = null;
+    try {
+        const data = await fetchJson('./data/projects-manual.json');
+        if (data && typeof data === 'object') manualDoc = data;
+    } catch {
+        manualDoc = null;
+    }
+
+    const overrides = (manualDoc && manualDoc.overrides && typeof manualDoc.overrides === 'object')
+        ? manualDoc.overrides
+        : {};
+
+    function repoOwner(url) {
+        const match = typeof url === 'string' && url.match(/github\.com\/([^/]+)/);
+        return match ? match[1] : '';
+    }
+
+    function activityText(stars, forks) {
+        const s = `${stars} star${stars === 1 ? '' : 's'}`;
+        const f = `${forks} fork${forks === 1 ? '' : 's'}`;
+        return `${s}, ${f}`;
+    }
+
+    // Normalize synced repos, applying overrides keyed by exact repo name.
+    const normalized = [];
+    syncedRaw.forEach((repo, pinnedIndex) => {
+        if (!repo || typeof repo.name !== 'string') return;
+        const over = (overrides[repo.name] && typeof overrides[repo.name] === 'object')
+            ? overrides[repo.name]
+            : {};
+        if (over.hidden === true) return;
+        const stars = typeof repo.stars === 'number' ? repo.stars : 0;
+        const forks = typeof repo.forks === 'number' ? repo.forks : 0;
+        normalized.push({
+            key: 'repo:' + repo.name,
+            sourceOrder: 1000 + pinnedIndex,
+            name: typeof over.displayName === 'string' && over.displayName ? over.displayName : repo.name,
+            description: Object.prototype.hasOwnProperty.call(over, 'description') ? over.description : repo.description,
+            website: projectsSafeUrl(over.website),
+            repoUrl: projectsSafeUrl(repo.url),
+            logo: typeof over.logo === 'string' && over.logo ? over.logo : repo.logo,
+            logoPlate: over.logoPlate === 'dark' || over.logoPlate === 'light' ? over.logoPlate : repo.logoPlate,
+            preview: repo.preview,
+            ownership: typeof over.ownership === 'string' && over.ownership
+                ? over.ownership
+                : (repoOwner(repo.url) === GITHUB_OWNER ? 'Owner' : 'Contributor'),
+            status: typeof over.status === 'string' ? over.status : '',
+            role: typeof over.role === 'string' ? over.role : '',
+            stack: typeof over.stack === 'string' ? over.stack : '',
+            language: repo.language,
+            activity: activityText(stars, forks),
+            extraFacts: Array.isArray(over.facts) ? over.facts : [],
+            order: typeof over.order === 'number' ? over.order : 100 + pinnedIndex,
+            isThisSite: repo.name === 'JDPersonalWebsite'
+        });
+    });
+
+    // Normalize manual entries (link-only projects).
+    if (manualDoc && Array.isArray(manualDoc.projects)) {
+        manualDoc.projects.forEach((entry) => {
+            if (!entry || typeof entry !== 'object') return;
+            if (entry.placeholder === true && !showPlaceholders) return;
+            if (typeof entry.name !== 'string' || !entry.name) return;
+            const website = projectsSafeUrl(entry.website);
+            const repoUrl = projectsSafeUrl(entry.repoUrl);
+            if (!website && !repoUrl) return;
+            const extraFacts = Array.isArray(entry.facts)
+                ? entry.facts.filter((f) => f && typeof f.label === 'string' && typeof f.value === 'string')
+                : [];
+            normalized.push({
+                key: 'manual:' + (typeof entry.slug === 'string' && entry.slug ? entry.slug : entry.name),
+                sourceOrder: normalized.length,
+                name: entry.name,
+                description: typeof entry.description === 'string' ? entry.description : '',
+                website,
+                repoUrl,
+                logo: typeof entry.logo === 'string' && entry.logo ? entry.logo : null,
+                logoPlate: entry.logoPlate === 'dark' ? 'dark' : 'light',
+                preview: null,
+                ownership: typeof entry.ownership === 'string' ? entry.ownership : '',
+                status: typeof entry.status === 'string' ? entry.status : '',
+                role: typeof entry.role === 'string' ? entry.role : '',
+                stack: typeof entry.stack === 'string' ? entry.stack : '',
+                language: '',
+                activity: '',
+                extraFacts,
+                order: typeof entry.order === 'number' ? entry.order : 50,
+                isThisSite: false
+            });
+        });
+    }
+
+    // Ascending order; stable sort keeps manual-before-synced on ties.
+    normalized.forEach((p, i) => { p.tiebreak = i; });
+    normalized.sort((a, b) => (a.order - b.order) || (a.tiebreak - b.tiebreak));
+
+    // Public list for future consumers (terminal/chatbot read this, not the DOM).
+    window.portfolioProjects = normalized.map((p) => ({
+        name: p.name,
+        description: p.description || '',
+        language: p.language || '',
+        stack: p.stack || '',
+        link: p.website || p.repoUrl || '',
+        ownership: p.ownership || '',
+        status: p.status || ''
+    }));
+
+    if (normalized.length === 0) {
+        panelsEl.innerHTML = syncedFailed
+            ? '<p class="projects-error">Couldn\'t load projects — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>'
+            : '<p class="projects-error">No projects to show yet — see <a href="https://github.com/jadolation">github.com/jadolation</a>.</p>';
         return;
     }
-    const autoMissing = auto.length === 0;
-    const autoNote = autoMissing
-        ? '<p class="projects-error">GitHub repos are temporarily unavailable — showing selected work below.</p>'
-        : '';
 
-    list.innerHTML = autoNote + projects.map((repo, cardIndex) => {
-        // Link-only entries carry no stars/forks; they render the same card
-        // shell with a "Visit site" overlay and no counts row.
-        const isManual = typeof repo.stars !== 'number';
-        const repoName = escapeHtml(repo.name);
-        const repoUrl = escapeHtml(repo.url);
-        const repoDesc = repo.description
-            ? escapeHtml(repo.description)
-            : null;
-        const repoLang = repo.language
-            ? escapeHtml(repo.language)
-            : '';
-        const isPersonalWebsite = repo.name === 'JDPersonalWebsite';
-        const siteLabel = isPersonalWebsite
-            ? '<span class="project-site-label">This site</span>'
-            : '';
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const repoStars = typeof repo.stars === 'number' ? repo.stars : 0;
-        const repoForks = typeof repo.forks === 'number' ? repo.forks : 0;
-        const starsLabel = `${repoStars} star${repoStars === 1 ? '' : 's'}`;
-        const forksLabel = `${repoForks} fork${repoForks === 1 ? '' : 's'}`;
-        const metaLine = isManual
-            ? ''
-            : `                    <div class="project-meta">
-                        <span>★ ${starsLabel}</span>
-                        <span aria-hidden="true"> · </span>
-                        <span>${forksLabel}</span>
-                    </div>`;
-
-        const descLine = repoDesc
-            ? `<p class="project-desc">${repoDesc}</p>`
-            : '';
-        const langLine = repoLang
-            ? `<span class="project-lang">${repoLang}</span>`
-            : '';
-
-        // Card media: manual/auto logo > vendored social preview >
-        // GitHub default social image > text fallback (last resort only).
-        const logoSrc = (typeof repo.logo === 'string' && repo.logo)
-            ? escapeHtml(repo.logo)
-            : '';
-        const logoPlate = repo.logoPlate === 'dark' ? 'dark' : 'light';
-        const previewSrc = (typeof repo.preview === 'string' && repo.preview)
-            ? escapeHtml(repo.preview)
-            : '';
-        // Owner comes from the repo URL so cross-owner pins (e.g. SRV) work.
-        const ogOwner = ((typeof repo.url === 'string' && repo.url.match(/github\.com\/([^/]+)/)) || [])[1] || 'jadolation';
-        const ogSrc = `https://opengraph.githubassets.com/1/${encodeURIComponent(ogOwner)}/${encodeURIComponent(repo.name)}`;
-        const lazyAttr = cardIndex < 3 ? '' : ' loading="lazy"';
-        const swapToFallback = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
-        const overlayLabel = isManual ? 'Visit site' : 'View on GitHub';
-        const overlayHtml = `
-                        <span class="project-overlay" aria-hidden="true">
-                            <span class="project-overlay-text">${overlayLabel}${EXTERNAL_LINK_SVG}</span>
-                        </span>`;
-
-        let mediaBlock;
-        if (logoSrc) {
-            mediaBlock = `
-                <div class="project-img-wrap project-img-wrap--logo" data-plate="${logoPlate}">
-                    <img
-                        class="project-logo"
-                        src="./${logoSrc}"
-                        alt="${repoName} logo"
-                        decoding="async"${lazyAttr}
-                        onerror="${swapToFallback}"
-                    >
-                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
-                </div>`;
-        } else if (previewSrc) {
-            mediaBlock = `
-                <div class="project-img-wrap">
-                    <img
-                        class="project-card-img"
-                        src="./${previewSrc}"
-                        alt="${repoName} preview"
-                        decoding="async"${lazyAttr}
-                        onerror="${swapToFallback}"
-                    >
-                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
-                </div>`;
-        } else if (isManual) {
-            // Link-only entries have no generated preview; text fallback.
-            mediaBlock = `
-                <div class="project-img-wrap">
-                    <div class="project-img-fallback project-img-fallback--static" aria-hidden="true">${repoName}</div>${overlayHtml}
-                </div>`;
-        } else {
-            const coverSrc = previewSrc ? `./${previewSrc}` : ogSrc;
-            const coverAlt = previewSrc ? `${repoName} preview` : `${repoName} repository preview`;
-            mediaBlock = `
-                <div class="project-img-wrap">
-                    <img
-                        class="project-card-img"
-                        src="${coverSrc}"
-                        alt="${coverAlt}"
-                        width="640"
-                        height="320"
-                        decoding="async"${lazyAttr}
-                        onerror="${swapToFallback}"
-                    >
-                    <div class="project-img-fallback" aria-hidden="true">${repoName}</div>${overlayHtml}
-                </div>`;
+    function mediaBlock(p, eager) {
+        const name = escapeHtml(p.name);
+        const lazy = eager ? '' : ' loading="lazy"';
+        const fallback = `<div class="projects-media-fallback" aria-hidden="true">${name}</div>`;
+        const swap = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
+        if (p.logo) {
+            const plate = p.logoPlate === 'dark' ? 'dark' : 'light';
+            return `<div class="projects-media projects-media--logo" data-plate="${plate}">`
+                + `<img class="project-logo" src="./${escapeHtml(p.logo)}" alt="${name} logo" decoding="async"${lazy} onerror="${swap}">`
+                + fallback + `</div>`;
         }
+        if (p.preview) {
+            return `<div class="projects-media">`
+                + `<img class="projects-preview-img" src="./${escapeHtml(p.preview)}" alt="${name} preview" decoding="async"${lazy} onerror="${swap}">`
+                + fallback + `</div>`;
+        }
+        const plate = p.logoPlate === 'dark' ? 'dark' : 'light';
+        const markFill = plate === 'dark' ? 'var(--text)' : 'var(--space)';
+        return `<div class="projects-media projects-media--logo" data-plate="${plate}">`
+            + githubMarkSvg(markFill, 'projects-gh-mark') + `</div>`;
+    }
 
-        return `
-        <article class="project-card${isPersonalWebsite ? ' project-card--this-site' : ''}">
-            <a href="${repoUrl}" target="_blank" rel="noopener" class="project-card-link">${mediaBlock}
-                <div class="project-card-body">
-                    <div class="project-card-header">
-                        <h3 class="project-card-title">${repoName}</h3>
-                        ${siteLabel}
-                    </div>
-                    ${descLine}
-                    ${langLine ? `<div class="project-tags">${langLine}</div>` : ''}
-                    ${metaLine}
-                </div>
-            </a>
-        </article>
-        `;
+    function factsBlock(p) {
+        const rows = [];
+        const row = (label, value) => {
+            if (typeof value !== 'string' || !value) return;
+            rows.push(`<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`);
+        };
+        row('Ownership', p.ownership);
+        row('Status', p.status);
+        row('My role', p.role);
+        row('Stack', p.stack);
+        row('Language', p.language);
+        row('Activity', p.activity);
+        p.extraFacts.forEach((f) => row(f.label, f.value));
+        if (!rows.length) return '';
+        return `<dl class="projects-facts">${rows.join('')}</dl>`;
+    }
+
+    function ctaBlock(p) {
+        const buttons = [];
+        if (p.website) {
+            buttons.push(`<a class="btn btn-primary projects-cta" href="${escapeHtml(p.website)}" target="_blank" rel="noopener noreferrer">Visit website</a>`);
+        } else if (p.repoUrl) {
+            buttons.push(`<a class="btn btn-primary projects-cta" href="${escapeHtml(p.repoUrl)}" target="_blank" rel="noopener noreferrer">View on GitHub</a>`);
+        }
+        if (p.website && p.repoUrl) {
+            buttons.push(`<a class="projects-gh-link" href="${escapeHtml(p.repoUrl)}" target="_blank" rel="noopener noreferrer">View on GitHub</a>`);
+        }
+        if (!buttons.length) return '';
+        return `<div class="projects-cta-row">${buttons.join('')}</div>`;
+    }
+
+    panelsEl.innerHTML = normalized.map((p, i) => {
+        const name = escapeHtml(p.name);
+        const desc = (typeof p.description === 'string' && p.description)
+            ? `<p class="projects-intro">${escapeHtml(p.description)}</p>` : '';
+        const facts = factsBlock(p);
+        const cta = ctaBlock(p);
+        const label = p.isThisSite ? '<span class="projects-site-label">This site</span>' : '';
+        const main = (desc || facts)
+            ? `<div class="projects-main">${desc}${facts}</div>` : '';
+        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}"${i === 0 ? ' data-active' : ''}>`
+            + `<div class="projects-side">${mediaBlock(p, i === 0)}`
+            + `<h3 class="projects-name">${name}${label}</h3>${cta}</div>${main}</article>`;
     }).join('');
+
+    // Logo strip (hidden for a single project).
+    if (normalized.length > 1) {
+        stripEl.hidden = false;
+        stripEl.innerHTML = normalized.map((p, i) => {
+            const name = escapeHtml(p.name);
+            const inner = p.logo
+                ? `<img src="./${escapeHtml(p.logo)}" alt="" width="200" height="64">`
+                : githubMarkSvg('var(--space)', 'projects-cell-mark');
+            const dark = p.logoPlate === 'dark' ? ' projects-cell--dark' : '';
+            return `<button type="button" role="tab" id="projects-tab-${i}" aria-controls="projects-panel-${i}" aria-selected="${i === 0 ? 'true' : 'false'}" tabindex="${i === 0 ? '0' : '-1'}" aria-label="${name}" class="projects-cell${dark}">${inner}</button>`;
+        }).join('');
+    } else {
+        stripEl.hidden = true;
+        stripEl.innerHTML = '';
+    }
+
+    const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
+    const tabs = Array.from(stripEl.querySelectorAll('[role="tab"]'));
+
+    function activate(index) {
+        panels.forEach((panel, i) => {
+            panel.toggleAttribute('data-active', i === index);
+        });
+        tabs.forEach((tab, i) => {
+            const active = i === index;
+            tab.setAttribute('aria-selected', active ? 'true' : 'false');
+            tab.setAttribute('tabindex', active ? '0' : '-1');
+        });
+    }
+
+    tabs.forEach((tab, idx) => {
+        tab.addEventListener('click', () => activate(idx));
+        tab.addEventListener('keydown', (e) => {
+            let target = -1;
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') target = idx + 1;
+            else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') target = idx - 1;
+            else if (e.key === 'Home') target = 0;
+            else if (e.key === 'End') target = tabs.length - 1;
+            else if (e.key === 'Enter' || e.key === ' ') target = idx;
+            else return;
+            e.preventDefault();
+            target = ((target % tabs.length) + tabs.length) % tabs.length;
+            tabs[target].focus();
+            activate(target);
+        });
+    });
+
+    // Pin each CTA row so its vertical center sits on the last facts
+    // row's center (CSS margin-top:auto handles the common case; this
+    // only corrects panels whose last row wraps taller than the button).
+    function pinButtons() {
+        panels.forEach((panel) => {
+            const facts = panel.querySelector('.projects-facts');
+            const ctaRow = panel.querySelector('.projects-cta-row');
+            const side = panel.querySelector('.projects-side');
+            if (!facts || !ctaRow || !side) return;
+            const lastRow = facts.lastElementChild;
+            if (!lastRow) return;
+            const pad = Math.max(0, (lastRow.getBoundingClientRect().height - ctaRow.getBoundingClientRect().height) / 2);
+            side.style.paddingBottom = pad > 1 ? pad.toFixed(1) + 'px' : '';
+        });
+    }
+    pinButtons();
+    if (!reducedMotion && window.ResizeObserver) {
+        let scheduled = false;
+        const ro = new ResizeObserver(() => {
+            if (scheduled) return;
+            scheduled = true;
+            requestAnimationFrame(() => { scheduled = false; pinButtons(); });
+        });
+        panels.forEach((panel) => ro.observe(panel));
+    }
+    window.addEventListener('resize', pinButtons);
+    window.addEventListener('load', pinButtons);
 }
 
 loadProjects();
+
 
 // About carousel
 (function() {
