@@ -64,11 +64,11 @@
                 <ul class="nav-list">
                     <li><a href="#home" class="nav-link">Home</a></li>
                     <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#bakery" class="nav-link">Bakery</a></li>
-                    <li><a href="#srv" class="nav-link srv-link">SRV</a></li>
-                    <li><a href="#marketing" class="nav-link">Marketing</a></li>
-                    <li><a href="#skills" class="nav-link">Skills</a></li>
                     <li><a href="#projects" class="nav-link">Projects</a></li>
+                    <li><a href="#marketing" class="nav-link">Marketing</a></li>
+                    <li><a href="#bakery" class="nav-link">Bakery</a></li>
+                  
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
                     <li><a href="#github-stats" class="nav-link">GitHub</a></li>
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
@@ -179,6 +179,70 @@
         </div>
     </section>
 
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <h2 class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</h2>
+            <p class="section-subtitle">Projects I own or have helped build, live and in development.</p>
+            
+
+            <div class="projects-panels" id="projectsPanels">
+                <!-- Panels rendered by JS -->
+            </div>
+            <div class="projects-strip" id="projectsStrip" role="tablist" aria-label="Projects">
+                <!-- Tabs rendered by JS -->
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Marketing Section -->
+    <section id="marketing" aria-labelledby="marketing-title">
+      <div class="container">
+        <h2 id="marketing-title" class="section-title">Social Media Marketing</h2>
+        <p class="section-subtitle">Selected posts from the two company accounts I've handled.</p>
+       
+        <ul class="marketing-grid" role="list">
+            <li class="marketing-item"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: SRV launch announcement post showing the app screens, with the text 'is finally launching this May'" data-full="assets/marketing/srv-launching-1080.webp">
+                <img src="assets/marketing/srv-launching-540.webp" alt="SRV launch announcement post showing the app screens, with the text 'is finally launching this May'" width="540" height="675" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
+            </figure></li>
+            <li class="marketing-item"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: SRV post calling Cordilleran service providers and home-based freelancers to join" data-full="assets/marketing/srv-call-for-providers-1080.webp">
+                <img src="assets/marketing/srv-help-wanted-540.webp" alt="SRV post calling Cordilleran service providers and home-based freelancers to join" width="540" height="675" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
+            </figure></li>
+            <li class="marketing-item"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: SRV beta tester recruitment post with a QR code and the website srvpinoy.com" data-full="assets/marketing/srv-beta-tester-1080.webp">
+                <img src="assets/marketing/srv-we-want-you-540.webp" alt="SRV beta tester recruitment post with a QR code and the website srvpinoy.com" width="540" height="675" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
+            </figure></li>
+            <li class="marketing-item"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: SRV Cordillera campaign post with an Igorot character, lion head and strawberry basket, reading 'A new way to be seen is here'" data-full="assets/marketing/srv-CAR-1080.webp">
+                <img src="assets/marketing/srv-CAR-540.webp" alt="SRV Cordillera campaign post with an Igorot character, lion head and strawberry basket, reading 'A new way to be seen is here'" width="540" height="675" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
+            </figure></li>
+            <li class="marketing-item marketing-item--landscape"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: New Creation 517 Bakery cover photo with the logo and the tagline 'Fresh breads, fresh joy everyday'" data-full="assets/marketing/bakery-cover-1600.webp">
+                <img src="assets/marketing/bakery-cover-960.webp" alt="New Creation 517 Bakery cover photo with the logo and the tagline 'Fresh breads, fresh joy everyday'" width="960" height="540" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">New Creation 517 Bakery</figcaption>
+            </figure></li>
+            <li class="marketing-item"><figure>
+              <button type="button" class="marketing-open" aria-label="View larger: New Creation 517 Bakery 'Currently baking something, coming soon' announcement post" data-full="assets/marketing/bakery-coming-soon-1080.webp">
+                <img src="assets/marketing/bakery-coming-soon-540.webp" alt="New Creation 517 Bakery 'Currently baking something, coming soon' announcement post" width="540" height="675" loading="lazy" decoding="async">
+              </button>
+              <figcaption class="marketing-caption">New Creation 517 Bakery</figcaption>
+            </figure></li>
+        </ul>
+      </div>
+    </section>
+
     <!-- Bakery Section -->
     <section id="bakery" class="bakery" aria-labelledby="bakery-title">
         <div class="container">
@@ -228,110 +292,6 @@
                 </ul>
             </div>
         </div>
-    </section>
-
-    <!-- SRV Startup Section -->
-    <section id="srv" class="srv-section">
-        <div class="container">
-            <div class="srv-columns">
-            <div class="srv-header">
-                <div class="srv-header-top">
-                    <div class="srv-logo-placeholder">
-                        <img src="assets/images/brand/srv-logo.png" alt="SRV Logo" class="srv-logo" width="250" height="auto">
-                    </div>
-                </div>
-                <h2 class="section-title srv-title">SRV: Serbisyo, Rito, Valid</h2>
-            </div>
-
-            <div class="srv-content">
-                
-                <p class="srv-intro">
-                    <strong>SRV (Serbisyo, Rito, Valid)</strong> is a blockchain-powered marketplace connecting clients with local freelance service providers in Baguio City. 
-                    Developed by <strong>SRV Digital Solutions Co.</strong>, the platform features service discovery, provider profiles, booking systems, and a unique vouching mechanism where users stake coins to build provider trust.
-                </p>
-                <dl class="srv-details">
-                    <div class="srv-detail-row">
-                        <dt>Blockchain Trust</dt>
-                        <dd>Staking-based vouching system with smart contracts</dd>
-                    </div>
-                    <div class="srv-detail-row">
-                        <dt>Categories</dt>
-                        <dd>Home repairs, auto services, tech support, cleaning, beauty, delivery, tutoring</dd>
-                    </div>
-                    <div class="srv-detail-row">
-                        <dt>Payments</dt>
-                        <dd>Cash & GCash with blockchain integration on test networks</dd>
-                    </div>
-                    <div class="srv-detail-row">
-                        <dt>Status</dt>
-                        <dd>Currently in development, preparing for Baguio market launch</dd>
-                    </div>
-                </dl>
-                <div class="srv-cta">
-                    <a href="https://srvpinoy.com/" class="btn btn-srv" target="_blank" rel="noopener noreferrer">Learn More About SRV</a>
-                </div>
-            </div>
-            </div>
-            <div class="achievements achievements--cols-5">
-                <h3 class="achievements-title">Key contributions</h3>
-                <ul class="achievements-list">
-                    <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Developed 75% of the frontend</li>
-                    <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>Managed the business side of the startup</li>
-                    <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Ran marketing through Meta Business Suite</li>
-                    <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>Got SRV accepted into the Google for Startups program</li>
-                    <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Placed 2nd in the World Computer Hackathon League, Asian rounds</li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-
-
-    <!-- Marketing Section -->
-    <section id="marketing" aria-labelledby="marketing-title">
-      <div class="container">
-        <h2 id="marketing-title" class="section-title">Social Media Marketing</h2>
-        <p class="section-subtitle">Selected posts from the two company accounts I've handled.</p>
-       
-        <ul class="marketing-grid" role="list">
-            <li class="marketing-item"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: SRV launch announcement post showing the app screens, with the text 'is finally launching this May'" data-full="assets/marketing/srv-launching-1080.webp">
-                <img src="assets/marketing/srv-launching-540.webp" alt="SRV launch announcement post showing the app screens, with the text 'is finally launching this May'" width="540" height="675" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
-            </figure></li>
-            <li class="marketing-item"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: SRV post calling Cordilleran service providers and home-based freelancers to join" data-full="assets/marketing/srv-call-for-providers-1080.webp">
-                <img src="assets/marketing/srv-help-wanted-540.webp" alt="SRV post calling Cordilleran service providers and home-based freelancers to join" width="540" height="675" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
-            </figure></li>
-            <li class="marketing-item"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: SRV beta tester recruitment post with a QR code and the website srvpinoy.com" data-full="assets/marketing/srv-beta-tester-1080.webp">
-                <img src="assets/marketing/srv-we-want-you-540.webp" alt="SRV beta tester recruitment post with a QR code and the website srvpinoy.com" width="540" height="675" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
-            </figure></li>
-            <li class="marketing-item"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: SRV Cordillera campaign post with an Igorot character, lion head and strawberry basket, reading 'A new way to be seen is here'" data-full="assets/marketing/srv-CAR-1080.webp">
-                <img src="assets/marketing/srv-CAR-540.webp" alt="SRV Cordillera campaign post with an Igorot character, lion head and strawberry basket, reading 'A new way to be seen is here'" width="540" height="675" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">SRV Digital Solutions Co.</figcaption>
-            </figure></li>
-            <li class="marketing-item marketing-item--landscape"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: New Creation 517 Bakery cover photo with the logo and the tagline 'Fresh breads, fresh joy everyday'" data-full="assets/marketing/bakery-cover-1600.webp">
-                <img src="assets/marketing/bakery-cover-960.webp" alt="New Creation 517 Bakery cover photo with the logo and the tagline 'Fresh breads, fresh joy everyday'" width="960" height="540" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">New Creation 517 Bakery</figcaption>
-            </figure></li>
-            <li class="marketing-item"><figure>
-              <button type="button" class="marketing-open" aria-label="View larger: New Creation 517 Bakery 'Currently baking something, coming soon' announcement post" data-full="assets/marketing/bakery-coming-soon-1080.webp">
-                <img src="assets/marketing/bakery-coming-soon-540.webp" alt="New Creation 517 Bakery 'Currently baking something, coming soon' announcement post" width="540" height="675" loading="lazy" decoding="async">
-              </button>
-              <figcaption class="marketing-caption">New Creation 517 Bakery</figcaption>
-            </figure></li>
-        </ul>
-      </div>
     </section>
     <!-- Skills Section -->
     <section id="skills" class="skills">
@@ -424,21 +384,6 @@
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>Projects</h2>
-            <p class="section-subtitle">Projects I own or have helped build, live and in development.</p>
-            
-
-            <div class="projects-panels" id="projectsPanels">
-                <!-- Panels rendered by JS -->
-            </div>
-            <div class="projects-strip" id="projectsStrip" role="tablist" aria-label="Projects">
-                <!-- Tabs rendered by JS -->
-            </div>
-        </div>
-    </section>
 
     <!-- GitHub Stats Section -->
     <section id="github-stats" class="github-stats">

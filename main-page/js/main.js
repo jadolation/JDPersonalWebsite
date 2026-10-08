@@ -408,10 +408,11 @@ async function loadProjects() {
         return `<div class="projects-cta-row">${buttons.join('')}</div>`;
     }
 
-    // Only the active panel exists in the DOM. There is nothing to measure,
-    // nothing frozen, and nothing to overlap: the container is always exactly
-    // the visible panel, so the strip always follows its content.
-    function renderPanel(i) {
+    // All panels render once; inactive ones stay hidden so loaded previews
+    // persist across tab switches instead of reloading on every visit.
+    // Hidden panels occupy zero layout, so the container is always exactly
+    // the visible panel and the strip always follows its content.
+    function renderPanel(i, visible) {
         const p = normalized[i];
         if (!p) return '';
         const name = escapeHtml(p.name);
@@ -422,12 +423,28 @@ async function loadProjects() {
         const label = p.isThisSite ? '<span class="projects-site-label">This site</span>' : '';
         const main = (desc || facts)
             ? `<div class="projects-main">${desc}${facts}</div>` : '';
-        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}" data-active>`
-            + `<div class="projects-side">${mediaBlock(p, true)}`
+        return `<article class="projects-panel" id="projects-panel-${i}" role="tabpanel" aria-labelledby="projects-tab-${i}" data-active${visible ? '' : ' hidden'}>`
+            + `<div class="projects-side">${mediaBlock(p, i === 0)}`
             + `<h3 class="projects-name">${name}${label}</h3>${cta}</div>${main}</article>`;
     }
 
-    panelsEl.innerHTML = renderPanel(0);
+    panelsEl.innerHTML = normalized.map((_, i) => renderPanel(i, i === 0)).join('');
+
+    // Warm up connections to website origins so first-visit iframe
+    // loads skip DNS+TLS setup. Derived from data; nothing hardcoded.
+    try {
+        const origins = new Set();
+        normalized.forEach((p) => {
+            const m = typeof p.website === 'string' && p.website.match(/^https?:\/\/([^/]+)/i);
+            if (m) origins.add(m[0].toLowerCase());
+        });
+        origins.forEach((origin) => {
+            const pre = document.createElement('link');
+            pre.rel = 'preconnect';
+            pre.href = origin;
+            document.head.appendChild(pre);
+        });
+    } catch { /* non-fatal: previews still load, just slower */ }
 
     // Logo strip (hidden for a single project).
     if (normalized.length > 1) {
@@ -447,16 +464,21 @@ async function loadProjects() {
 
     const tabs = Array.from(stripEl.querySelectorAll('[role="tab"]'));
 
+    const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
+
     function activate(index) {
+        panels.forEach((panel, i) => {
+            if (i === index) panel.removeAttribute('hidden');
+            else panel.setAttribute('hidden', '');
+        });
         tabs.forEach((tab, i) => {
             const active = i === index;
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
             tab.setAttribute('tabindex', active ? '0' : '-1');
         });
-        panelsEl.innerHTML = renderPanel(index);
-        const panel = panelsEl.querySelector('.projects-panel');
-        if (panel) {
-            const mount = panel.querySelector('.projects-live-preview');
+        const activePanel = panels[index];
+        if (activePanel) {
+            const mount = activePanel.querySelector('.projects-live-preview');
             if (mount) loadWebsitePreview(mount, normalized[index] ? normalized[index].name : '');
         }
     }

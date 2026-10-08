@@ -737,6 +737,10 @@ body.romantic-theme .navbar.scrolled {
     animation: projectsFadeIn 150ms ease;
 }
 
+.projects-panel[hidden] {
+    display: none;
+}
+
 .projects-side {
     display: flex;
     flex-direction: column;
