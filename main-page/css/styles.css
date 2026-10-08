@@ -96,7 +96,11 @@ body.romantic-theme .contact {
 html {
     scroll-behavior: smooth;
     overflow-x: hidden;
-    background: var(--space);
+    scroll-padding-top: 90px;
+}
+
+section[id] {
+    scroll-margin-top: 90px;
 }
 
 body {
@@ -330,11 +334,17 @@ body.romantic-theme .navbar.scrolled {
 .nav-toggle {
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
     cursor: pointer;
     background: none;
     border: none;
     padding: 4px;
+    min-width: 44px;
+    min-height: 44px;
+    color: inherit;
+    font: inherit;
 }
 
 .nav-toggle span {
@@ -446,6 +456,8 @@ body.romantic-theme .navbar.scrolled {
 .social-links a {
     width: auto;
     height: auto;
+    min-width: 44px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -941,11 +953,14 @@ body.romantic-theme .navbar.scrolled {
 .contact-row dd {
     color: var(--text);
     margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .contact-row dd a {
     color: var(--accent);
     text-decoration: none;
+    overflow-wrap: anywhere;
 }
 
 .contact-row dd a:hover {
@@ -1010,6 +1025,22 @@ body.romantic-theme .navbar.scrolled {
 
 .contact-form .btn {
     width: 100%;
+    min-height: 48px;
+}
+
+@media (max-width: 480px) {
+    .contact-form {
+        padding: 1.25rem;
+    }
+    .srv-detail-row,
+    .bakery-fact-row {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .srv-detail-row dt,
+    .bakery-fact-row dt {
+        min-width: 0;
+    }
 }
 
  /* Footer */
@@ -1031,13 +1062,20 @@ body.romantic-theme .navbar.scrolled {
 
 .footer-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 0.5rem 1.5rem;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .footer-links a {
     color: var(--text-dim);
     transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .footer-links a:hover {
@@ -1071,7 +1109,8 @@ body.romantic-theme .navbar.scrolled {
         height: calc(100vh - 70px);
         background: rgb(7 10 18 / 0.98);
         backdrop-filter: blur(10px);
-        transition: right 0.3s ease;
+        transition: right 0.3s ease, visibility 0s linear 0.3s;
+        visibility: hidden;
         padding: 2rem;
     }
     
@@ -1081,11 +1120,18 @@ body.romantic-theme .navbar.scrolled {
     
     .nav-menu.active {
         right: 0;
+        visibility: visible;
+        transition: right 0.3s ease;
     }
     
     .nav-list {
         flex-direction: column;
-        gap: 2rem;
+        gap: 0.5rem;
+    }
+
+    .nav-menu .nav-link {
+        display: block;
+        padding: 0.65rem 0;
     }
     
     .nav-toggle {
@@ -1167,10 +1213,6 @@ body.romantic-theme .navbar.scrolled {
     }
     
     .skills-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .skill-items {
         grid-template-columns: 1fr;
     }
 }
@@ -1366,6 +1408,9 @@ body.romantic-theme .navbar.scrolled {
 }
 
 @media (max-width: 600px) {
+    .achievements {
+        margin-top: 2.5rem;
+    }
     .achievements-list {
         grid-template-columns: minmax(0, 1fr);
     }
@@ -1398,12 +1443,17 @@ body.romantic-theme .navbar.scrolled {
         padding: 60px 0;
     }
     
-    .srv-logo {
+    .srv-logo,
+    .bakery-logo {
         max-width: 120px;
     }
     
     .srv-tagline {
         font-size: 1.1rem;
+    }
+
+    .projects-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
     
 }

@@ -299,11 +299,15 @@ class GitHubStats {
     async updateStatsDisplay(userData, repos, activity) {
         const reposCount = userData.public_repos;
         const activeCount = repos.length;
-        const reposText = activeCount > 0 && activeCount !== reposCount
-            ? `${reposCount} repositories (${activeCount} active)`
-            : `${reposCount} repositories`;
 
-        document.getElementById('github-repos').textContent = reposText;
+        const reposEl = document.getElementById('github-repos');
+        reposEl.textContent = reposCount;
+        // The static label already reads "repositories"; extend it instead
+        // of duplicating the word inside the value.
+        const reposLabel = reposEl.closest('.stat-item')?.querySelector('.stat-label');
+        if (reposLabel && activeCount > 0 && activeCount !== reposCount) {
+            reposLabel.textContent = `repositories (${activeCount} active)`;
+        }
         document.getElementById('github-followers').textContent = userData.followers;
         document.getElementById('github-stars').textContent = this.calculateTotalStars(repos);
 

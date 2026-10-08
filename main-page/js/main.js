@@ -18,17 +18,37 @@ window.addEventListener('scroll', () => {
 });
 
 // Mobile menu toggle
+function setMenuOpen(open) {
+    navMenu.classList.toggle('active', open);
+    navToggle.classList.toggle('active', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+}
+
 navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    navToggle.classList.toggle('active');
+    setMenuOpen(!navMenu.classList.contains('active'));
 });
 
 // Close mobile menu when clicking a link
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        navToggle.classList.remove('active');
+        setMenuOpen(false);
     });
+});
+
+// Close on Escape (focus returns to the toggle) and on outside tap
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+        setMenuOpen(false);
+        navToggle.focus();
+    }
+});
+document.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('active')
+        && !navMenu.contains(e.target)
+        && !navToggle.contains(e.target)) {
+        setMenuOpen(false);
+    }
 });
 
 // Active nav link on scroll
@@ -370,6 +390,10 @@ loadProjects();
         thumbs.forEach((t, idx) => {
             if (idx === current) t.classList.add('active'); else t.classList.remove('active');
         });
+        const activeThumb = thumbs[current];
+        if (activeThumb && typeof activeThumb.scrollIntoView === 'function') {
+            activeThumb.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+        }
         border.style.borderColor = 'var(--rule)';
         border.style.boxShadow = 'none';
     }
@@ -394,8 +418,21 @@ loadProjects();
     main.addEventListener('click', () => { setActive(current + 1); resetAuto(); });
     main.addEventListener('mouseenter', pauseAuto);
     main.addEventListener('mouseleave', resumeAuto);
-    main.addEventListener('focus', pauseAuto);
-    main.addEventListener('blur', resumeAuto);
+
+    // Touch swipe on the main image (mouse hover pause never fires on touch)
+    let touchStartX = null;
+    main.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) touchStartX = e.touches[0].clientX;
+        pauseAuto();
+    }, { passive: true });
+    main.addEventListener('touchend', (e) => {
+        if (touchStartX !== null) {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (Math.abs(dx) > 40) setActive(current + (dx < 0 ? 1 : -1));
+        }
+        touchStartX = null;
+        resetAuto();
+    });
 
     // initialize
     setActive(0);
