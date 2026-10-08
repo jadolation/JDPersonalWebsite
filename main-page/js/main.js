@@ -279,6 +279,7 @@ async function loadProjects() {
             activity: activityText(stars, forks),
             extraFacts: Array.isArray(over.facts) ? over.facts : [],
             order: typeof over.order === 'number' ? over.order : 100 + pinnedIndex,
+            previewMode: over.previewMode === 'live' ? 'live' : 'image',
             isThisSite: repo.name === 'JDPersonalWebsite'
         });
     });
@@ -313,6 +314,7 @@ async function loadProjects() {
                 activity: '',
                 extraFacts,
                 order: typeof entry.order === 'number' ? entry.order : 50,
+                previewMode: entry.previewMode === 'live' ? 'live' : 'image',
                 isThisSite: false
             });
         });
@@ -342,11 +344,24 @@ async function loadProjects() {
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    function hostOf(url) {
+        const match = typeof url === 'string' && url.match(/^https?:\/\/([^/]+)/i);
+        return match ? match[1] : '';
+    }
+
     function mediaBlock(p, eager) {
         const name = escapeHtml(p.name);
         const lazy = eager ? '' : ' loading="lazy"';
         const fallback = `<div class="projects-media-fallback" aria-hidden="true">${name}</div>`;
         const swap = `this.style.display='none';this.nextElementSibling.style.display='flex';`;
+        // Live website preview wins when opted in; created lazily on activation.
+        if (p.previewMode === 'live' && p.website) {
+            const host = escapeHtml(hostOf(p.website) || p.website);
+            return `<div class="projects-media projects-browser">`
+                + `<div class="projects-browser-bar" aria-hidden="true"><span class="projects-browser-dots"><i></i><i></i><i></i></span><span class="projects-browser-host">${host}</span></div>`
+                + `<div class="projects-live-preview" data-preview-url="${escapeHtml(p.website)}"><span class="projects-preview-loading">Loading preview…</span></div>`
+                + `</div>`;
+        }
         if (p.logo) {
             const plate = p.logoPlate === 'dark' ? 'dark' : 'light';
             return `<div class="projects-media projects-media--logo" data-plate="${plate}">`
@@ -428,6 +443,21 @@ async function loadProjects() {
     const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
     const tabs = Array.from(stripEl.querySelectorAll('[role="tab"]'));
 
+    function loadWebsitePreview(container, name) {
+        if (!container || container.dataset.loaded === 'true') return;
+        const url = container.getAttribute('data-preview-url');
+        if (!url) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.loading = 'lazy';
+        iframe.title = 'Live preview of ' + name;
+        iframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+        iframe.setAttribute('referrerpolicy', 'no-referrer');
+        iframe.className = 'projects-live-frame';
+        container.replaceChildren(iframe);
+        container.dataset.loaded = 'true';
+    }
+
     function activate(index) {
         panels.forEach((panel, i) => {
             panel.toggleAttribute('data-active', i === index);
@@ -437,6 +467,11 @@ async function loadProjects() {
             tab.setAttribute('aria-selected', active ? 'true' : 'false');
             tab.setAttribute('tabindex', active ? '0' : '-1');
         });
+        const activePanel = panels[index];
+        if (activePanel) {
+            const mount = activePanel.querySelector('.projects-live-preview');
+            if (mount) loadWebsitePreview(mount, normalized[index] ? normalized[index].name : '');
+        }
         syncHeight(index);
     }
 
@@ -484,6 +519,11 @@ async function loadProjects() {
         syncHeight(active === -1 ? 0 : active);
     }
     syncHeight(0);
+    // Mount the initially visible panel's preview (it never passes activate).
+    if (panels[0]) {
+        const mount = panels[0].querySelector('.projects-live-preview');
+        if (mount) loadWebsitePreview(mount, normalized[0] ? normalized[0].name : '');
+    }
     // Late image arrivals change panel heights; re-sync when they land.
     panelsEl.querySelectorAll('img').forEach((img) => {
         img.addEventListener('load', syncActiveHeight);
