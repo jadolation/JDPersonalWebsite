@@ -1,7 +1,7 @@
 /* GitHub Stats Section */
 .github-stats {
     padding: 80px 0;
-    background: var(--space);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
