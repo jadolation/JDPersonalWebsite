@@ -309,7 +309,7 @@ async function loadProjects() {
                 status: typeof entry.status === 'string' ? entry.status : '',
                 role: typeof entry.role === 'string' ? entry.role : '',
                 stack: typeof entry.stack === 'string' ? entry.stack : '',
-                language: '',
+                language: typeof entry.language === 'string' ? entry.language : '',
                 activity: '',
                 extraFacts,
                 order: typeof entry.order === 'number' ? entry.order : 50,

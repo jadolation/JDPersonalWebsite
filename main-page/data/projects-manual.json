@@ -1,6 +1,19 @@
 {
   "projects": [
     {
+      "slug": "promptgraph",
+      "name": "PromptGraph",
+      "description": "AI-powered AEO platform that helps businesses improve their visibility across ChatGPT, Gemini, and Grok through AI position tracking, competitor intelligence, analytics, and structured business endpoints.",
+      "logo": "assets/project-logos/manual/promptgraph.svg",
+      "logoPlate": "light",
+      "website": "https://app.promptgraph.ai/",
+      "ownership": "Contributor",
+      "status": "Live, in active development",
+      "role": "Lead Developer — Frontend & AI; developed ~35% of core features and the majority of AI-related components",
+      "language": "TypeScript",
+      "order": 2
+    },
+    {
       "slug": "example-client-site",
       "name": "Client Website",
       "description": "One-line description of the work.",
