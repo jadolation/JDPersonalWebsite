@@ -280,6 +280,7 @@ async function loadProjects() {
             extraFacts: Array.isArray(over.facts) ? over.facts : [],
             order: typeof over.order === 'number' ? over.order : 100 + pinnedIndex,
             previewMode: over.previewMode === 'live' ? 'live' : 'image',
+            allowSameOrigin: over.allowSameOrigin === true,
             isThisSite: repo.name === 'JDPersonalWebsite'
         });
     });
@@ -315,6 +316,7 @@ async function loadProjects() {
                 extraFacts,
                 order: typeof entry.order === 'number' ? entry.order : 50,
                 previewMode: entry.previewMode === 'live' ? 'live' : 'image',
+                allowSameOrigin: entry.allowSameOrigin === true,
                 isThisSite: false
             });
         });
@@ -466,7 +468,7 @@ async function loadProjects() {
 
     const panels = Array.from(panelsEl.querySelectorAll('.projects-panel'));
 
-    function loadWebsitePreview(container, name) {
+    function loadWebsitePreview(container, name, allowSameOrigin) {
         if (!container || container.dataset.loaded === 'true') return;
         const url = container.getAttribute('data-preview-url');
         if (!url) return;
@@ -474,7 +476,11 @@ async function loadProjects() {
         iframe.src = url;
         iframe.loading = 'lazy';
         iframe.title = 'Live preview of ' + name;
-        iframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+        // allow-same-origin is opt-in per project: it restores the framed
+        // origin (fixing CORS-blocked subresources) without granting access
+        // to this page, as long as the framed origin differs from ours.
+        iframe.setAttribute('sandbox', 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox'
+            + (allowSameOrigin === true ? ' allow-same-origin' : ''));
         iframe.setAttribute('referrerpolicy', 'no-referrer');
         iframe.className = 'projects-live-frame';
         container.replaceChildren(iframe);
@@ -494,7 +500,8 @@ async function loadProjects() {
         const activePanel = panels[index];
         if (activePanel) {
             const mount = activePanel.querySelector('.projects-live-preview');
-            if (mount) loadWebsitePreview(mount, normalized[index] ? normalized[index].name : '');
+            const entry = normalized[index];
+            if (mount) loadWebsitePreview(mount, entry ? entry.name : '', !!(entry && entry.allowSameOrigin));
         }
     }
 
@@ -520,7 +527,8 @@ async function loadProjects() {
         const panel = panelsEl.querySelector('.projects-panel');
         if (panel) {
             const mount = panel.querySelector('.projects-live-preview');
-            if (mount) loadWebsitePreview(mount, normalized[0] ? normalized[0].name : '');
+            const entry = normalized[0];
+            if (mount) loadWebsitePreview(mount, entry ? entry.name : '', !!(entry && entry.allowSameOrigin));
         }
     }
 }

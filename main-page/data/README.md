@@ -38,6 +38,11 @@ This file is hand-maintained. The hourly workflow only writes
   when the tab opens (only if the entry has a `website`); anything else (or
   absent) keeps the logo/image panel. Only set `"live"` for sites verified to
   allow framing (no `X-Frame-Options` / `frame-ancestors` refusal).
+- `allowSameOrigin: true` — opt-in escape hatch for framed sites whose own
+  JS/CSS fail under the default opaque-origin sandbox (e.g. CORS-blocked
+  subresources). Restores the framed origin without granting access to this
+  page — safe only because our pages and framed sites are cross-origin;
+  never set it for same-origin URLs. Default off.
 - `placeholder: true` — renders only with `?placeholders=1` in the URL.
 - No `stars`/`forks`: their absence is what marks an entry as link-only.
 

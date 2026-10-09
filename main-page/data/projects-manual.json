@@ -97,7 +97,8 @@
       "status": "Live, in active development",
       "role": "Frontend developer and co-owner",
       "order": 2,
-      "previewMode": "live"
+      "previewMode": "live",
+      "allowSameOrigin": true
     },
     "SOLID-Principles---Prompt-Engineering---GIT-101-Training-Activity": {
       "displayName": "SOLID Training",
