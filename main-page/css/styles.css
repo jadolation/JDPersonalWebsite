@@ -489,9 +489,35 @@ body.romantic-theme .navbar.scrolled {
 .about-content {
     display: grid;
     grid-template-columns: 1fr 400px;
-    gap: 4rem;
+    column-gap: 4rem;
+    row-gap: 0;
     align-items: center;
     margin-top: 3rem;
+}
+
+/* Flattened so the portrait can sit between the heading and the
+   paragraphs on small screens while keeping the desktop 2-column look */
+.about-text {
+    display: contents;
+}
+
+.about-text > h3,
+.about-text > p,
+.about-text > dl,
+.about-text > div.about-buttons {
+    grid-column: 1;
+}
+
+/* Desktop only: the portrait spans the text column's rows. Scoped to
+   min-width so mobile never inherits a two-column placement (which would
+   shove the image into an implicit off-screen track). */
+@media (min-width: 1121px) {
+    .about-image {
+        grid-column: 2;
+        grid-row: 1 / span 10;
+        align-self: center;
+        min-width: 0;
+    }
 }
 
 .about-image-wrapper {
@@ -1314,6 +1340,12 @@ body.romantic-theme .navbar.scrolled {
         gap: 2rem;
         align-items: center;
     }
+    .hero-logo-container {
+        order: -1;
+    }
+    .hero-content {
+        order: 2;
+    }
     .hero-logo {
         width: 220px;
         height: 220px;
@@ -1324,6 +1356,7 @@ body.romantic-theme .navbar.scrolled {
     
     .about-content {
         grid-template-columns: 1fr;
+        row-gap: 4rem;
         text-align: center;
     }
     
@@ -1361,6 +1394,23 @@ body.romantic-theme .navbar.scrolled {
     
     .hero-buttons {
         flex-direction: column;
+        align-items: center;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
+
+    .about-buttons {
+        justify-content: center;
+    }
+
+    .section-subtitle,
+    .skill-category h3,
+    .achievements-title,
+    .github-activity h3,
+    .github-chart h3 {
+        text-align: center;
     }
     
     .section-title {
@@ -1997,6 +2047,8 @@ body.romantic-theme .navbar.scrolled {
     grid-auto-columns: 78%;
     gap: 16px;
     overflow-x: auto;
+    overflow-y: hidden;
+    overflow-y: clip;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 20px;
     scrollbar-width: thin;
@@ -2011,7 +2063,7 @@ body.romantic-theme .navbar.scrolled {
   .marketing-item img,
   .marketing-placeholder {
     aspect-ratio: auto;
-    height: 100%;
+    height: calc(100% - 2.25rem);
   }
   /* Landscape cover keeps its composition: letterboxed instead of center-cropped. */
   .marketing-item--landscape img {
