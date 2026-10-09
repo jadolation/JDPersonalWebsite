@@ -74,11 +74,25 @@
       "role": "Frontend Developer, then Project Manager — spearheaded frontend development before managing the project",
       "language": "TypeScript",
       "order": 7
+    },
+    {
+      "slug": "royal-care",
+      "name": "528 Royal Care",
+      "description": "Static corporate website for 528 Royal Care, a holding company managing food and beverage franchises including 517 Bakery.",
+      "logo": "assets/project-logos/manual/528-royal-care.svg",
+      "logoPlate": "light",
+      "website": "https://528royalcare.com/",
+      "ownership": "Client project",
+      "status": "Live",
+      "role": "Main developer — designed and built the static corporate website",
+      "stack": "HTML, CSS, JavaScript",
+      "order": 8
     }
   ],
   "overrides": {
     "SRV": {
       "displayName": "SRV",
+      "description": "Serbisyo, Rito, Valid — blockchain-powered marketplace connecting clients with local freelance service providers in Baguio City, with service discovery, provider profiles, bookings, and a staking-based vouching system for provider trust.",
       "website": "https://srvpinoy.com",
       "status": "Live, in active development",
       "role": "Frontend developer and co-owner",
